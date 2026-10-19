@@ -135,7 +135,7 @@ electron/      main.ts (cửa sổ, IPC, menu), preload.ts, storage.ts (ghi nguy
 src/core/      logic thuần, có test: status, time, codes, migrate, search, ops, actions,
                sync.ts (gộp dữ liệu), dataHub.ts (phiên bản dữ liệu)
 src/platform/  capacitor.ts: lưu trữ, đồng bộ, chia sẻ file, thông báo, nút Back trên Android
-capacitor.config.ts, scripts/android-prepare.mjs, android-signing/, assets/logo.png
+capacitor.config.ts, scripts/android-prepare.mjs, android-signing/, assets/icon-*.png, assets/splash*.png
 src/store/     Zustand store, ghi qua IPC
 src/components Toolbar, SubNav, Overview (4 thẻ 3D), Gantt (Tháng/Tuần/Timeline/Split), Grid, Mobile,
                BulkBar, Drawer, Settings, Tooltip
