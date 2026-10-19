@@ -145,13 +145,16 @@ export function normalizeData(d: Obj): Data {
     tt: asStatus(x.tt),
     gc: str(x.gc)
   }));
+  const reminded: Record<string, number> = {};
+  if (isObj(d.reminded)) for (const [k, v] of Object.entries(d.reminded)) if (typeof v === 'number') reminded[k] = v;
   const data: Data = {
     schemaVersion: CURRENT_SCHEMA,
     people,
     thang,
     tuan,
     ngay,
-    counters: isObj(d.counters) ? (d.counters as unknown as Counters) : undefined
+    counters: isObj(d.counters) ? (d.counters as unknown as Counters) : undefined,
+    ...(Object.keys(reminded).length ? { reminded } : {})
   };
   fillCodes(data);
   return data;

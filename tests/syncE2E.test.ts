@@ -133,3 +133,36 @@ describe('đồng bộ Wi-Fi đầu-cuối', () => {
     expect(normalizeAddr('')).toBe('');
   });
 });
+
+import { discoverHubs, syncWithFailover, pingHub } from '../src/lib/syncClient.ts';
+describe('USB / Bluetooth: tự đổi đường và tìm PC', () => {
+  it('địa chỉ cũ không tới được → tự dùng địa chỉ khác của PC', async () => {
+    const s = await setup();
+    const good = `127.0.0.1:${s.info.port}`;
+    try {
+    const { token, addresses } = await pairWithHub(fetch, good, s.info.pairCode!, 'ĐT');
+    expect(Array.isArray(addresses)).toBe(true);
+    const phone = createDataHub({ data: emptyData(), meta: emptyMeta() });
+    const dead = '127.0.0.1:1'; // vd. Wi-Fi đã mất
+    const r = await syncWithFailover(fetch, dead, [dead, good], token, phone.state.data, phone.state.meta);
+    expect(r.addr).toBe(good);
+    expect(r.result.data.thang).toHaveLength(1);
+    expect((await pingHub(fetch, good))!.name).toBe('PC-TEST');
+    expect(await pingHub(fetch, dead, 500)).toBeNull();
+    } finally {
+      await s.hub.stop();
+    }
+  });
+  it('mất hết đường → báo lỗi mạng', async () => {
+    let err: unknown;
+    try { await syncWithFailover(fetch, '127.0.0.1:1', ['127.0.0.1:2'], 'x', emptyData(), emptyMeta()); } catch (e) { err = e; }
+    expect(err instanceof SyncHttpError && err.code === 'network').toBe(true);
+  });
+  it('Tìm PC: quét dải mạng và thấy PC', async () => {
+    const s = await setup();
+    const found = await discoverHubs(fetch, [], { port: s.info.port!, prefixes: ['127.0.0'], timeoutMs: 400 });
+    expect(found[0]?.addr).toBe(`127.0.0.1:${s.info.port}`);
+    expect(found[0]?.name).toBe('PC-TEST');
+    await s.hub.stop();
+  });
+});

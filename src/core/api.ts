@@ -1,5 +1,5 @@
 // Hợp đồng giữa renderer và main (preload expose đúng các hàm này, mục 2.2)
-import type { Data, Settings } from './model.ts';
+import type { Data, Level, Settings } from './model.ts';
 
 export type LoadNotice =
   | { kind: 'fresh' }
@@ -15,6 +15,17 @@ export interface AppInfo {
   packaged: boolean;
 }
 export type Platform = 'electron' | 'android' | 'web';
+
+export interface NotifyArgs {
+  title: string;
+  body: string;
+  level?: Level;
+  id?: string;
+}
+export interface ScheduledNote extends NotifyArgs {
+  nid: number;
+  at: number;
+}
 
 export interface LoadResult {
   data: Data;
@@ -36,6 +47,16 @@ export interface SaveResult extends Result {
   data?: Data;
 }
 
+export type LinkKind = 'wifi' | 'usb' | 'bluetooth' | 'lan';
+export interface SyncLink {
+  address: string;
+  kind: LinkKind;
+}
+export interface FoundHub {
+  addr: string;
+  name: string;
+}
+
 export interface SyncDeviceInfo {
   id: string;
   name: string;
@@ -48,6 +69,10 @@ export interface SyncInfo {
   enabled: boolean;
   port: number | null;
   addresses: string[];
+  /** PC: địa chỉ theo loại kết nối (Wi-Fi, USB, Bluetooth, mạng dây) */
+  links: SyncLink[];
+  /** điện thoại: mọi địa chỉ đã biết của PC (tự thử lần lượt khi mất kết nối) */
+  hubHosts: string[];
   pairCode: string | null;
   devices: SyncDeviceInfo[];
   hubAddr: string | null;
@@ -64,8 +89,9 @@ export type SyncAction =
   | { type: 'removeDevice'; id: string }
   | { type: 'pair'; addr: string; code: string; name: string }
   | { type: 'syncNow' }
+  | { type: 'discover' }
   | { type: 'unpair' };
-export type SyncActionResult = SyncInfo & { error?: string };
+export type SyncActionResult = SyncInfo & { error?: string; found?: FoundHub[] };
 
 export interface SheetSpec {
   name: string;
@@ -99,7 +125,12 @@ export interface HcnApi {
   openDataFolder(): Promise<void>;
   openLog(): Promise<void>;
   openExternal(url: string): Promise<void>;
-  notify(args: { title: string; body: string }): Promise<void>;
+  /** thông báo ngay; bấm vào thì mở việc (level, id) */
+  notify(args: NotifyArgs): Promise<void>;
+  /** Android: hẹn giờ thông báo bằng hệ thống (báo cả khi app tắt). PC: không cần */
+  scheduleReminders(items: ScheduledNote[]): Promise<void>;
+  /** người dùng bấm vào thông báo */
+  onOpenTask(cb: (level: Level, id: string) => void): () => void;
   checkUpdates(): Promise<void>;
   installUpdate(): Promise<void>;
   setAutoDownload(value: boolean): Promise<void>;
@@ -118,6 +149,8 @@ export const emptySyncInfo = (role: SyncInfo['role']): SyncInfo => ({
   enabled: false,
   port: null,
   addresses: [],
+  links: [],
+  hubHosts: [],
   pairCode: null,
   devices: [],
   hubAddr: null,

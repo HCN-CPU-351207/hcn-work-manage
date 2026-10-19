@@ -15,6 +15,12 @@ if (!manifest.includes('usesCleartextTraffic')) {
   manifest = manifest.replace('<application', '<application\n        android:usesCleartextTraffic="true"');
   fs.writeFileSync(manifestPath, manifest);
 }
+// Nhắc việc đúng giờ (Android 12+): quyền hẹn giờ chính xác
+manifest = fs.readFileSync(manifestPath, 'utf8');
+for (const perm of ['android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED']) {
+  if (!manifest.includes(perm)) manifest = manifest.replace('</manifest>', `    <uses-permission android:name="${perm}" />\n</manifest>`);
+}
+fs.writeFileSync(manifestPath, manifest);
 
 // 2) build.gradle: phiên bản + ký
 const gradlePath = path.join(root, 'android/app/build.gradle');

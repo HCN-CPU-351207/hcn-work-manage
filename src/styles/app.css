@@ -2407,3 +2407,90 @@ th.col-actions {
 [data-theme='light'] .wifi-code {
   color: var(--accent-dark);
 }
+
+/* ---------- Thông báo, đường kết nối ---------- */
+.set-group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+.set-group:disabled {
+  opacity: 0.5;
+}
+.toggle-num {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 520px;
+}
+.toggle-num .toggle {
+  flex: 1;
+}
+.toggle-num input {
+  width: 72px;
+}
+.toggle-num .unit {
+  color: var(--text-title);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.narrow-row {
+  max-width: 520px;
+}
+.wifi-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.link-kind {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  min-width: 92px;
+  text-align: center;
+}
+.link-wifi {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.link-usb {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.link-bluetooth {
+  background: var(--info-soft);
+  color: var(--info);
+}
+.link-lan {
+  background: var(--idle-soft);
+  color: var(--text-title);
+}
+.howto {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-title);
+  font-size: 13px;
+  max-width: 68ch;
+}
+/* việc trễ hạn trên Gantt: viền đỏ nhấp nháy nhẹ */
+.tb-overdue {
+  animation: overdue-pulse 2.4s ease-in-out infinite;
+}
+@keyframes overdue-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 113, 113, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.35);
+  }
+}

@@ -10,10 +10,10 @@ import { createDataHub } from '../core/dataHub.ts';
 import type { DataHub } from '../core/dataHub.ts';
 import { parseImport } from '../core/migrate.ts';
 import { defaultSettings, emptyData, toBackup } from '../core/model.ts';
-import type { Data, Settings } from '../core/model.ts';
+import type { Data, Level, Settings } from '../core/model.ts';
 import { initMeta, isMeta } from '../core/sync.ts';
 import type { SyncMeta } from '../core/sync.ts';
-import { normalizeAddr, pairWithHub, SyncHttpError, syncWithHub } from '../lib/syncClient.ts';
+import { discoverHubs, normalizeAddr, pairWithHub, SyncHttpError, syncWithFailover } from '../lib/syncClient.ts';
 import { fillWorkbook } from '../lib/xlsxBuild.ts';
 
 const DIR = Directory.Data;
@@ -29,6 +29,8 @@ interface ClientState {
   lastSync: string | null;
   lastError: string | null;
   lastChanges: number | null;
+  /** mọi địa chỉ đã biết của PC (Wi-Fi, USB, Bluetooth) */
+  hosts?: string[];
 }
 interface SyncFile {
   v: 1;
@@ -68,6 +70,15 @@ async function listDir(path: string): Promise<string[]> {
   } catch {
     return [];
   }
+}
+
+let permOk: boolean | null = null;
+async function notifyPermission(): Promise<boolean> {
+  if (permOk) return true;
+  let perm = await LocalNotifications.checkPermissions();
+  if (perm.display !== 'granted') perm = await LocalNotifications.requestPermissions();
+  permOk = perm.display === 'granted';
+  return permOk;
 }
 
 function toBase64(buf: ArrayBuffer): string {
@@ -159,6 +170,7 @@ export function createCapacitorApi(): HcnApi {
       ...emptySyncInfo('client'),
       enabled: !!client.token,
       hubAddr: client.addr,
+      hubHosts: client.hosts ?? [],
       hubName: client.hubName,
       lastSync: client.lastSync,
       lastError: client.lastError,
@@ -179,9 +191,10 @@ export function createCapacitorApi(): HcnApi {
       await flushCb?.();
       await writes;
       const { data, meta } = hub.state;
-      const r = await syncWithHub(fetch, client.addr, client.token, data, meta);
+      const { addr, result: r } = await syncWithFailover(fetch, client.addr, client.hosts ?? [], client.token, data, meta);
       const a = hub.adoptFromHub(r.data, r.meta, Date.now());
-      client = { ...client, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
+      const hosts = [...new Set([addr, ...(r.addresses ?? []), ...(client.hosts ?? [])])].slice(0, 12);
+      client = { ...client, addr, hosts, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
       if (a.changed) {
         void persistData();
         for (const cb of externalCbs) cb(a.data, a.rev);
@@ -336,15 +349,43 @@ export function createCapacitorApi(): HcnApi {
     async openExternal(url) {
       window.open(url, '_blank');
     },
-    async notify({ title, body }) {
+    async notify({ title, body, level, id }) {
       try {
-        let perm = await LocalNotifications.checkPermissions();
-        if (perm.display !== 'granted') perm = await LocalNotifications.requestPermissions();
-        if (perm.display !== 'granted') return;
-        await LocalNotifications.schedule({ notifications: [{ id: Math.floor(Date.now() % 2_000_000_000), title, body }] });
+        if (!(await notifyPermission())) return;
+        await LocalNotifications.schedule({
+          notifications: [{ id: Math.floor(Date.now() % 2_000_000_000), title, body, extra: { hcn: 1, level, id } }]
+        });
       } catch {
         /* thiết bị không hỗ trợ */
       }
+    },
+    /** Hẹn giờ bằng hệ thống Android: báo đúng giờ kể cả khi app đã tắt hoặc máy khởi động lại */
+    async scheduleReminders(items) {
+      try {
+        if (!(await notifyPermission())) return;
+        const pending = await LocalNotifications.getPending();
+        const old = pending.notifications.filter((n) => (n.extra as { hcnRem?: number } | undefined)?.hcnRem).map((n) => ({ id: n.id }));
+        if (old.length) await LocalNotifications.cancel({ notifications: old });
+        if (!items.length) return;
+        await LocalNotifications.schedule({
+          notifications: items.map((r) => ({
+            id: r.nid,
+            title: r.title,
+            body: r.body,
+            schedule: { at: new Date(r.at), allowWhileIdle: true },
+            extra: { hcn: 1, hcnRem: 1, level: r.level, id: r.id }
+          }))
+        });
+      } catch {
+        /* bỏ qua: lần chạy sau sẽ hẹn lại */
+      }
+    },
+    onOpenTask(cb) {
+      const h = LocalNotifications.addListener('localNotificationActionPerformed', (a) => {
+        const x = a.notification.extra as { level?: Level; id?: string } | undefined;
+        if (x?.level && x.id) cb(x.level, x.id);
+      });
+      return () => void h.then((l) => l.remove());
     },
     async checkUpdates() {
       for (const cb of updateCbs) cb({ type: 'not-available', manual: true });
@@ -370,13 +411,17 @@ export function createCapacitorApi(): HcnApi {
         if (!addr) return { ...info(), error: 'addr' };
         try {
           const r = await pairWithHub(fetch, addr, a.code, a.name.trim() || 'Android');
-          client = { addr, token: r.token, hubName: r.hubName, lastSync: null, lastError: null, lastChanges: null };
+          client = { addr, token: r.token, hubName: r.hubName, lastSync: null, lastError: null, lastChanges: null, hosts: [...new Set([addr, ...r.addresses])] };
           await persistSync();
           const err = await syncNow();
           return { ...info(), error: err };
         } catch (e) {
           return { ...info(), error: e instanceof SyncHttpError ? e.code : 'server' };
         }
+      }
+      if (a.type === 'discover') {
+        const found = await discoverHubs(fetch, [client.addr, ...(client.hosts ?? [])].filter((x): x is string => !!x));
+        return { ...info(), found, error: found.length ? undefined : 'notFound' };
       }
       if (a.type === 'syncNow') {
         const err = await syncNow();

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SyncAction, SyncInfo } from '../../core/api.ts';
+import type { SyncAction, SyncActionResult, SyncInfo } from '../../core/api.ts';
 import { useApp } from '../../store/app.ts';
 import { api } from '../../lib/devApi.ts';
 import { cx } from '../../lib/labels.ts';
@@ -17,7 +17,8 @@ const ERR_KEY: Record<string, string> = {
   timeout: 'wifi.err.timeout',
   schema: 'wifi.err.schema',
   server: 'wifi.err.server',
-  addr: 'wifi.err.addr'
+  addr: 'wifi.err.addr',
+  notFound: 'wifi.err.notFound'
 };
 
 function useSyncInfo() {
@@ -65,7 +66,7 @@ export function SyncSection() {
   return info.role === 'hub' ? <HubView info={info} busy={busy} err={err} run={run} /> : <ClientView info={info} busy={busy} err={err} run={run} />;
 }
 
-type ViewProps = { info: SyncInfo; busy: boolean; err: string | null; run: (a: SyncAction) => Promise<SyncInfo & { error?: string }> };
+type ViewProps = { info: SyncInfo; busy: boolean; err: string | null; run: (a: SyncAction) => Promise<SyncActionResult> };
 
 function when(iso: string | null, lang: string, never: string): string {
   return iso ? new Date(iso).toLocaleString(lang) : never;
@@ -89,10 +90,13 @@ function HubView({ info, busy, err, run }: ViewProps) {
       {info.enabled && (
         <>
           <Block title={t('wifi.addresses')} hint={t('wifi.addressesHint')}>
-            {info.addresses.length ? (
+            {info.links.length ? (
               <div className="wifi-addrs">
-                {info.addresses.map((a) => (
-                  <code key={a} className="wifi-big">{`${a}:${info.port}`}</code>
+                {info.links.map((l) => (
+                  <div key={l.address} className="wifi-link">
+                    <span className={cx('link-kind', `link-${l.kind}`)}>{t(`wifi.kind.${l.kind}`)}</span>
+                    <code className="wifi-big">{`${l.address}:${info.port}`}</code>
+                  </div>
                 ))}
               </div>
             ) : (
@@ -139,6 +143,13 @@ function HubView({ info, busy, err, run }: ViewProps) {
             {info.lastSync && <p className="set-hint">{t('wifi.lastSyncLine', { time: when(info.lastSync, lang, ''), n: info.lastChanges ?? 0 })}</p>}
           </Block>
           <Block hint={t('wifi.firewall')} />
+          <Block title={t('wifi.tetherTitle')} hint={t('wifi.tetherHint')}>
+            <ol className="howto">
+              <li>{t('wifi.tetherUsb')}</li>
+              <li>{t('wifi.tetherBt')}</li>
+              <li>{t('wifi.tetherThen')}</li>
+            </ol>
+          </Block>
         </>
       )}
     </>
@@ -153,7 +164,17 @@ function ClientView({ info, busy, err, run }: ViewProps) {
   const [addr, setAddr] = useState(info.hubAddr ?? '');
   const [code, setCode] = useState('');
   const [name, setName] = useState('Android');
+  const [foundMsg, setFoundMsg] = useState<string | null>(null);
   const shownErr = err ?? info.lastError;
+  const discover = async () => {
+    setFoundMsg(null);
+    const r = await run({ type: 'discover' });
+    const f = r.found?.[0];
+    if (f) {
+      setAddr(f.addr);
+      setFoundMsg(t('wifi.found', { name: f.name, addr: f.addr }));
+    }
+  };
 
   if (!info.enabled) {
     return (
@@ -162,6 +183,13 @@ function ClientView({ info, busy, err, run }: ViewProps) {
           <span>{t('wifi.addr')}</span>
           <input value={addr} inputMode="decimal" placeholder={t('wifi.addrPlaceholder')} onChange={(e) => setAddr(e.target.value)} />
         </label>
+        <div className="btn-row">
+          <button className="btn btn-sm" disabled={busy} onClick={() => void discover()}>
+            {busy ? t('wifi.searching') : t('wifi.discover')}
+          </button>
+        </div>
+        {foundMsg && <p className="set-status">{foundMsg}</p>}
+        <p className="set-hint">{t('wifi.clientTether')}</p>
         <label className="field narrow">
           <span>{t('wifi.pairCode')}</span>
           <input value={code} inputMode="numeric" maxLength={6} placeholder="123456" onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} />
@@ -198,6 +226,12 @@ function ClientView({ info, busy, err, run }: ViewProps) {
           </dd>
           <dt>{t('wifi.lastSync')}</dt>
           <dd>{when(info.lastSync, lang, t('wifi.never'))}</dd>
+          {info.hubHosts.length > 1 && (
+            <>
+              <dt>{t('wifi.routes')}</dt>
+              <dd className="small">{info.hubHosts.join(' · ')}</dd>
+            </>
+          )}
         </dl>
         {shownErr && <p className="set-status err">{t(ERR_KEY[shownErr] ?? 'wifi.err.server')}</p>}
         <div className="btn-row">

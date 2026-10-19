@@ -87,6 +87,8 @@ export interface Data {
   tuan: Tuan[];
   ngay: Ngay[];
   counters?: Counters;
+  /** nhắc việc đã báo: khóa mốc → thời điểm báo (ms); gộp khi đồng bộ để máy kia không báo lặp */
+  reminded?: Record<string, number>;
 }
 
 export type Quick = 'today' | 'overdue' | 'duesoon' | 'mine';
@@ -123,6 +125,20 @@ export interface Settings {
   savedViews: SavedView[];
   // kỹ thuật: các việc đã báo trong ngày (để không báo lặp)
   notified?: { date: string; ids: string[] };
+  /** Thông báo chi tiết */
+  notifySoon: boolean;
+  notifyDue: boolean;
+  notifyOverdue: boolean;
+  notifyDayStart: boolean;
+  notifyDayLeadMin: number;
+  notifyDayLate: boolean;
+  /** giờ báo các mốc theo ngày (HH:MM) */
+  notifyMorning: string;
+  quietStart: string;
+  quietEnd: string;
+  /** PC: đóng cửa sổ thì chạy nền ở khay hệ thống; tự mở cùng Windows */
+  runInBackground: boolean;
+  launchAtLogin: boolean;
 }
 
 export interface BackupFile {
@@ -153,7 +169,18 @@ export function defaultSettings(): Settings {
     notificationsEnabled: true,
     autoDownloadUpdates: true,
     lastUpdateCheck: null,
-    savedViews: []
+    savedViews: [],
+    notifySoon: true,
+    notifyDue: true,
+    notifyOverdue: true,
+    notifyDayStart: true,
+    notifyDayLeadMin: 10,
+    notifyDayLate: true,
+    notifyMorning: '08:00',
+    quietStart: '22:00',
+    quietEnd: '07:00',
+    runInBackground: true,
+    launchAtLogin: false
   };
 }
 

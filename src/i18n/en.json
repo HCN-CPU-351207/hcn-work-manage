@@ -290,7 +290,31 @@
     "title": "HCN: {{over}} overdue, {{soon}} due soon",
     "enable": "Windows notifications",
     "days": "\"Due soon\" window (days)",
-    "hint": "On launch and every 4 hours, HCN sends one summary of overdue and due-soon tasks not yet notified today."
+    "hint": "On launch and every 4 hours, HCN sends one summary of overdue and due-soon tasks not yet notified today.",
+    "hint2": "HCN notifies at each task's milestones. Each one fires once, and devices share what was already shown after syncing.",
+    "test": "Send a test notification",
+    "testTitle": "HCN Work Manage",
+    "testBody": "Notifications are working.",
+    "testSent": "Test sent. If nothing appears, allow notifications for HCN in the system settings.",
+    "rangeTitle": "Monthly and weekly tasks",
+    "soon": "Remind before the deadline",
+    "daysUnit": "days",
+    "due": "Remind on the due date",
+    "over": "Alert when overdue and not done",
+    "dayTitle": "Daily tasks",
+    "dayStart": "Remind before the start time",
+    "leadUnit": "minutes",
+    "dayLate": "Alert when past the end time and not done",
+    "timeTitle": "Timing",
+    "timeHint": "Day-based reminders (before, on and after the deadline) arrive at the morning time. Anything during quiet hours waits until they end.",
+    "morning": "Morning time",
+    "quietStart": "Quiet from",
+    "quietEnd": "Quiet until",
+    "bgTitle": "Run in the background",
+    "bgHint": "HCN must be running to remind on time. When on, clicking X hides the window to the system tray (by the clock); to quit, right-click the HCN icon > Quit.",
+    "background": "Keep running in the tray when closed",
+    "login": "Start with Windows (hidden)",
+    "androidHint": "On the phone, reminders are scheduled by the system, so they arrive even when the app is closed or after a restart. If they're late, turn off battery saving for HCN."
   },
   "settings": {
     "title": "Settings",
@@ -382,9 +406,9 @@
   "wifi": {
     "unavailable": "Sync is only available in the PC and Android apps.",
     "hubHint": "This PC acts as the hub: phones on the same Wi-Fi send and receive changes while the PC app is open. Data never leaves your local network.",
-    "enable": "Allow phones to sync over Wi-Fi",
+    "enable": "Allow phones to sync (Wi-Fi, USB, Bluetooth)",
     "addresses": "This PC's address",
-    "addressesHint": "Enter this address on the phone. If there are several, use the one on the phone's Wi-Fi (usually starting with 192.168).",
+    "addressesHint": "Enter one of these addresses on the phone (or tap Find PC automatically there). The label shows the route: Wi-Fi, USB cable or Bluetooth.",
     "noAddress": "This PC isn't connected to Wi-Fi or a wired network.",
     "code": "Pairing code",
     "codeHint": "Each code works once. It changes automatically after a phone pairs.",
@@ -397,8 +421,8 @@
     "removeTitle": "Remove phone",
     "removeMsg": "{{name}} won't be able to sync until it pairs again. Data on the phone stays.",
     "lastSyncLine": "Last sync at {{time}}, {{n}} changes.",
-    "firewall": "The first time, Windows may ask for firewall access for HCN Work Manage: choose Allow for Private networks. The phone and PC must be on the same Wi-Fi.",
-    "clientHint": "On the PC, open HCN > Settings > Sync, turn sync on, then enter the address and code shown there. The phone and PC must be on the same Wi-Fi.",
+    "firewall": "The first time (or the first USB / Bluetooth connection), Windows may ask for firewall access for HCN Work Manage: tick both Private and Public, then Allow, because Windows often treats USB/Bluetooth networks as Public.",
+    "clientHint": "On the PC, open HCN > Settings > Sync, turn sync on, then enter the address and code shown there. The phone and PC must share a Wi-Fi network or be linked by USB cable / Bluetooth.",
     "addr": "PC address",
     "addrPlaceholder": "e.g. 192.168.1.5:47821",
     "pairCode": "Pairing code (6 digits)",
@@ -422,7 +446,32 @@
       "timeout": "The PC didn't respond in time. Try again with a better Wi-Fi signal.",
       "schema": "The devices use different data versions. Update the app on both.",
       "server": "The PC reported an error. Try again later.",
-      "addr": "Enter the PC address."
-    }
+      "addr": "Enter the PC address.",
+      "notFound": "No PC found. Make sure HCN is open on the PC with sync on, then type the address shown there."
+    },
+    "kind": {
+      "wifi": "Wi-Fi",
+      "usb": "USB cable",
+      "bluetooth": "Bluetooth",
+      "lan": "Wired / USB"
+    },
+    "tetherTitle": "No Wi-Fi? Use a USB cable or Bluetooth",
+    "tetherHint": "The phone shares a network with the PC over the cable or Bluetooth, then syncing works just like Wi-Fi. No Internet needed.",
+    "tetherUsb": "USB: plug the phone into the PC. On the phone: Settings > Connections/Hotspot & tethering > turn on USB tethering.",
+    "tetherBt": "Bluetooth: first pair the phone with the PC over Bluetooth. On the phone turn on Bluetooth tethering. On the PC: Bluetooth tray icon > Join a Personal Area Network > pick the phone > Connect using > Access point.",
+    "tetherThen": "A new address then appears above (labelled USB cable, Bluetooth or Wired / USB). Phones already paired find the new route by themselves.",
+    "discover": "Find PC automatically",
+    "searching": "Searching… (up to about 30 seconds)",
+    "found": "Found {{name}} ({{addr}}). Enter the pairing code and tap Connect.",
+    "clientTether": "No Wi-Fi: turn on USB tethering (cable to the PC) or Bluetooth tethering in the phone settings, then tap Find PC automatically.",
+    "routes": "Routes to the PC"
+  },
+  "rem": {
+    "soon": "Due soon ({{when}}): {{ma}}",
+    "due": "Due today: {{ma}}",
+    "over": "Overdue ({{when}}): {{ma}}",
+    "start": "Starts at {{when}}: {{ma}}",
+    "late": "Past its {{when}} end time: {{ma}}",
+    "summary": "HCN: {{n}} reminders"
   }
 }

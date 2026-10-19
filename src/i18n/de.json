@@ -290,7 +290,31 @@
     "title": "HCN: {{over}} überfällig, {{soon}} bald fällig",
     "enable": "Windows-Benachrichtigungen",
     "days": "Tage für „bald fällig“",
-    "hint": "Beim Start und alle 4 Stunden sendet HCN eine Zusammenfassung überfälliger und bald fälliger Aufgaben, die heute noch nicht gemeldet wurden."
+    "hint": "Beim Start und alle 4 Stunden sendet HCN eine Zusammenfassung überfälliger und bald fälliger Aufgaben, die heute noch nicht gemeldet wurden.",
+    "hint2": "HCN erinnert zu den Zeitpunkten jeder Aufgabe. Jede Erinnerung kommt einmal; nach dem Synchronisieren wiederholt das andere Gerät sie nicht.",
+    "test": "Testbenachrichtigung senden",
+    "testTitle": "HCN Work Manage",
+    "testBody": "Benachrichtigungen funktionieren.",
+    "testSent": "Test gesendet. Falls nichts erscheint, Benachrichtigungen für HCN in den Systemeinstellungen erlauben.",
+    "rangeTitle": "Monats- und Wochenaufgaben",
+    "soon": "Vor der Frist erinnern",
+    "daysUnit": "Tage",
+    "due": "Am Fälligkeitstag erinnern",
+    "over": "Bei Überfälligkeit warnen",
+    "dayTitle": "Tagesaufgaben",
+    "dayStart": "Vor der Startzeit erinnern",
+    "leadUnit": "Minuten",
+    "dayLate": "Warnen, wenn die Endzeit überschritten ist",
+    "timeTitle": "Zeiten",
+    "timeHint": "Tagesbezogene Erinnerungen kommen zur Morgenzeit. Was in die Ruhezeit fällt, wird bis zu ihrem Ende verschoben.",
+    "morning": "Morgenzeit",
+    "quietStart": "Ruhe ab",
+    "quietEnd": "Ruhe bis",
+    "bgTitle": "Im Hintergrund ausführen",
+    "bgHint": "HCN muss laufen, um pünktlich zu erinnern. Dann blendet X das Fenster in den Infobereich aus; zum Beenden: Rechtsklick auf das HCN-Symbol > Beenden.",
+    "background": "Beim Schließen im Infobereich weiterlaufen",
+    "login": "Mit Windows starten (ausgeblendet)",
+    "androidHint": "Am Telefon plant das System die Erinnerungen – sie kommen auch bei geschlossener App oder nach einem Neustart. Bei Verzögerung den Energiesparmodus für HCN deaktivieren."
   },
   "settings": {
     "title": "Einstellungen",
@@ -382,9 +406,9 @@
   "wifi": {
     "unavailable": "Synchronisierung gibt es nur in der PC- und Android-App.",
     "hubHint": "Dieser PC ist die Zentrale: Telefone im selben WLAN tauschen Änderungen aus, solange die PC-App geöffnet ist. Die Daten verlassen das lokale Netz nicht.",
-    "enable": "Synchronisierung per WLAN erlauben",
+    "enable": "Telefon-Synchronisierung erlauben (WLAN, USB, Bluetooth)",
     "addresses": "Adresse dieses PCs",
-    "addressesHint": "Diese Adresse am Telefon eingeben. Bei mehreren die aus demselben WLAN wählen (meist 192.168…).",
+    "addressesHint": "Eine dieser Adressen am Telefon eingeben (oder dort PC automatisch suchen tippen). Die Markierung zeigt den Weg: WLAN, USB-Kabel oder Bluetooth.",
     "noAddress": "Dieser PC ist mit keinem WLAN oder LAN verbunden.",
     "code": "Kopplungscode",
     "codeHint": "Jeder Code gilt nur einmal und ändert sich nach dem Koppeln.",
@@ -397,8 +421,8 @@
     "removeTitle": "Telefon entfernen",
     "removeMsg": "{{name}} kann erst nach erneutem Koppeln wieder synchronisieren. Die Daten auf dem Telefon bleiben.",
     "lastSyncLine": "Letzte Synchronisierung {{time}}, {{n}} Änderungen.",
-    "firewall": "Beim ersten Mal fragt Windows evtl. nach Firewall-Zugriff für HCN Work Manage: für private Netzwerke Zulassen wählen. Telefon und PC müssen im selben WLAN sein.",
-    "clientHint": "Am PC HCN > Einstellungen > Synchronisierung öffnen, einschalten und hier Adresse und Code eingeben. Telefon und PC im selben WLAN.",
+    "firewall": "Beim ersten Mal (oder bei der ersten USB-/Bluetooth-Verbindung) fragt Windows evtl. nach Firewall-Zugriff: Privat und Öffentlich ankreuzen und Zulassen, da USB/Bluetooth-Netze oft als öffentlich gelten.",
+    "clientHint": "Am PC HCN > Einstellungen > Synchronisierung öffnen, einschalten und die angezeigte Adresse und den Code eingeben. Telefon und PC müssen im selben WLAN oder per USB-Kabel / Bluetooth verbunden sein.",
     "addr": "PC-Adresse",
     "addrPlaceholder": "z. B. 192.168.1.5:47821",
     "pairCode": "Code (6 Ziffern)",
@@ -422,7 +446,32 @@
       "timeout": "Der PC hat nicht rechtzeitig geantwortet. Mit besserem WLAN erneut versuchen.",
       "schema": "Die Geräte nutzen unterschiedliche Datenversionen. App auf beiden aktualisieren.",
       "server": "Der PC meldet einen Fehler. Später erneut versuchen.",
-      "addr": "PC-Adresse eingeben."
-    }
+      "addr": "PC-Adresse eingeben.",
+      "notFound": "Kein PC gefunden. Prüfen, ob HCN am PC mit Synchronisierung läuft, dann die angezeigte Adresse eingeben."
+    },
+    "kind": {
+      "wifi": "WLAN",
+      "usb": "USB-Kabel",
+      "bluetooth": "Bluetooth",
+      "lan": "Kabel / USB"
+    },
+    "tetherTitle": "Kein WLAN? USB-Kabel oder Bluetooth nutzen",
+    "tetherHint": "Das Telefon teilt per Kabel oder Bluetooth ein Netz mit dem PC; danach funktioniert die Synchronisierung wie über WLAN. Kein Internet nötig.",
+    "tetherUsb": "USB: Telefon per Kabel anschließen. Am Telefon: Einstellungen > Verbindungen/Hotspot & Tethering > USB-Tethering einschalten.",
+    "tetherBt": "Bluetooth: Telefon zuerst per Bluetooth mit dem PC koppeln. Am Telefon Bluetooth-Tethering einschalten. Am PC: Bluetooth-Symbol > Einem persönlichen Netzwerk beitreten > Telefon wählen > Verbinden über > Zugriffspunkt.",
+    "tetherThen": "Danach erscheint oben eine neue Adresse (USB-Kabel, Bluetooth oder Kabel / USB). Bereits gekoppelte Telefone finden den neuen Weg selbst.",
+    "discover": "PC automatisch suchen",
+    "searching": "Suche… (bis etwa 30 Sekunden)",
+    "found": "{{name}} gefunden ({{addr}}). Code eingeben und Verbinden tippen.",
+    "clientTether": "Kein WLAN: USB-Tethering (Kabel zum PC) oder Bluetooth-Tethering einschalten und PC automatisch suchen tippen.",
+    "routes": "Wege zum PC"
+  },
+  "rem": {
+    "soon": "Bald fällig ({{when}}): {{ma}}",
+    "due": "Heute fällig: {{ma}}",
+    "over": "Überfällig ({{when}}): {{ma}}",
+    "start": "Beginnt um {{when}}: {{ma}}",
+    "late": "Endzeit {{when}} überschritten: {{ma}}",
+    "summary": "HCN: {{n}} Erinnerungen"
   }
 }

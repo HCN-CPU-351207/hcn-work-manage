@@ -1,7 +1,7 @@
 // Cầu nối contextBridge: chỉ expose các API cần thiết
 import { contextBridge, ipcRenderer } from 'electron';
 import type { HcnApi, UpdateEvent } from '../src/core/api.ts';
-import type { Data } from '../src/core/model.ts';
+import type { Data, Level } from '../src/core/model.ts';
 
 const api: HcnApi = {
   platform: 'electron',
@@ -16,6 +16,12 @@ const api: HcnApi = {
   openLog: () => ipcRenderer.invoke('hcn:openLog'),
   openExternal: (url) => ipcRenderer.invoke('hcn:openExternal', url),
   notify: (args) => ipcRenderer.invoke('hcn:notify', args),
+  scheduleReminders: async () => {},
+  onOpenTask: (cb) => {
+    const h = (_e: unknown, p: { level: Level; id: string }) => cb(p.level, p.id);
+    ipcRenderer.on('hcn:openTask', h);
+    return () => ipcRenderer.removeListener('hcn:openTask', h);
+  },
   checkUpdates: () => ipcRenderer.invoke('hcn:checkUpdates'),
   installUpdate: () => ipcRenderer.invoke('hcn:installUpdate'),
   setAutoDownload: (v) => ipcRenderer.invoke('hcn:setAutoDownload', v),

@@ -290,7 +290,31 @@
     "title": "HCN: {{over}} atrasadas, {{soon}} a vencer",
     "enable": "Notificações do Windows",
     "days": "Dias para \"a vencer\"",
-    "hint": "Ao abrir e a cada 4 horas, o HCN envia um resumo das tarefas atrasadas e a vencer ainda não notificadas hoje."
+    "hint": "Ao abrir e a cada 4 horas, o HCN envia um resumo das tarefas atrasadas e a vencer ainda não notificadas hoje.",
+    "hint2": "O HCN avisa nos marcos de cada tarefa. Cada aviso surge uma vez e, após sincronizar, o outro aparelho não repete.",
+    "test": "Enviar notificação de teste",
+    "testTitle": "HCN Work Manage",
+    "testBody": "As notificações estão a funcionar.",
+    "testSent": "Teste enviado. Se não aparecer, permita notificações do HCN nas definições do sistema.",
+    "rangeTitle": "Tarefas mensais e semanais",
+    "soon": "Avisar antes do prazo",
+    "daysUnit": "dias",
+    "due": "Avisar no dia do prazo",
+    "over": "Alertar quando atrasada e por concluir",
+    "dayTitle": "Tarefas diárias",
+    "dayStart": "Lembrar antes da hora de início",
+    "leadUnit": "minutos",
+    "dayLate": "Alertar quando passar da hora de fim por concluir",
+    "timeTitle": "Horário",
+    "timeHint": "Os avisos por dia (antes, no dia e após o prazo) chegam à hora da manhã. O que cair nas horas de silêncio espera até ao fim delas.",
+    "morning": "Hora da manhã",
+    "quietStart": "Silêncio a partir de",
+    "quietEnd": "Silêncio até",
+    "bgTitle": "Executar em segundo plano",
+    "bgHint": "O HCN tem de estar aberto para avisar a horas. Ligado, o X só esconde a janela na área de notificação; para sair: botão direito no ícone HCN > Sair.",
+    "background": "Continuar na área de notificação ao fechar",
+    "login": "Iniciar com o Windows (oculto)",
+    "androidHint": "No telemóvel, os lembretes são agendados pelo sistema e chegam mesmo com a app fechada ou após reiniciar. Se atrasarem, desative a poupança de bateria para o HCN."
   },
   "settings": {
     "title": "Definições",
@@ -382,9 +406,9 @@
   "wifi": {
     "unavailable": "A sincronização só existe nas apps de PC e Android.",
     "hubHint": "Este PC é o ponto central: telemóveis na mesma rede Wi-Fi enviam e recebem alterações com a app do PC aberta. Os dados não saem da rede local.",
-    "enable": "Permitir sincronização por Wi-Fi",
+    "enable": "Permitir sincronização de telemóveis (Wi-Fi, USB, Bluetooth)",
     "addresses": "Endereço deste PC",
-    "addressesHint": "Introduza este endereço no telemóvel. Se houver vários, use o da mesma rede Wi-Fi (normalmente começa por 192.168).",
+    "addressesHint": "Introduza um destes endereços no telemóvel (ou toque em Procurar PC automaticamente). A etiqueta indica o caminho: Wi-Fi, cabo USB ou Bluetooth.",
     "noAddress": "Este PC não está ligado a Wi-Fi nem a rede com fios.",
     "code": "Código de emparelhamento",
     "codeHint": "Cada código só serve uma vez e muda depois de um telemóvel emparelhar.",
@@ -397,8 +421,8 @@
     "removeTitle": "Remover telemóvel",
     "removeMsg": "{{name}} deixará de sincronizar até voltar a emparelhar. Os dados no telemóvel mantêm-se.",
     "lastSyncLine": "Última sincronização às {{time}}, {{n}} alterações.",
-    "firewall": "Na primeira vez, o Windows pode pedir acesso na firewall para o HCN Work Manage: escolha Permitir em redes Privadas. Telemóvel e PC têm de estar na mesma rede Wi-Fi.",
-    "clientHint": "No PC, abra HCN > Definições > Sincronização, ative-a e introduza aqui o endereço e o código mostrados. Telemóvel e PC na mesma rede Wi-Fi.",
+    "firewall": "Na primeira vez (ou na primeira ligação USB / Bluetooth), o Windows pode pedir acesso na firewall: marque Privada e Pública e Permitir, pois redes USB/Bluetooth costumam ser Públicas.",
+    "clientHint": "No PC, abra HCN > Definições > Sincronização, ative-a e introduza o endereço e o código mostrados. O telemóvel e o PC têm de estar na mesma rede Wi-Fi ou ligados por cabo USB / Bluetooth.",
     "addr": "Endereço do PC",
     "addrPlaceholder": "ex. 192.168.1.5:47821",
     "pairCode": "Código (6 dígitos)",
@@ -422,7 +446,32 @@
       "timeout": "O PC não respondeu a tempo. Tente com melhor sinal Wi-Fi.",
       "schema": "Os aparelhos usam versões de dados diferentes. Atualize a app em ambos.",
       "server": "O PC reportou um erro. Tente mais tarde.",
-      "addr": "Introduza o endereço do PC."
-    }
+      "addr": "Introduza o endereço do PC.",
+      "notFound": "PC não encontrado. Confirme que o HCN está aberto no PC com sincronização ativa e introduza o endereço mostrado."
+    },
+    "kind": {
+      "wifi": "Wi-Fi",
+      "usb": "Cabo USB",
+      "bluetooth": "Bluetooth",
+      "lan": "Cabo / USB"
+    },
+    "tetherTitle": "Sem Wi-Fi? Use cabo USB ou Bluetooth",
+    "tetherHint": "O telemóvel partilha rede com o PC por cabo ou Bluetooth e a sincronização funciona como por Wi-Fi. Não precisa de Internet.",
+    "tetherUsb": "USB: ligue o telemóvel ao PC. No telemóvel: Definições > Ligações/Hotspot e ancoragem > ative Ancoragem USB.",
+    "tetherBt": "Bluetooth: emparelhe primeiro o telemóvel com o PC. No telemóvel ative Ancoragem Bluetooth. No PC: ícone Bluetooth > Aderir a uma Rede de Área Pessoal > escolha o telemóvel > Ligar através de > Ponto de acesso.",
+    "tetherThen": "Depois aparece acima um novo endereço (Cabo USB, Bluetooth ou Cabo / USB). Telemóveis já emparelhados encontram o novo caminho sozinhos.",
+    "discover": "Procurar PC automaticamente",
+    "searching": "A procurar… (até cerca de 30 segundos)",
+    "found": "Encontrado {{name}} ({{addr}}). Introduza o código e toque em Ligar.",
+    "clientTether": "Sem Wi-Fi: ative Ancoragem USB (cabo ao PC) ou Bluetooth nas definições e toque em Procurar PC automaticamente.",
+    "routes": "Caminhos até ao PC"
+  },
+  "rem": {
+    "soon": "Prazo próximo ({{when}}): {{ma}}",
+    "due": "Prazo hoje: {{ma}}",
+    "over": "Atrasada ({{when}}): {{ma}}",
+    "start": "Começa às {{when}}: {{ma}}",
+    "late": "Passou da hora de fim {{when}}: {{ma}}",
+    "summary": "HCN: {{n}} lembretes"
   }
 }

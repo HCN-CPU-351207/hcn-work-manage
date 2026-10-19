@@ -1,11 +1,10 @@
 // Khung ứng dụng: Toolbar, Sub-Nav, trang theo tab, lớp phủ; phím tắt, thông báo, cập nhật
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { todayStr } from './core/dates.ts';
-import { bellItems, derive } from './core/status.ts';
 import i18n from './i18n/index.ts';
 import { useApp } from './store/app.ts';
 import { api } from './lib/devApi.ts';
+import { startReminders } from './lib/reminderRunner.ts';
 import { isTyping } from './lib/hooks.ts';
 import { Toolbar } from './components/Toolbar/Toolbar.tsx';
 import { SubNav } from './components/SubNav/SubNav.tsx';
@@ -19,23 +18,6 @@ import type { Tab } from './core/model.ts';
 
 const TABS: Tab[] = ['overview', 'thang', 'tuan', 'ngay'];
 const t = (k: string, o?: Record<string, unknown>) => i18n.t(k, o) as string;
-
-/** Thông báo Windows: khi khởi động và mỗi 4 giờ, gom Quá hạn + Sắp đến hạn chưa báo trong ngày (mục 12) */
-function runNotify() {
-  const st = useApp.getState();
-  const s = st.settings;
-  if (!s.notificationsEnabled) return;
-  const today = todayStr();
-  const items = bellItems(st.data, derive(st.data, today), today, s.notifyDaysBefore);
-  const already = s.notified?.date === today ? new Set(s.notified.ids) : new Set<string>();
-  const fresh = items.filter((i) => !already.has(i.id));
-  if (!fresh.length) return;
-  const over = fresh.filter((i) => i.kind === 'overdue').length;
-  const soon = fresh.length - over;
-  const names = fresh.slice(0, 3).map((i) => `${i.ma} ${i.ten}`).join(' · ');
-  void api().notify({ title: t('notify.title', { over, soon }), body: names + (fresh.length > 3 ? ' …' : '') });
-  st.setSettings({ notified: { date: today, ids: [...already, ...fresh.map((i) => i.id)] } });
-}
 
 /** Focus ô tìm kiếm ngay trong sự kiện phím (không chờ render) để không lọt ký tự gõ nhanh */
 function focusSearchNow() {
@@ -76,7 +58,6 @@ export function App() {
       if (n?.kind === 'restored-from-backup') st.toast(t('notice.restored', { file: n.backup }), 'info', { ttl: 9000 });
       if (n?.kind === 'corrupt-no-backup') st.toast(t('notice.corrupt', { file: n.corruptFile }), 'error', { ttl: 12000 });
       if (n?.kind === 'migrated') st.toast(t('notice.migrated', { v: n.from }), 'info');
-      window.setTimeout(runNotify, 3000);
     });
     const offUpdate = api().onUpdate((e) => useApp.getState().onUpdateEvent(e));
     const offFlush = api().onFlush(async () => {
@@ -94,7 +75,7 @@ export function App() {
       }
       return false;
     });
-    const iv = window.setInterval(runNotify, 4 * 60 * 60 * 1000);
+    const stopReminders = startReminders();
     const onUnload = () => void useApp.getState().flush();
     window.addEventListener('beforeunload', onUnload);
     return () => {
@@ -102,7 +83,7 @@ export function App() {
       offFlush();
       offExternal();
       offBack();
-      window.clearInterval(iv);
+      stopReminders();
       window.removeEventListener('beforeunload', onUnload);
     };
   }, []);

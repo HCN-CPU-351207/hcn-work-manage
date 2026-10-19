@@ -5,6 +5,7 @@
 import { formatCode, syncCounters } from './codes.ts';
 import type { Prefix } from './codes.ts';
 import type { Data, Ngay, Thang, Tuan } from './model.ts';
+import { mergeReminded } from './reminders.ts';
 
 export type Kind = 'people' | 'thang' | 'tuan' | 'ngay';
 export const KINDS: Kind[] = ['people', 'thang', 'tuan', 'ngay'];
@@ -71,6 +72,9 @@ export function pruneTombs(meta: SyncMeta, now: number): SyncMeta {
 /** Hai bản có cùng nội dung (không xét thứ tự bản ghi; giao diện luôn tự sắp xếp) */
 export function sameData(a: Data, b: Data): boolean {
   if (a === b) return true;
+  const ra = Object.keys(a.reminded ?? {}).sort().join('|');
+  const rb = Object.keys(b.reminded ?? {}).sort().join('|');
+  if (ra !== rb) return false;
   return KINDS.every((k) => {
     const A = recs(a, k);
     const B = recs(b, k);
@@ -218,6 +222,7 @@ export function mergeData(a: Data, am: SyncMeta, b: Data, bm: SyncMeta, now: num
     W: Math.max(a.counters?.W ?? 0, b.counters?.W ?? 0),
     D: Math.max(a.counters?.D ?? 0, b.counters?.D ?? 0)
   };
+  out.reminded = mergeReminded(a.reminded, b.reminded, now);
   const merged: SyncMeta = { v: 1, stamps, tomb };
   const fixed = reconcile(out, merged, bOnly);
   const meta = pruneTombs(sameData(fixed, out) ? merged : stampChanges(out, fixed, merged, now), now);
@@ -256,6 +261,7 @@ export function applyEdit(base: Data, edited: Data, current: Data, meta: SyncMet
     W: Math.max(current.counters?.W ?? 0, edited.counters?.W ?? 0),
     D: Math.max(current.counters?.D ?? 0, edited.counters?.D ?? 0)
   };
+  out.reminded = mergeReminded(current.reminded, edited.reminded, now);
   const stamped = stampChanges(current, out, meta, now);
   const fixed = reconcile(out, stamped, localNew);
   return { data: fixed, meta: stampChanges(out, fixed, stamped, now), patched: true };

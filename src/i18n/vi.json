@@ -290,7 +290,31 @@
     "title": "HCN: {{over}} việc quá hạn, {{soon}} việc sắp đến hạn",
     "enable": "Bật thông báo Windows",
     "days": "Số ngày \"sắp đến hạn\"",
-    "hint": "Khi mở app và mỗi 4 giờ, HCN gửi một thông báo tổng hợp các việc quá hạn và sắp đến hạn chưa được báo trong ngày."
+    "hint": "Khi mở app và mỗi 4 giờ, HCN gửi một thông báo tổng hợp các việc quá hạn và sắp đến hạn chưa được báo trong ngày.",
+    "hint2": "HCN báo đúng mốc cho từng việc. Mỗi mốc chỉ báo một lần, và máy nào đã báo thì máy kia không báo lại sau khi đồng bộ.",
+    "test": "Gửi thử thông báo",
+    "testTitle": "HCN Work Manage",
+    "testBody": "Thông báo đang hoạt động.",
+    "testSent": "Đã gửi thông báo thử. Nếu không thấy, hãy bật thông báo cho HCN trong cài đặt của máy.",
+    "rangeTitle": "Việc Tháng và Tuần",
+    "soon": "Báo trước hạn",
+    "daysUnit": "ngày",
+    "due": "Báo vào ngày đến hạn",
+    "over": "Báo khi đã trễ hạn mà chưa xong",
+    "dayTitle": "Việc Ngày",
+    "dayStart": "Nhắc trước giờ bắt đầu",
+    "leadUnit": "phút",
+    "dayLate": "Báo khi quá giờ kết thúc mà chưa xong",
+    "timeTitle": "Giờ báo",
+    "timeHint": "Các mốc theo ngày (trước hạn, đến hạn, trễ hạn) báo vào giờ buổi sáng. Thông báo rơi vào giờ yên lặng sẽ dời tới lúc hết giờ yên lặng.",
+    "morning": "Giờ báo buổi sáng",
+    "quietStart": "Yên lặng từ",
+    "quietEnd": "Yên lặng đến",
+    "bgTitle": "Chạy nền trên máy tính",
+    "bgHint": "Để nhắc đúng giờ, HCN cần đang chạy. Khi bật, bấm X chỉ ẩn cửa sổ xuống khay hệ thống (cạnh đồng hồ); muốn tắt hẳn: chuột phải biểu tượng HCN > Thoát hẳn.",
+    "background": "Bấm X thì chạy nền ở khay hệ thống",
+    "login": "Tự mở cùng Windows (chạy ẩn)",
+    "androidHint": "Trên điện thoại, nhắc việc được hẹn giờ bằng hệ thống nên vẫn báo khi app đã tắt hoặc sau khi khởi động lại máy. Nếu báo trễ, hãy tắt chế độ tiết kiệm pin cho HCN."
   },
   "settings": {
     "title": "Cài đặt",
@@ -382,9 +406,9 @@
   "wifi": {
     "unavailable": "Đồng bộ chỉ có trong app PC và app Android.",
     "hubHint": "Máy này làm trạm: điện thoại cùng mạng Wi-Fi sẽ gửi và nhận thay đổi khi app PC đang mở. Dữ liệu không đi ra ngoài mạng nội bộ.",
-    "enable": "Cho phép điện thoại đồng bộ qua Wi-Fi",
+    "enable": "Cho phép điện thoại đồng bộ (Wi-Fi, USB, Bluetooth)",
     "addresses": "Địa chỉ của máy này",
-    "addressesHint": "Nhập địa chỉ này trên điện thoại. Có nhiều dòng thì dùng dòng cùng mạng Wi-Fi với điện thoại (thường bắt đầu bằng 192.168).",
+    "addressesHint": "Nhập một trong các địa chỉ này trên điện thoại (hoặc bấm Tìm PC tự động trên điện thoại). Nhãn cho biết đường kết nối: Wi-Fi, Cáp USB hay Bluetooth.",
     "noAddress": "Máy này chưa kết nối mạng Wi-Fi hoặc mạng dây.",
     "code": "Mã ghép đôi",
     "codeHint": "Mỗi mã chỉ dùng được một lần. Sau khi một điện thoại ghép đôi xong, mã tự đổi.",
@@ -397,8 +421,8 @@
     "removeTitle": "Gỡ điện thoại",
     "removeMsg": "{{name}} sẽ không đồng bộ được nữa cho đến khi ghép đôi lại. Dữ liệu trên điện thoại vẫn còn.",
     "lastSyncLine": "Lần đồng bộ gần nhất lúc {{time}}, {{n}} thay đổi.",
-    "firewall": "Lần đầu bật, Windows có thể hỏi quyền tường lửa cho HCN Work Manage: chọn Cho phép (Allow) với mạng Riêng tư (Private). Điện thoại và PC phải cùng một mạng Wi-Fi.",
-    "clientHint": "Trên PC, mở HCN > Cài đặt > Đồng bộ, bật đồng bộ, rồi nhập địa chỉ và mã hiển thị ở đó. Điện thoại và PC phải cùng mạng Wi-Fi.",
+    "firewall": "Lần đầu bật (hoặc khi cắm USB / Bluetooth lần đầu), Windows có thể hỏi quyền tường lửa cho HCN Work Manage: tích cả Riêng tư (Private) và Công cộng (Public) rồi chọn Cho phép (Allow), vì mạng USB/Bluetooth thường được Windows xếp vào Công cộng.",
+    "clientHint": "Trên PC, mở HCN > Cài đặt > Đồng bộ, bật đồng bộ, rồi nhập địa chỉ và mã hiển thị ở đó. Điện thoại và PC cần cùng mạng Wi-Fi, hoặc nối với nhau qua cáp USB / Bluetooth.",
     "addr": "Địa chỉ PC",
     "addrPlaceholder": "vd. 192.168.1.5:47821",
     "pairCode": "Mã ghép đôi (6 số)",
@@ -422,7 +446,32 @@
       "timeout": "PC không phản hồi kịp. Thử lại khi tín hiệu Wi-Fi tốt hơn.",
       "schema": "Hai máy dùng phiên bản dữ liệu khác nhau. Cập nhật app trên cả hai máy.",
       "server": "PC báo lỗi khi đồng bộ. Thử lại sau.",
-      "addr": "Nhập địa chỉ PC."
-    }
+      "addr": "Nhập địa chỉ PC.",
+      "notFound": "Không tìm thấy PC. Kiểm tra PC đang mở HCN và đã bật đồng bộ, rồi nhập địa chỉ hiện trên PC."
+    },
+    "kind": {
+      "wifi": "Wi-Fi",
+      "usb": "Cáp USB",
+      "bluetooth": "Bluetooth",
+      "lan": "Mạng dây / USB"
+    },
+    "tetherTitle": "Không có Wi-Fi? Dùng cáp USB hoặc Bluetooth",
+    "tetherHint": "Điện thoại chia sẻ mạng cho PC qua cáp hoặc Bluetooth, sau đó đồng bộ như qua Wi-Fi. Không cần Internet.",
+    "tetherUsb": "USB: cắm cáp điện thoại vào PC. Trên điện thoại: Cài đặt > Kết nối & chia sẻ (hoặc Điểm phát sóng & chia sẻ) > bật Chia sẻ kết nối qua USB.",
+    "tetherBt": "Bluetooth: ghép đôi Bluetooth điện thoại với PC trước. Trên điện thoại bật Chia sẻ kết nối qua Bluetooth. Trên PC: biểu tượng Bluetooth ở khay > Tham gia mạng cá nhân (Join a Personal Area Network) > chọn điện thoại > Kết nối bằng > Điểm truy cập.",
+    "tetherThen": "Sau đó địa chỉ mới sẽ hiện ở trên (nhãn Cáp USB, Bluetooth hoặc Mạng dây / USB). Điện thoại đã ghép đôi thì tự tìm ra đường mới, không cần nhập lại.",
+    "discover": "Tìm PC tự động",
+    "searching": "Đang tìm PC… (tối đa khoảng 30 giây)",
+    "found": "Đã tìm thấy {{name}} ({{addr}}). Nhập mã ghép đôi rồi bấm Kết nối.",
+    "clientTether": "Không có Wi-Fi: bật Chia sẻ kết nối qua USB (cắm cáp vào PC) hoặc qua Bluetooth trong cài đặt điện thoại, rồi bấm Tìm PC tự động.",
+    "routes": "Các đường tới PC"
+  },
+  "rem": {
+    "soon": "Sắp đến hạn ({{when}}): {{ma}}",
+    "due": "Đến hạn hôm nay: {{ma}}",
+    "over": "Đã trễ hạn ({{when}}): {{ma}}",
+    "start": "Sắp bắt đầu lúc {{when}}: {{ma}}",
+    "late": "Quá giờ kết thúc {{when}}: {{ma}}",
+    "summary": "HCN: {{n}} nhắc việc"
   }
 }

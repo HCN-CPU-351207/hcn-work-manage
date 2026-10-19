@@ -49,6 +49,8 @@ export function createDevApi(seed?: Partial<LoadResult>): HcnApi {
       window.open(url, '_blank');
     },
     async notify() {},
+    async scheduleReminders() {},
+    onOpenTask: () => () => {},
     async checkUpdates() {},
     async installUpdate() {},
     async setAutoDownload() {},

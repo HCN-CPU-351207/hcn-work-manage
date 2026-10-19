@@ -5,7 +5,7 @@ import { countDiff, initMeta, isMeta } from '../src/core/sync.ts';
 import type { SyncMeta } from '../src/core/sync.ts';
 import type { SaveResult, SyncAction, SyncActionResult, SyncInfo } from '../src/core/api.ts';
 import { emptySyncInfo } from '../src/core/api.ts';
-import { createSyncServer, DEFAULT_PORT, lanAddresses } from './syncServer.ts';
+import { createSyncServer, DEFAULT_PORT, lanLinks } from './syncServer.ts';
 import type { SyncDevice } from './syncServer.ts';
 
 export interface HubFile {
@@ -87,7 +87,8 @@ export function createHubController(initialData: Data, deps: HubDeps) {
     ...emptySyncInfo('hub'),
     enabled: file.hub.enabled && server.running,
     port: server.port,
-    addresses: server.running ? lanAddresses() : [],
+    addresses: server.running ? lanLinks().map((l) => l.address) : [],
+    links: server.running ? lanLinks() : [],
     pairCode: server.running ? server.pairCode : null,
     devices: file.hub.devices.map(({ id, name, pairedAt, lastSeen }) => ({ id, name, pairedAt, lastSeen })),
     lastSync,

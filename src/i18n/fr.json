@@ -290,7 +290,31 @@
     "title": "HCN : {{over}} en retard, {{soon}} bientôt dues",
     "enable": "Notifications Windows",
     "days": "Jours « bientôt dues »",
-    "hint": "Au lancement et toutes les 4 heures, HCN envoie un résumé des tâches en retard et bientôt dues non encore notifiées aujourd'hui."
+    "hint": "Au lancement et toutes les 4 heures, HCN envoie un résumé des tâches en retard et bientôt dues non encore notifiées aujourd'hui.",
+    "hint2": "HCN notifie à chaque étape de chaque tâche. Chaque rappel n'apparaît qu'une fois et l'autre appareil ne le répète pas après synchro.",
+    "test": "Envoyer une notification test",
+    "testTitle": "HCN Work Manage",
+    "testBody": "Les notifications fonctionnent.",
+    "testSent": "Test envoyé. Si rien n'apparaît, autorisez les notifications de HCN dans les réglages système.",
+    "rangeTitle": "Tâches mensuelles et hebdomadaires",
+    "soon": "Rappel avant l'échéance",
+    "daysUnit": "jours",
+    "due": "Rappel le jour de l'échéance",
+    "over": "Alerter en cas de retard non terminé",
+    "dayTitle": "Tâches quotidiennes",
+    "dayStart": "Rappel avant l'heure de début",
+    "leadUnit": "minutes",
+    "dayLate": "Alerter si l'heure de fin est dépassée",
+    "timeTitle": "Horaires",
+    "timeHint": "Les rappels par jour (avant, le jour et après l'échéance) arrivent à l'heure du matin. Ceux tombant dans les heures calmes attendent leur fin.",
+    "morning": "Heure du matin",
+    "quietStart": "Calme à partir de",
+    "quietEnd": "Calme jusqu'à",
+    "bgTitle": "Exécution en arrière-plan",
+    "bgHint": "HCN doit tourner pour rappeler à l'heure. Activé, X masque la fenêtre dans la zone de notification ; pour quitter : clic droit sur l'icône HCN > Quitter.",
+    "background": "Rester dans la zone de notification à la fermeture",
+    "login": "Démarrer avec Windows (masqué)",
+    "androidHint": "Sur le téléphone, les rappels sont programmés par le système : ils arrivent même appli fermée ou après redémarrage. S'ils sont en retard, désactivez l'économie de batterie pour HCN."
   },
   "settings": {
     "title": "Paramètres",
@@ -382,9 +406,9 @@
   "wifi": {
     "unavailable": "La synchronisation n'existe que dans les applis PC et Android.",
     "hubHint": "Ce PC sert de relais : les téléphones sur le même Wi-Fi envoient et reçoivent les modifications quand l'appli PC est ouverte. Les données restent sur le réseau local.",
-    "enable": "Autoriser la synchro des téléphones par Wi-Fi",
+    "enable": "Autoriser la synchro des téléphones (Wi-Fi, USB, Bluetooth)",
     "addresses": "Adresse de ce PC",
-    "addressesHint": "Saisissez cette adresse sur le téléphone. S'il y en a plusieurs, prenez celle du même Wi-Fi (souvent 192.168…).",
+    "addressesHint": "Saisissez une de ces adresses sur le téléphone (ou touchez Trouver le PC automatiquement). L'étiquette indique la route : Wi-Fi, câble USB ou Bluetooth.",
     "noAddress": "Ce PC n'est connecté à aucun réseau Wi-Fi ou filaire.",
     "code": "Code d'appairage",
     "codeHint": "Chaque code ne sert qu'une fois ; il change après l'appairage d'un téléphone.",
@@ -397,8 +421,8 @@
     "removeTitle": "Retirer le téléphone",
     "removeMsg": "{{name}} ne pourra plus se synchroniser avant un nouvel appairage. Ses données restent sur le téléphone.",
     "lastSyncLine": "Dernière synchro à {{time}}, {{n}} modifications.",
-    "firewall": "La première fois, Windows peut demander l'accès pare-feu pour HCN Work Manage : choisissez Autoriser pour les réseaux privés. Le téléphone et le PC doivent être sur le même Wi-Fi.",
-    "clientHint": "Sur le PC, ouvrez HCN > Paramètres > Synchronisation, activez-la, puis saisissez ici l'adresse et le code affichés. Même Wi-Fi obligatoire.",
+    "firewall": "La première fois (ou à la première connexion USB / Bluetooth), Windows peut demander l'accès pare-feu : cochez Privé et Public puis Autoriser, car les réseaux USB/Bluetooth sont souvent classés Publics.",
+    "clientHint": "Sur le PC, ouvrez HCN > Paramètres > Synchro, activez-la, puis saisissez l'adresse et le code affichés. Le téléphone et le PC doivent partager le Wi-Fi ou être reliés par câble USB / Bluetooth.",
     "addr": "Adresse du PC",
     "addrPlaceholder": "ex. 192.168.1.5:47821",
     "pairCode": "Code (6 chiffres)",
@@ -422,7 +446,32 @@
       "timeout": "Le PC n'a pas répondu à temps. Réessayez avec un meilleur signal Wi-Fi.",
       "schema": "Les appareils utilisent des versions de données différentes. Mettez l'appli à jour sur les deux.",
       "server": "Le PC a signalé une erreur. Réessayez plus tard.",
-      "addr": "Saisissez l'adresse du PC."
-    }
+      "addr": "Saisissez l'adresse du PC.",
+      "notFound": "PC introuvable. Vérifiez que HCN est ouvert sur le PC avec la synchro activée, puis saisissez l'adresse affichée."
+    },
+    "kind": {
+      "wifi": "Wi-Fi",
+      "usb": "Câble USB",
+      "bluetooth": "Bluetooth",
+      "lan": "Filaire / USB"
+    },
+    "tetherTitle": "Pas de Wi-Fi ? Utilisez un câble USB ou le Bluetooth",
+    "tetherHint": "Le téléphone partage un réseau avec le PC par câble ou Bluetooth, puis la synchro fonctionne comme en Wi-Fi. Pas besoin d'Internet.",
+    "tetherUsb": "USB : branchez le téléphone au PC. Sur le téléphone : Paramètres > Connexions/Point d'accès et partage > activez le partage de connexion USB.",
+    "tetherBt": "Bluetooth : appairez d'abord le téléphone avec le PC. Sur le téléphone activez le partage Bluetooth. Sur le PC : icône Bluetooth > Rejoindre un réseau personnel > choisissez le téléphone > Se connecter via > Point d'accès.",
+    "tetherThen": "Une nouvelle adresse apparaît alors ci-dessus (Câble USB, Bluetooth ou Filaire / USB). Les téléphones déjà appairés trouvent seuls la nouvelle route.",
+    "discover": "Trouver le PC automatiquement",
+    "searching": "Recherche… (jusqu'à environ 30 secondes)",
+    "found": "{{name}} trouvé ({{addr}}). Saisissez le code et touchez Connecter.",
+    "clientTether": "Pas de Wi-Fi : activez le partage USB (câble au PC) ou Bluetooth dans les réglages, puis touchez Trouver le PC automatiquement.",
+    "routes": "Routes vers le PC"
+  },
+  "rem": {
+    "soon": "Échéance proche ({{when}}) : {{ma}}",
+    "due": "Échéance aujourd'hui : {{ma}}",
+    "over": "En retard ({{when}}) : {{ma}}",
+    "start": "Commence à {{when}} : {{ma}}",
+    "late": "Heure de fin {{when}} dépassée : {{ma}}",
+    "summary": "HCN : {{n}} rappels"
   }
 }

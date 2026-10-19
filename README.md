@@ -20,17 +20,33 @@ Electron 44 · Capacitor 8 · Vite · React 18 + TypeScript strict · Zustand ·
 
 Yêu cầu Android 7 trở lên (khuyến nghị Android 10+, WebView cập nhật).
 
-## Đồng bộ PC ↔ điện thoại qua Wi-Fi
+## Đồng bộ PC ↔ điện thoại (Wi-Fi, cáp USB, Bluetooth)
 
-PC làm trạm; điện thoại tự đồng bộ khi **cùng mạng Wi-Fi** và **app PC đang mở**. Dữ liệu không đi ra ngoài mạng nội bộ, không cần tài khoản.
+PC làm trạm; điện thoại tự đồng bộ khi **app PC đang mở** và hai máy nối với nhau bằng **cùng Wi-Fi**, **cáp USB** hoặc **Bluetooth**. Dữ liệu không đi ra Internet, không cần tài khoản.
 
-1. Trên PC: **Cài đặt > Đồng bộ** → bật **Cho phép điện thoại đồng bộ qua Wi-Fi**. Lần đầu Windows hỏi tường lửa: chọn **Allow** cho mạng **Private** (cần quyền Admin cho bước này; nếu không có, nhờ người quản trị máy bấm Allow).
-2. PC hiện **địa chỉ** (vd. `192.168.1.12:47821`) và **mã ghép đôi 6 số**.
-3. Trên điện thoại: **Cài đặt > Đồng bộ** → nhập địa chỉ và mã → **Kết nối**. Dữ liệu PC về điện thoại ngay.
-4. Từ đó điện thoại tự đồng bộ khi mở app, sau mỗi thay đổi (khoảng 3 giây) và mỗi 30 giây. Ra khỏi Wi-Fi vẫn dùng bình thường; về lại sẽ tự gộp.
+1. Trên PC: **Cài đặt > Đồng bộ** → bật **Cho phép điện thoại đồng bộ**. Lần đầu Windows hỏi tường lửa: tích cả **Private** và **Public** rồi **Allow** (mạng USB/Bluetooth thường bị xếp vào Public; bước này cần quyền Admin).
+2. PC hiện các **địa chỉ** kèm nhãn đường kết nối (Wi-Fi / Cáp USB / Bluetooth) và **mã ghép đôi 6 số**.
+3. Trên điện thoại: **Cài đặt > Đồng bộ** → bấm **Tìm PC tự động** (hoặc gõ địa chỉ) → nhập mã → **Kết nối**.
+4. Từ đó điện thoại tự đồng bộ khi mở app, sau mỗi thay đổi (khoảng 3 giây) và mỗi 30 giây. Điện thoại nhớ mọi địa chỉ của PC nên tự chuyển Wi-Fi ↔ USB ↔ Bluetooth, không cần ghép lại.
+
+**Không có Wi-Fi?** Dùng chia sẻ mạng của điện thoại (không tốn dữ liệu di động cho việc đồng bộ):
+- **Cáp USB:** cắm điện thoại vào PC → trên điện thoại: Cài đặt > Kết nối & chia sẻ (Điểm phát sóng & chia sẻ) → bật **Chia sẻ kết nối qua USB**.
+- **Bluetooth:** ghép đôi Bluetooth điện thoại với PC → trên điện thoại bật **Chia sẻ kết nối qua Bluetooth** → trên PC: biểu tượng Bluetooth ở khay → **Join a Personal Area Network** → chọn điện thoại → **Connect using > Access point**.
 
 Cách gộp: so từng việc, **bản sửa sau cùng thắng**; việc đã xóa không sống lại; hai máy cùng tạo một mã (vd. M008) thì bản của điện thoại được đánh mã mới; việc con của việc bị xóa ở máy kia cũng bị xóa theo.
 Vì so theo giờ sửa, hãy để đồng hồ PC và điện thoại ở chế độ tự động. Nhiều điện thoại có thể ghép với cùng một PC; gỡ điện thoại trong danh sách trên PC là nó không đồng bộ được nữa.
+
+## Thông báo trễ hạn
+
+Bật trong **Cài đặt > Thông báo**:
+- **Việc Tháng/Tuần:** báo trước hạn N ngày, báo vào ngày đến hạn, báo khi đã trễ mà chưa xong.
+- **Việc Ngày:** nhắc trước giờ bắt đầu N phút, báo khi quá giờ kết thúc mà chưa xong.
+- **Giờ báo buổi sáng** cho các mốc theo ngày, và **giờ yên lặng** (thông báo rơi vào đó sẽ dời đến khi hết).
+- Mỗi mốc chỉ báo một lần; máy nào đã báo thì máy kia không báo lại sau khi đồng bộ. Bấm vào thông báo để mở đúng việc.
+
+**Điện thoại:** nhắc việc được hẹn giờ bằng hệ thống, nên vẫn báo khi đã tắt app hoặc sau khi khởi động lại máy. Lần đầu hãy **cho phép thông báo** (và *Báo thức & lời nhắc* nếu Android hỏi). Nếu báo trễ, tắt chế độ tiết kiệm pin cho HCN.
+
+**Máy tính:** HCN cần đang chạy để nhắc. Mặc định bấm **X** chỉ ẩn xuống **khay hệ thống** (cạnh đồng hồ); tắt hẳn bằng chuột phải biểu tượng HCN > **Thoát hẳn**. Bật **Tự mở cùng Windows** để HCN chạy ẩn ngay khi đăng nhập.
 
 ## Tự build trên máy Windows
 

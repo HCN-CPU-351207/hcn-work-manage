@@ -63,7 +63,7 @@ export function SettingsDialog() {
   );
 }
 
-function Block({ title, hint, children }: { title?: string; hint?: ReactNode; children: ReactNode }) {
+function Block({ title, hint, children }: { title?: string; hint?: ReactNode; children?: ReactNode }) {
   return (
     <div className="set-block">
       {title && <h4>{title}</h4>}
@@ -340,17 +340,71 @@ function UpdateSection() {
 
 function NotifySection() {
   const { t } = useTranslation();
-  const on = useApp((s) => s.settings.notificationsEnabled);
-  const days = useApp((s) => s.settings.notifyDaysBefore);
-  const setSettings = useApp((s) => s.setSettings);
+  const s = useApp((st) => st.settings);
+  const setSettings = useApp((st) => st.setSettings);
+  const toast = useApp((st) => st.toast);
+  const num = (v: string, min: number, max: number, dflt: number) => Math.max(min, Math.min(max, Number(v) || dflt));
+  const off = !s.notificationsEnabled;
   return (
-    <Block hint={t('notify.hint')}>
-      <Toggle label={t('notify.enable')} checked={on} onChange={(v) => setSettings({ notificationsEnabled: v })} />
-      <label className="field narrow">
-        <span>{t('notify.days')}</span>
-        <input type="number" min={1} max={30} value={days} onChange={(e) => setSettings({ notifyDaysBefore: Math.max(1, Math.min(30, Number(e.target.value) || 3)) })} />
-      </label>
-    </Block>
+    <>
+      <Block hint={t('notify.hint2')}>
+        <Toggle label={t('notify.enable')} checked={s.notificationsEnabled} onChange={(v) => setSettings({ notificationsEnabled: v })} />
+        <div className="btn-row">
+          <button
+            className="btn btn-sm"
+            disabled={off}
+            onClick={() => {
+              void api().notify({ title: t('notify.testTitle'), body: t('notify.testBody') });
+              toast(t('notify.testSent'), 'ok');
+            }}
+          >
+            {t('notify.test')}
+          </button>
+        </div>
+      </Block>
+      <fieldset className="set-group" disabled={off}>
+        <Block title={t('notify.rangeTitle')}>
+          <div className="toggle-num">
+            <Toggle label={t('notify.soon')} checked={s.notifySoon} onChange={(v) => setSettings({ notifySoon: v })} />
+            <input type="number" min={1} max={30} value={s.notifyDaysBefore} aria-label={t('notify.days')} onChange={(e) => setSettings({ notifyDaysBefore: num(e.target.value, 1, 30, 3) })} />
+            <span className="unit">{t('notify.daysUnit')}</span>
+          </div>
+          <Toggle label={t('notify.due')} checked={s.notifyDue} onChange={(v) => setSettings({ notifyDue: v })} />
+          <Toggle label={t('notify.over')} checked={s.notifyOverdue} onChange={(v) => setSettings({ notifyOverdue: v })} />
+        </Block>
+        <Block title={t('notify.dayTitle')}>
+          <div className="toggle-num">
+            <Toggle label={t('notify.dayStart')} checked={s.notifyDayStart} onChange={(v) => setSettings({ notifyDayStart: v })} />
+            <input type="number" min={0} max={240} value={s.notifyDayLeadMin} aria-label={t('notify.leadUnit')} onChange={(e) => setSettings({ notifyDayLeadMin: num(e.target.value, 0, 240, 10) })} />
+            <span className="unit">{t('notify.leadUnit')}</span>
+          </div>
+          <Toggle label={t('notify.dayLate')} checked={s.notifyDayLate} onChange={(v) => setSettings({ notifyDayLate: v })} />
+        </Block>
+        <Block title={t('notify.timeTitle')} hint={t('notify.timeHint')}>
+          <div className="field-row narrow-row">
+            <label className="field">
+              <span>{t('notify.morning')}</span>
+              <input type="time" value={s.notifyMorning} onChange={(e) => e.target.value && setSettings({ notifyMorning: e.target.value })} />
+            </label>
+            <label className="field">
+              <span>{t('notify.quietStart')}</span>
+              <input type="time" value={s.quietStart} onChange={(e) => e.target.value && setSettings({ quietStart: e.target.value })} />
+            </label>
+            <label className="field">
+              <span>{t('notify.quietEnd')}</span>
+              <input type="time" value={s.quietEnd} onChange={(e) => e.target.value && setSettings({ quietEnd: e.target.value })} />
+            </label>
+          </div>
+        </Block>
+      </fieldset>
+      {api().platform === 'electron' && (
+        <Block title={t('notify.bgTitle')} hint={t('notify.bgHint')}>
+          <Toggle label={t('notify.background')} checked={s.runInBackground} onChange={(v) => setSettings({ runInBackground: v })} />
+          <Toggle label={t('notify.login')} checked={s.launchAtLogin} onChange={(v) => setSettings({ launchAtLogin: v })} />
+        </Block>
+      )}
+      {api().platform === 'android' && <Block hint={t('notify.androidHint')} />}
+    </>
   );
 }
 

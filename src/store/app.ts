@@ -226,7 +226,7 @@ export const useApp = create<AppState>()((set, get) => {
     async init() {
       try {
         const r = await api().loadAll();
-        set({ data: r.data, settings: r.settings, info: r.info, notice: r.notice, rev: r.rev ?? 0, ready: true });
+        set({ data: r.data, settings: { ...defaultSettings(), ...r.settings }, info: r.info, notice: r.notice, rev: r.rev ?? 0, ready: true });
       } catch (e) {
         set({ loadError: (e as Error).message, ready: true });
       }

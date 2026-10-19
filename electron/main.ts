@@ -1,10 +1,10 @@
 // Tiến trình chính: cửa sổ, single-instance, menu, IPC, updater
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, shell, Tray } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Data, Settings } from '../src/core/model.ts';
 import { toBackup } from '../src/core/model.ts';
-import type { LoadNotice, LoadResult, Result, SaveResult, SheetSpec, SyncAction, UpdateEvent } from '../src/core/api.ts';
+import type { LoadNotice, LoadResult, NotifyArgs, Result, SaveResult, SheetSpec, SyncAction, UpdateEvent } from '../src/core/api.ts';
 import { MigrationError } from '../src/core/migrate.ts';
 import { writeWorkbook } from './excel.ts';
 import { createLogger } from './logger.ts';
@@ -41,6 +41,56 @@ let notice: LoadNotice = { kind: 'ok' };
 let updater: ReturnType<typeof createUpdater> | null = null;
 let forceClose = false;
 let hubCtl: HubController;
+let tray: Tray | null = null;
+let quitting = false;
+let bgHintShown = false;
+const startHidden = process.argv.includes('--hidden');
+const iconPath = path.join(__dirname, '..', 'build', 'icon.png');
+const tr = (vi: string, en: string) => (settings?.language === 'vi' || !settings ? vi : en);
+
+function showWindow(): void {
+  if (!win) return;
+  if (win.isMinimized()) win.restore();
+  win.show();
+  win.focus();
+}
+
+/** Khay hệ thống: chỉ có khi bật "chạy nền" */
+function applyBackgroundSettings(): void {
+  if (settings.runInBackground && !tray && fs.existsSync(iconPath)) {
+    tray = new Tray(nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 }));
+    tray.setToolTip('HCN Work Manage');
+    tray.on('click', showWindow);
+  }
+  if (tray) {
+    if (!settings.runInBackground) {
+      tray.destroy();
+      tray = null;
+    } else {
+      tray.setContextMenu(
+        Menu.buildFromTemplate([
+          { label: tr('Mở HCN Work Manage', 'Open HCN Work Manage'), click: showWindow },
+          { type: 'separator' },
+          {
+            label: tr('Thoát hẳn', 'Quit'),
+            click: () => {
+              quitting = true;
+              app.quit();
+            }
+          }
+        ])
+      );
+    }
+  }
+  // Tự mở cùng Windows (ẩn xuống khay)
+  if (app.isPackaged) {
+    try {
+      app.setLoginItemSettings({ openAtLogin: !!settings.launchAtLogin, args: ['--hidden'] });
+    } catch (e) {
+      log.error('Không đặt được tự mở cùng Windows', e);
+    }
+  }
+}
 
 const send = (channel: string, payload?: unknown) => {
   if (win && !win.isDestroyed()) win.webContents.send(channel, payload);
@@ -49,12 +99,7 @@ const send = (channel: string, payload?: unknown) => {
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
-    if (win) {
-      if (win.isMinimized()) win.restore();
-      win.focus();
-    }
-  });
+  app.on('second-instance', () => showWindow());
   app.whenReady().then(boot).catch((e) => fatal(e));
 }
 
@@ -104,6 +149,7 @@ function boot(): void {
   buildMenu();
   registerIpc();
   createWindow();
+  applyBackgroundSettings();
   void hubCtl.startIfEnabled();
 
   updater = createUpdater({
@@ -133,13 +179,13 @@ function boot(): void {
 
   app.on('window-all-closed', () => app.quit());
   app.on('before-quit', () => {
+    quitting = true;
     updater?.stop();
     void hubCtl?.stop();
   });
 }
 
 function createWindow(): void {
-  const iconPath = path.join(__dirname, '..', 'build', 'icon.png');
   win = new BrowserWindow({
     width: 1320,
     height: 840,
@@ -155,10 +201,15 @@ function createWindow(): void {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
-      spellcheck: false
+      spellcheck: false,
+      // vẫn đếm giờ nhắc việc khi cửa sổ ẩn xuống khay
+      backgroundThrottling: false
     }
   });
-  win.once('ready-to-show', () => win?.show());
+  win.once('ready-to-show', () => {
+    // mở cùng Windows (--hidden) và đang bật chạy nền: nằm ở khay, không hiện cửa sổ
+    if (!(startHidden && settings.runInBackground)) win?.show();
+  });
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//.test(url)) void shell.openExternal(url);
     return { action: 'deny' };
@@ -171,6 +222,20 @@ function createWindow(): void {
   win.on('close', (e) => {
     if (forceClose) return;
     e.preventDefault();
+    // Chạy nền: bấm X chỉ ẩn cửa sổ để vẫn nhắc việc đúng giờ
+    if (!quitting && settings.runInBackground && tray) {
+      send('hcn:flush');
+      win?.hide();
+      if (!bgHintShown) {
+        bgHintShown = true;
+        showNotification(
+          tr('HCN vẫn đang chạy', 'HCN is still running'),
+          tr('App nằm ở khay hệ thống để nhắc việc đúng giờ. Bấm chuột phải biểu tượng HCN > Thoát hẳn để tắt.', 'The app stays in the system tray to send reminders. Right-click the HCN icon > Quit to exit.'),
+          showWindow
+        );
+      }
+      return;
+    }
     let done = false;
     const finish = () => {
       if (done) return;
@@ -269,6 +334,7 @@ function registerIpc(): void {
     try {
       storage.saveSettings(s);
       settings = s;
+      applyBackgroundSettings();
       return { ok: true };
     } catch (e) {
       log.error('Lỗi ghi settings.json', e);
@@ -344,12 +410,10 @@ function registerIpc(): void {
   ipcMain.handle('hcn:openExternal', async (_e, url: string) => {
     if (/^https:\/\//.test(url)) await shell.openExternal(url);
   });
-  ipcMain.handle('hcn:notify', (_e, a: { title: string; body: string }) => {
+  ipcMain.handle('hcn:notify', (_e, a: NotifyArgs) => {
     showNotification(a.title, a.body, () => {
-      if (win) {
-        if (win.isMinimized()) win.restore();
-        win.focus();
-      }
+      showWindow();
+      if (a.level && a.id) send('hcn:openTask', { level: a.level, id: a.id });
     });
   });
   ipcMain.handle('hcn:syncInfo', () => hubCtl.info());
