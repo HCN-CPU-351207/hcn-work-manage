@@ -1,0 +1,40 @@
+name: Build HCN (Windows .exe)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm test
+      - run: npm run typecheck
+        continue-on-error: true
+      # Tạo file cài đặt trong thư mục release/
+      - run: npm run dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HCN-Setup
+          path: |
+            release/HCN-Setup-*.exe
+            release/HCN-Setup-*.exe.blockmap
+            release/latest.yml
+      # Khi đẩy tag (ví dụ v1.0.0): đính kèm vào GitHub Release để electron-updater tải được
+      - name: Publish release assets
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/HCN-Setup-*.exe
+            release/HCN-Setup-*.exe.blockmap
+            release/latest.yml

@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "A carregar dados…",
+    "loadError": "Não foi possível ler os dados"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "ok": "OK",
+    "close": "Fechar",
+    "clear": "Limpar",
+    "undo": "Desfazer",
+    "prev": "Anterior",
+    "next": "Seguinte",
+    "today": "Hoje",
+    "thisWeek": "Esta semana",
+    "thisMonth": "Este mês",
+    "untitled": "(sem nome)"
+  },
+  "tabs": {
+    "label": "Páginas",
+    "overview": "Visão geral",
+    "thang": "Mensais",
+    "tuan": "Semanais",
+    "ngay": "Diárias"
+  },
+  "level": {
+    "thang": "Tarefa mensal",
+    "tuan": "Tarefa semanal",
+    "ngay": "Tarefa diária"
+  },
+  "levelShort": {
+    "thang": "Mês",
+    "tuan": "Semana",
+    "ngay": "Dia"
+  },
+  "status": {
+    "todo": "Por fazer",
+    "doing": "Em curso",
+    "done": "Concluída",
+    "overdue": "Atrasada"
+  },
+  "loai": {
+    "ui": "Urgente - Importante",
+    "un": "Urgente - Não importante",
+    "ni": "Não urgente - Importante",
+    "nn": "Não urgente - Não importante"
+  },
+  "weekday": {
+    "0": "Seg",
+    "1": "Ter",
+    "2": "Qua",
+    "3": "Qui",
+    "4": "Sex",
+    "5": "Sáb",
+    "6": "Dom"
+  },
+  "person": {
+    "unassigned": "Sem responsável"
+  },
+  "toolbar": {
+    "search": "Pesquisar",
+    "searchPlaceholder": "Pesquisar código, tarefa, pessoa… ou /",
+    "quick": "Criar"
+  },
+  "search": {
+    "commands": "Comandos",
+    "noCommand": "Nenhum comando encontrado",
+    "noResults": "Nenhuma tarefa encontrada",
+    "filtering": "A tabela está filtrada pela pesquisa. Escolha um resultado para saltar até ele.",
+    "slashTip": "Escreva / para {{n}} comandos"
+  },
+  "cmd": {
+    "create": "Abrir criação rápida",
+    "today": "Tarefas de hoje",
+    "overdue": "Tarefas atrasadas",
+    "duesoon": "A vencer em breve",
+    "mine": "As minhas tarefas",
+    "export": "Exportar tudo para Excel",
+    "backup": "Cópia de segurança .json",
+    "restore": "Restaurar de .json",
+    "theme": "Alternar Escuro / Claro",
+    "language": "Mudar idioma",
+    "settings": "Abrir definições"
+  },
+  "quick": {
+    "today": "Hoje",
+    "overdue": "Atrasadas",
+    "duesoon": "A vencer",
+    "mine": "As minhas"
+  },
+  "sync": {
+    "saved": "Guardado",
+    "pending": "A guardar…",
+    "error": "Falha ao guardar",
+    "errorDetail": "Falha ao gravar: {{msg}}. As alterações ficam em memória e serão repetidas."
+  },
+  "bell": {
+    "title": "Notificações",
+    "empty": "Nada atrasado ou a vencer",
+    "overdue": "Atrasadas ({{n}})",
+    "soon": "A vencer em {{d}} dias ({{n}})",
+    "due": "Prazo {{date}}"
+  },
+  "views": {
+    "add": "Guardar filtro",
+    "namePlaceholder": "Nome do filtro",
+    "needFilter": "Defina um filtro ou pesquisa primeiro",
+    "saved": "Filtro \"{{name}}\" guardado",
+    "remove": "Remover filtro {{name}}"
+  },
+  "metric": {
+    "total": "Total",
+    "doing": "Em curso",
+    "overdue": "Atrasadas",
+    "done": "Concluídas",
+    "subTotal": "Tarefas mensais",
+    "subPct": "{{p}}% do total",
+    "open": "Ver lista"
+  },
+  "gantt": {
+    "code": "Código",
+    "hint": "Clique num dia para ver a linha de 24 horas",
+    "openDay": "Abrir a linha deste dia",
+    "noPlan": "Sem datas previstas",
+    "emptyMonth": "Sem tarefas neste mês",
+    "emptyWeek": "Sem tarefas semanais nesta semana",
+    "backMonth": "Voltar ao mês",
+    "backWeek": "Voltar à semana"
+  },
+  "timeline": {
+    "title": "Linha de {{date}}",
+    "unscheduled": "Sem horário",
+    "trayEmpty": "Tudo tem horário",
+    "trayHint": "Clique para definir o horário",
+    "empty": "Sem tarefas com horário neste dia",
+    "totals": "Previsto {{p}} · Real {{a}}",
+    "from": "De",
+    "to": "Até",
+    "zoom": "Zoom",
+    "zoomIn": "Aumentar",
+    "zoomOut": "Diminuir",
+    "nTasks": "{{n}} tarefas"
+  },
+  "tip": {
+    "plan": "Previsto",
+    "actual": "Real",
+    "running": "em curso",
+    "diff": "Diferença {{v}}",
+    "conflict": "Sobrepõe-se a outra tarefa",
+    "hint": "Clique para fixar · Duplo clique para abrir",
+    "open": "Abrir detalhes"
+  },
+  "col": {
+    "ma": "Código",
+    "loai": "Tipo",
+    "task": "Tarefa",
+    "content": "Conteúdo",
+    "person": "Responsável",
+    "planStart": "Início previsto",
+    "planDeadline": "Prazo previsto",
+    "actualStart": "Início real",
+    "actualEnd": "Fim real",
+    "status": "Estado",
+    "progress": "Progresso",
+    "note": "Notas",
+    "parentThang": "Mês pai",
+    "parentTuan": "Semana pai",
+    "date": "Data",
+    "planTime": "Hora prevista",
+    "actualTime": "Hora real"
+  },
+  "grid": {
+    "selectAll": "Selecionar tudo",
+    "selectRow": "Selecionar {{ma}}",
+    "actions": "Ações",
+    "autoStatus": "Calculado a partir das subtarefas",
+    "dblEdit": "Duplo clique para editar",
+    "runningDays": "em curso há {{n}} dias"
+  },
+  "qa": {
+    "start": "Iniciar",
+    "end": "Terminar",
+    "reset": "Repor",
+    "edit": "Editar",
+    "delete": "Eliminar"
+  },
+  "card": {
+    "plan": "Prev.",
+    "actual": "Real"
+  },
+  "swipe": {
+    "title": "Concluir rápido",
+    "completeAll": "Concluir todas as subtarefas?"
+  },
+  "filter": {
+    "status": "Filtro de estado",
+    "person": "Filtro de responsável",
+    "allStatus": "Todos os estados",
+    "allPeople": "Todos",
+    "from": "Data inicial",
+    "to": "Data final",
+    "clear": "Limpar filtros",
+    "count": "{{n}} tarefas",
+    "countOf": "{{n}} de {{total}} tarefas",
+    "view": "Vista",
+    "table": "Tabela",
+    "gantt": "Gantt"
+  },
+  "empty": {
+    "thang": "Ainda não há tarefas mensais.",
+    "tuan": "Ainda não há tarefas semanais.",
+    "ngay": "Ainda não há tarefas diárias.",
+    "filtered": "Nenhuma tarefa corresponde aos filtros."
+  },
+  "bulk": {
+    "label": "Ações em massa",
+    "selected": "{{n}} selecionadas",
+    "status": "Mudar estado",
+    "assign": "Reatribuir",
+    "export": "Exportar seleção",
+    "delete": "Eliminar seleção",
+    "clear": "Limpar seleção",
+    "skipped": "{{n}} tarefas com subtarefas ignoradas",
+    "statusDone": "{{n}} tarefas atualizadas",
+    "assigned": "{{n}} tarefas reatribuídas"
+  },
+  "del": {
+    "title": "Eliminar tarefas",
+    "messageSimple": "Vai eliminar {{n}} tarefas diárias. Tem a certeza?",
+    "messageTuan": "Vai eliminar {{n}} tarefas semanais e {{d}} diárias. Tem a certeza?",
+    "messageThang": "Vai eliminar {{n}} tarefas mensais com {{w}} semanais e {{d}} diárias. Tem a certeza?",
+    "confirm": "Eliminar",
+    "done": "{{n}} tarefas eliminadas"
+  },
+  "form": {
+    "level": "Nível",
+    "namePlaceholder": "Nome da tarefa",
+    "choose": "— Escolher —",
+    "details": "Detalhes…",
+    "errName": "Indique o nome da tarefa",
+    "errParentThang": "Escolha o mês pai",
+    "errParentTuan": "Escolha a semana pai",
+    "errDate": "Escolha uma data",
+    "errDeadline": "O prazo não pode ser antes do início",
+    "errActualEnd": "O fim real não pode ser antes do início real",
+    "errBothTimes": "Indique as duas horas previstas ou deixe ambas vazias",
+    "errTimeOrder": "A hora final não pode ser antes da inicial",
+    "errActualStartFirst": "Indique primeiro a hora real de início"
+  },
+  "drawer": {
+    "new": {
+      "thang": "Nova tarefa mensal",
+      "tuan": "Nova tarefa semanal",
+      "ngay": "Nova tarefa diária"
+    },
+    "planFrom": "Previsto de",
+    "planTo": "Previsto até",
+    "actualFrom": "Real de",
+    "actualTo": "Real até",
+    "actualHint": "Deixe as datas reais vazias para calculá-las a partir das subtarefas.",
+    "ngayHint": "Com hora real de fim fica Concluída; só com início fica Em curso."
+  },
+  "toast": {
+    "created": "{{ma}} criada",
+    "saved": "Alterações guardadas",
+    "undone": "Desfeito",
+    "exported": "Ficheiro Excel exportado",
+    "exportFail": "Falha ao exportar Excel: {{msg}}",
+    "backedUp": "Cópia guardada",
+    "backupFail": "Falha na cópia: {{msg}}",
+    "pickMe": "Escolha \"Eu sou…\" nas definições para usar As minhas tarefas"
+  },
+  "restore": {
+    "title": "Restaurar dados",
+    "preview": "Vai importar {{m}} mensais, {{w}} semanais, {{d}} diárias e {{p}} pessoas. Os dados atuais são guardados antes da substituição.",
+    "confirm": "Restaurar",
+    "done": "Dados restaurados",
+    "fail": "Falha ao restaurar: {{msg}}",
+    "invalid": "Ficheiro inválido",
+    "future": "Este ficheiro é de uma versão mais recente do HCN. Atualize a aplicação."
+  },
+  "notice": {
+    "restored": "data.json estava danificado e foi restaurado da cópia {{file}}",
+    "corrupt": "data.json estava danificado e não há cópia. O ficheiro foi guardado como {{file}}",
+    "migrated": "Dados atualizados da versão {{v}}"
+  },
+  "notify": {
+    "title": "HCN: {{over}} atrasadas, {{soon}} a vencer",
+    "enable": "Notificações do Windows",
+    "days": "Dias para \"a vencer\"",
+    "hint": "Ao abrir e a cada 4 horas, o HCN envia um resumo das tarefas atrasadas e a vencer ainda não notificadas hoje."
+  },
+  "settings": {
+    "title": "Definições",
+    "language": "Idioma",
+    "appearance": "Aparência",
+    "people": "Pessoas",
+    "personal": "Pessoal",
+    "data": "Dados",
+    "update": "Atualizações",
+    "notify": "Notificações",
+    "about": "Sobre",
+    "themeHint": "Aplica-se de imediato.",
+    "light": "Claro",
+    "dark": "Escuro",
+    "darkMode": "Modo escuro",
+    "sync": "Sincronização"
+  },
+  "people": {
+    "hint": "As pessoas servem para atribuir tarefas e mostrar avatares no Gantt.",
+    "name": "Nome",
+    "namePlaceholder": "Nome da nova pessoa",
+    "add": "Adicionar",
+    "empty": "Ainda não há pessoas. Adicione acima.",
+    "color": "Cor do avatar",
+    "photo": "Foto",
+    "removePhoto": "Remover foto",
+    "photoFail": "Não foi possível ler a imagem",
+    "delete": "Remover pessoa",
+    "deleteTitle": "Remover pessoa",
+    "deleteAssigned": "{{name}} tem {{n}} tarefas. Ficarão \"Sem responsável\".",
+    "duplicate": "Esse nome já existe",
+    "tasks": "{{n}} tarefas",
+    "unnamed": "Sem nome"
+  },
+  "personal": {
+    "hint": "Usado no filtro \"As minhas tarefas\" e como responsável padrão das novas tarefas.",
+    "iam": "Eu sou…",
+    "none": "— Não definido —",
+    "addPeople": "Adicionar pessoas"
+  },
+  "data": {
+    "backupTitle": "Cópia e restauro",
+    "backupHint": "Guarde uma cópia .json, restaure de .json (incluindo cópias da versão HTML antiga) ou exporte um Excel com 4 folhas.",
+    "backup": "Copiar .json",
+    "restore": "Restaurar de .json",
+    "export": "Exportar .xlsx",
+    "location": "Localização dos dados",
+    "locationHint": "Os dados ficam fora da pasta de instalação, por isso atualizar ou reinstalar não os apaga. As cópias automáticas estão na pasta backups.",
+    "openFolder": "Abrir pasta",
+    "legacyTitle": "Migrar da versão HTML antiga",
+    "legacyHint": "Abra a versão HTML antiga, clique em Cópia para obter cvkt-backup-….json e use Restaurar de .json acima.",
+    "androidLocation": "Os dados ficam no armazenamento privado da app no telemóvel. Desinstalar apaga-os: sincronize com o PC ou faça cópia .json antes."
+  },
+  "update": {
+    "current": "Versão atual",
+    "lastCheck": "Última verificação",
+    "never": "Nunca",
+    "check": "Procurar atualizações",
+    "checking": "A verificar…",
+    "latest": "Tem a versão mais recente",
+    "available": "Versão {{v}} disponível",
+    "downloading": "A transferir v{{v}}: {{p}}%",
+    "ready": "Atualização v{{v}} pronta.",
+    "installNow": "Instalar e reiniciar",
+    "later": "Mais tarde",
+    "error": "Não foi possível verificar: {{msg}}",
+    "auto": "Transferir atualizações automaticamente",
+    "devNote": "Versão de desenvolvimento: só funciona na aplicação instalada.",
+    "androidNote": "No Android, atualize instalando o novo .apk por cima. Os dados mantêm-se."
+  },
+  "about": {
+    "log": "Ficheiro de registo",
+    "openLog": "Abrir registo",
+    "report": "Reportar problema"
+  },
+  "excel": {
+    "sheetThang": "Mensais",
+    "sheetTuan": "Semanais",
+    "sheetNgay": "Diárias",
+    "sheetPeople": "Pessoas",
+    "planFrom": "Previsto de",
+    "planTo": "Previsto até",
+    "actualFrom": "Real de",
+    "actualTo": "Real até",
+    "personName": "Nome",
+    "personColor": "Cor",
+    "personTasks": "Tarefas"
+  },
+  "wifi": {
+    "unavailable": "A sincronização só existe nas apps de PC e Android.",
+    "hubHint": "Este PC é o ponto central: telemóveis na mesma rede Wi-Fi enviam e recebem alterações com a app do PC aberta. Os dados não saem da rede local.",
+    "enable": "Permitir sincronização por Wi-Fi",
+    "addresses": "Endereço deste PC",
+    "addressesHint": "Introduza este endereço no telemóvel. Se houver vários, use o da mesma rede Wi-Fi (normalmente começa por 192.168).",
+    "noAddress": "Este PC não está ligado a Wi-Fi nem a rede com fios.",
+    "code": "Código de emparelhamento",
+    "codeHint": "Cada código só serve uma vez e muda depois de um telemóvel emparelhar.",
+    "regen": "Novo código",
+    "devices": "Telemóveis emparelhados",
+    "noDevices": "Ainda sem telemóveis. Abra o HCN no telemóvel, vá a Definições > Sincronização e introduza o endereço e o código acima.",
+    "lastSeen": "Última sincronização: {{time}}",
+    "never": "nunca",
+    "remove": "Remover telemóvel",
+    "removeTitle": "Remover telemóvel",
+    "removeMsg": "{{name}} deixará de sincronizar até voltar a emparelhar. Os dados no telemóvel mantêm-se.",
+    "lastSyncLine": "Última sincronização às {{time}}, {{n}} alterações.",
+    "firewall": "Na primeira vez, o Windows pode pedir acesso na firewall para o HCN Work Manage: escolha Permitir em redes Privadas. Telemóvel e PC têm de estar na mesma rede Wi-Fi.",
+    "clientHint": "No PC, abra HCN > Definições > Sincronização, ative-a e introduza aqui o endereço e o código mostrados. Telemóvel e PC na mesma rede Wi-Fi.",
+    "addr": "Endereço do PC",
+    "addrPlaceholder": "ex. 192.168.1.5:47821",
+    "pairCode": "Código (6 dígitos)",
+    "deviceName": "Nome deste telemóvel",
+    "connect": "Ligar",
+    "connecting": "A ligar…",
+    "connected": "Ligado a {{name}}",
+    "auto": "Sincroniza ao abrir, após alterações e a cada 30 segundos, na mesma Wi-Fi que um PC com o HCN aberto. Fora dela funciona normalmente e sincroniza quando voltar.",
+    "hub": "PC",
+    "lastSync": "Última sincronização",
+    "now": "Sincronizar agora",
+    "syncing": "A sincronizar…",
+    "done": "Sincronizado ({{n}} alterações)",
+    "unpair": "Desligar",
+    "unpairMsg": "O telemóvel deixa de sincronizar com o PC. Os dados ficam nos dois aparelhos.",
+    "err": {
+      "code": "Código errado ou já usado. Veja o novo código no PC.",
+      "unpaired": "O PC removeu este telemóvel. Emparelhe de novo.",
+      "tooMany": "Demasiadas tentativas erradas. Tente daqui a um minuto.",
+      "network": "Não foi possível ligar ao PC. Verifique: mesma Wi-Fi, HCN aberto no PC com sincronização ativa, endereço correto.",
+      "timeout": "O PC não respondeu a tempo. Tente com melhor sinal Wi-Fi.",
+      "schema": "Os aparelhos usam versões de dados diferentes. Atualize a app em ambos.",
+      "server": "O PC reportou um erro. Tente mais tarde.",
+      "addr": "Introduza o endereço do PC."
+    }
+  }
+}

@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "Đang mở dữ liệu…",
+    "loadError": "Không đọc được dữ liệu"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "ok": "Đồng ý",
+    "close": "Đóng",
+    "clear": "Xóa",
+    "undo": "Hoàn tác",
+    "prev": "Trước",
+    "next": "Sau",
+    "today": "Hôm nay",
+    "thisWeek": "Tuần này",
+    "thisMonth": "Tháng này",
+    "untitled": "(chưa đặt tên)"
+  },
+  "tabs": {
+    "label": "Chuyển trang",
+    "overview": "Tổng quan",
+    "thang": "CV Tháng",
+    "tuan": "CV Tuần",
+    "ngay": "CV Ngày"
+  },
+  "level": {
+    "thang": "CV Tháng",
+    "tuan": "CV Tuần",
+    "ngay": "CV Ngày"
+  },
+  "levelShort": {
+    "thang": "Tháng",
+    "tuan": "Tuần",
+    "ngay": "Ngày"
+  },
+  "status": {
+    "todo": "Chưa làm",
+    "doing": "Đang làm",
+    "done": "Hoàn thành",
+    "overdue": "Quá hạn"
+  },
+  "loai": {
+    "ui": "Gấp - Quan trọng",
+    "un": "Gấp - Không quan trọng",
+    "ni": "Không gấp - Quan trọng",
+    "nn": "Không gấp - Không quan trọng"
+  },
+  "weekday": {
+    "0": "T2",
+    "1": "T3",
+    "2": "T4",
+    "3": "T5",
+    "4": "T6",
+    "5": "T7",
+    "6": "CN"
+  },
+  "person": {
+    "unassigned": "Chưa gán"
+  },
+  "toolbar": {
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm mã, tên việc, người… hoặc gõ /",
+    "quick": "Tạo nhanh"
+  },
+  "search": {
+    "commands": "Lệnh nhanh",
+    "noCommand": "Không có lệnh phù hợp",
+    "noResults": "Không tìm thấy việc nào",
+    "filtering": "Bảng đang được lọc theo từ khóa. Chọn một kết quả để nhảy đến dòng.",
+    "slashTip": "Gõ / để xem {{n}} lệnh nhanh"
+  },
+  "cmd": {
+    "create": "Mở Tạo nhanh",
+    "today": "Việc hôm nay",
+    "overdue": "Việc quá hạn",
+    "duesoon": "Việc sắp đến hạn",
+    "mine": "Việc của tôi",
+    "export": "Xuất Excel toàn bộ",
+    "backup": "Sao lưu ra file .json",
+    "restore": "Khôi phục từ file .json",
+    "theme": "Đổi giao diện Dark / Light",
+    "language": "Đổi ngôn ngữ",
+    "settings": "Mở Cài đặt"
+  },
+  "quick": {
+    "today": "Hôm nay",
+    "overdue": "Quá hạn",
+    "duesoon": "Sắp đến hạn",
+    "mine": "Việc của tôi"
+  },
+  "sync": {
+    "saved": "Đã lưu",
+    "pending": "Chờ lưu",
+    "error": "Lỗi lưu dữ liệu",
+    "errorDetail": "Lỗi ghi dữ liệu: {{msg}}. Dữ liệu vẫn còn trong bộ nhớ, đang thử lại."
+  },
+  "bell": {
+    "title": "Thông báo",
+    "empty": "Không có việc quá hạn hoặc sắp đến hạn",
+    "overdue": "Quá hạn ({{n}})",
+    "soon": "Sắp đến hạn trong {{d}} ngày ({{n}})",
+    "due": "Hạn {{date}}"
+  },
+  "views": {
+    "add": "Lưu bộ lọc",
+    "namePlaceholder": "Tên bộ lọc",
+    "needFilter": "Chọn một bộ lọc hoặc từ khóa trước khi lưu",
+    "saved": "Đã lưu bộ lọc \"{{name}}\"",
+    "remove": "Xóa bộ lọc {{name}}"
+  },
+  "metric": {
+    "total": "Tổng CV",
+    "doing": "Đang làm",
+    "overdue": "Quá hạn",
+    "done": "Hoàn thành",
+    "subTotal": "Công việc tháng",
+    "subPct": "{{p}}% tổng số",
+    "open": "Xem danh sách"
+  },
+  "gantt": {
+    "code": "Mã",
+    "hint": "Bấm vào một ngày để xem timeline 24 giờ",
+    "openDay": "Mở timeline của ngày này",
+    "noPlan": "Chưa có ngày dự kiến",
+    "emptyMonth": "Không có công việc nào trong tháng này",
+    "emptyWeek": "Không có công việc tuần nào trong tuần này",
+    "backMonth": "Quay lại tháng",
+    "backWeek": "Quay lại tuần"
+  },
+  "timeline": {
+    "title": "Timeline ngày {{date}}",
+    "unscheduled": "Chưa xếp giờ",
+    "trayEmpty": "Mọi việc đã có giờ",
+    "trayHint": "Bấm để đặt giờ",
+    "empty": "Chưa có việc nào được xếp giờ trong ngày này",
+    "totals": "Dự kiến {{p}} · Thực tế {{a}}",
+    "from": "Từ giờ",
+    "to": "Đến giờ",
+    "zoom": "Thu phóng",
+    "zoomIn": "Phóng to",
+    "zoomOut": "Thu nhỏ",
+    "nTasks": "{{n}} việc"
+  },
+  "tip": {
+    "plan": "Dự kiến",
+    "actual": "Thực tế",
+    "running": "đang chạy",
+    "diff": "Chênh lệch {{v}}",
+    "conflict": "Trùng giờ với việc khác",
+    "hint": "Nhấp để ghim · Nhấp đúp để mở",
+    "open": "Mở chi tiết"
+  },
+  "col": {
+    "ma": "Mã",
+    "loai": "Loại",
+    "task": "Công việc",
+    "content": "Nội dung",
+    "person": "Người",
+    "planStart": "DK bắt đầu",
+    "planDeadline": "DK deadline",
+    "actualStart": "TT bắt đầu",
+    "actualEnd": "TT kết thúc",
+    "status": "Trạng thái",
+    "progress": "Tiến độ",
+    "note": "Ghi chú",
+    "parentThang": "Tháng cha",
+    "parentTuan": "Tuần cha",
+    "date": "Ngày",
+    "planTime": "Giờ DK",
+    "actualTime": "Giờ TT"
+  },
+  "grid": {
+    "selectAll": "Chọn tất cả",
+    "selectRow": "Chọn {{ma}}",
+    "actions": "Thao tác",
+    "autoStatus": "Tự động từ việc con",
+    "dblEdit": "Nhấp đúp để sửa",
+    "runningDays": "đang chạy {{n}} ngày"
+  },
+  "qa": {
+    "start": "Bắt đầu",
+    "end": "Kết thúc",
+    "reset": "Đặt lại",
+    "edit": "Sửa",
+    "delete": "Xóa"
+  },
+  "card": {
+    "plan": "DK",
+    "actual": "TT"
+  },
+  "swipe": {
+    "title": "Hoàn thành nhanh",
+    "completeAll": "Hoàn thành tất cả việc con?"
+  },
+  "filter": {
+    "status": "Lọc trạng thái",
+    "person": "Lọc người",
+    "allStatus": "Mọi trạng thái",
+    "allPeople": "Mọi người",
+    "from": "Từ ngày",
+    "to": "Đến ngày",
+    "clear": "Bỏ lọc",
+    "count": "{{n}} việc",
+    "countOf": "{{n}} / {{total}} việc",
+    "view": "Kiểu xem",
+    "table": "Bảng",
+    "gantt": "Gantt"
+  },
+  "empty": {
+    "thang": "Chưa có công việc tháng nào.",
+    "tuan": "Chưa có công việc tuần nào.",
+    "ngay": "Chưa có công việc ngày nào.",
+    "filtered": "Không có việc nào khớp bộ lọc."
+  },
+  "bulk": {
+    "label": "Thao tác hàng loạt",
+    "selected": "Đã chọn {{n}} việc",
+    "status": "Đổi trạng thái",
+    "assign": "Phân công lại",
+    "export": "Xuất Excel đã chọn",
+    "delete": "Xóa hàng loạt",
+    "clear": "Bỏ chọn",
+    "skipped": "Đã bỏ qua {{n}} việc có việc con",
+    "statusDone": "Đã đổi trạng thái {{n}} việc",
+    "assigned": "Đã phân công {{n}} việc"
+  },
+  "del": {
+    "title": "Xóa công việc",
+    "messageSimple": "Sẽ xóa {{n}} việc ngày. Bạn chắc chắn?",
+    "messageTuan": "Sẽ xóa {{n}} việc tuần cùng {{d}} việc ngày. Bạn chắc chắn?",
+    "messageThang": "Sẽ xóa {{n}} việc tháng cùng {{w}} việc tuần và {{d}} việc ngày. Bạn chắc chắn?",
+    "confirm": "Xóa",
+    "done": "Đã xóa {{n}} việc"
+  },
+  "form": {
+    "level": "Cấp",
+    "namePlaceholder": "Nhập tên công việc",
+    "choose": "— Chọn —",
+    "details": "Chi tiết…",
+    "errName": "Nhập tên công việc",
+    "errParentThang": "Chọn tháng cha",
+    "errParentTuan": "Chọn tuần cha",
+    "errDate": "Chọn ngày",
+    "errDeadline": "Deadline không được trước ngày bắt đầu",
+    "errActualEnd": "Ngày kết thúc thực tế không được trước ngày bắt đầu thực tế",
+    "errBothTimes": "Nhập đủ giờ dự kiến từ và đến, hoặc để trống cả hai",
+    "errTimeOrder": "Giờ đến không được trước giờ từ",
+    "errActualStartFirst": "Nhập giờ thực tế bắt đầu trước"
+  },
+  "drawer": {
+    "new": {
+      "thang": "CV Tháng mới",
+      "tuan": "CV Tuần mới",
+      "ngay": "CV Ngày mới"
+    },
+    "planFrom": "Giờ DK từ",
+    "planTo": "Giờ DK đến",
+    "actualFrom": "Giờ TT từ",
+    "actualTo": "Giờ TT đến",
+    "actualHint": "Để trống ngày thực tế để tự tính từ việc con.",
+    "ngayHint": "Có giờ TT đến thì việc được tính là Hoàn thành; chỉ có giờ TT từ là Đang làm."
+  },
+  "toast": {
+    "created": "Đã tạo {{ma}}",
+    "saved": "Đã lưu thay đổi",
+    "undone": "Đã hoàn tác",
+    "exported": "Đã xuất file Excel",
+    "exportFail": "Không xuất được Excel: {{msg}}",
+    "backedUp": "Đã sao lưu",
+    "backupFail": "Không sao lưu được: {{msg}}",
+    "pickMe": "Chọn \"Tôi là…\" trong Cài đặt để dùng bộ lọc Việc của tôi"
+  },
+  "restore": {
+    "title": "Khôi phục dữ liệu",
+    "preview": "Sẽ nhập {{m}} tháng, {{w}} tuần, {{d}} ngày, {{p}} người. Dữ liệu hiện tại sẽ được sao lưu trước khi thay thế.",
+    "confirm": "Khôi phục",
+    "done": "Đã khôi phục dữ liệu",
+    "fail": "Không khôi phục được: {{msg}}",
+    "invalid": "File không hợp lệ",
+    "future": "File được tạo bởi phiên bản HCN mới hơn. Hãy cập nhật ứng dụng."
+  },
+  "notice": {
+    "restored": "data.json bị hỏng nên đã khôi phục từ bản sao lưu {{file}}",
+    "corrupt": "data.json bị hỏng và chưa có bản sao lưu. File hỏng được giữ lại: {{file}}",
+    "migrated": "Đã nâng cấp dữ liệu từ phiên bản {{v}}"
+  },
+  "notify": {
+    "title": "HCN: {{over}} việc quá hạn, {{soon}} việc sắp đến hạn",
+    "enable": "Bật thông báo Windows",
+    "days": "Số ngày \"sắp đến hạn\"",
+    "hint": "Khi mở app và mỗi 4 giờ, HCN gửi một thông báo tổng hợp các việc quá hạn và sắp đến hạn chưa được báo trong ngày."
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "language": "Ngôn ngữ",
+    "appearance": "Giao diện",
+    "people": "Nhân sự",
+    "personal": "Cá nhân",
+    "data": "Dữ liệu",
+    "update": "Cập nhật",
+    "notify": "Thông báo",
+    "about": "Giới thiệu",
+    "themeHint": "Đổi có hiệu lực ngay.",
+    "light": "Light",
+    "dark": "Dark",
+    "darkMode": "Giao diện tối",
+    "sync": "Đồng bộ"
+  },
+  "people": {
+    "hint": "Người phụ trách dùng để gán việc và hiện avatar trên Gantt.",
+    "name": "Tên",
+    "namePlaceholder": "Tên người mới",
+    "add": "Thêm",
+    "empty": "Chưa có ai. Thêm người đầu tiên ở trên.",
+    "color": "Màu avatar",
+    "photo": "Ảnh",
+    "removePhoto": "Bỏ ảnh",
+    "photoFail": "Không đọc được ảnh",
+    "delete": "Xóa người",
+    "deleteTitle": "Xóa nhân sự",
+    "deleteAssigned": "{{name}} đang được gán {{n}} việc. Các việc này sẽ chuyển về \"Chưa gán\".",
+    "duplicate": "Tên này đã có trong danh sách",
+    "tasks": "{{n}} việc",
+    "unnamed": "Không tên"
+  },
+  "personal": {
+    "hint": "Dùng cho bộ lọc \"Việc của tôi\" và làm người mặc định khi tạo việc.",
+    "iam": "Tôi là…",
+    "none": "— Chưa chọn —",
+    "addPeople": "Thêm nhân sự"
+  },
+  "data": {
+    "backupTitle": "Sao lưu và khôi phục",
+    "backupHint": "Sao lưu ra một file .json, khôi phục từ file .json (kể cả file sao lưu của bản HTML cũ), hoặc xuất Excel 4 sheet.",
+    "backup": "Sao lưu .json",
+    "restore": "Khôi phục từ .json",
+    "export": "Xuất Excel .xlsx",
+    "location": "Vị trí dữ liệu",
+    "locationHint": "Dữ liệu không nằm trong thư mục cài đặt, nên cập nhật hoặc cài lại không làm mất dữ liệu. Bản sao lưu tự động nằm trong thư mục backups.",
+    "openFolder": "Mở thư mục",
+    "legacyTitle": "Chuyển dữ liệu từ bản HTML cũ",
+    "legacyHint": "Mở bản HTML cũ, bấm Sao lưu để có file cvkt-backup-….json, rồi bấm Khôi phục từ .json ở trên và chọn file đó.",
+    "androidLocation": "Dữ liệu nằm trong bộ nhớ riêng của ứng dụng trên điện thoại. Gỡ app sẽ xóa dữ liệu, nên hãy đồng bộ với PC hoặc sao lưu .json trước."
+  },
+  "update": {
+    "current": "Phiên bản hiện tại",
+    "lastCheck": "Kiểm tra gần nhất",
+    "never": "Chưa kiểm tra",
+    "check": "Kiểm tra cập nhật",
+    "checking": "Đang kiểm tra…",
+    "latest": "Bạn đang dùng bản mới nhất",
+    "available": "Có bản v{{v}}",
+    "downloading": "Đang tải v{{v}}: {{p}}%",
+    "ready": "Có bản cập nhật v{{v}}.",
+    "installNow": "Cài và khởi động lại",
+    "later": "Để sau",
+    "error": "Không kiểm tra được: {{msg}}",
+    "auto": "Tự động tải bản cập nhật",
+    "devNote": "Đang chạy bản phát triển: kiểm tra cập nhật chỉ hoạt động ở bản đã cài.",
+    "androidNote": "Trên Android, cập nhật bằng cách cài file .apk mới đè lên bản cũ. Dữ liệu được giữ nguyên."
+  },
+  "about": {
+    "log": "Nhật ký",
+    "openLog": "Mở nhật ký",
+    "report": "Báo lỗi"
+  },
+  "excel": {
+    "sheetThang": "Tháng",
+    "sheetTuan": "Tuần",
+    "sheetNgay": "Ngày",
+    "sheetPeople": "Nhân sự",
+    "planFrom": "Giờ DK từ",
+    "planTo": "Giờ DK đến",
+    "actualFrom": "Giờ TT từ",
+    "actualTo": "Giờ TT đến",
+    "personName": "Tên",
+    "personColor": "Màu",
+    "personTasks": "Số việc"
+  },
+  "wifi": {
+    "unavailable": "Đồng bộ chỉ có trong app PC và app Android.",
+    "hubHint": "Máy này làm trạm: điện thoại cùng mạng Wi-Fi sẽ gửi và nhận thay đổi khi app PC đang mở. Dữ liệu không đi ra ngoài mạng nội bộ.",
+    "enable": "Cho phép điện thoại đồng bộ qua Wi-Fi",
+    "addresses": "Địa chỉ của máy này",
+    "addressesHint": "Nhập địa chỉ này trên điện thoại. Có nhiều dòng thì dùng dòng cùng mạng Wi-Fi với điện thoại (thường bắt đầu bằng 192.168).",
+    "noAddress": "Máy này chưa kết nối mạng Wi-Fi hoặc mạng dây.",
+    "code": "Mã ghép đôi",
+    "codeHint": "Mỗi mã chỉ dùng được một lần. Sau khi một điện thoại ghép đôi xong, mã tự đổi.",
+    "regen": "Đổi mã",
+    "devices": "Điện thoại đã ghép đôi",
+    "noDevices": "Chưa có điện thoại nào. Mở app HCN trên điện thoại, vào Cài đặt > Đồng bộ và nhập địa chỉ cùng mã ở trên.",
+    "lastSeen": "Đồng bộ gần nhất: {{time}}",
+    "never": "chưa đồng bộ",
+    "remove": "Gỡ điện thoại",
+    "removeTitle": "Gỡ điện thoại",
+    "removeMsg": "{{name}} sẽ không đồng bộ được nữa cho đến khi ghép đôi lại. Dữ liệu trên điện thoại vẫn còn.",
+    "lastSyncLine": "Lần đồng bộ gần nhất lúc {{time}}, {{n}} thay đổi.",
+    "firewall": "Lần đầu bật, Windows có thể hỏi quyền tường lửa cho HCN Work Manage: chọn Cho phép (Allow) với mạng Riêng tư (Private). Điện thoại và PC phải cùng một mạng Wi-Fi.",
+    "clientHint": "Trên PC, mở HCN > Cài đặt > Đồng bộ, bật đồng bộ, rồi nhập địa chỉ và mã hiển thị ở đó. Điện thoại và PC phải cùng mạng Wi-Fi.",
+    "addr": "Địa chỉ PC",
+    "addrPlaceholder": "vd. 192.168.1.5:47821",
+    "pairCode": "Mã ghép đôi (6 số)",
+    "deviceName": "Tên điện thoại này",
+    "connect": "Kết nối",
+    "connecting": "Đang kết nối…",
+    "connected": "Đã kết nối với {{name}}",
+    "auto": "Tự đồng bộ khi mở app, khi có thay đổi và mỗi 30 giây, miễn là điện thoại cùng mạng Wi-Fi với PC đang mở HCN. Khác mạng thì vẫn dùng bình thường, sẽ đồng bộ khi về lại.",
+    "hub": "Máy PC",
+    "lastSync": "Đồng bộ gần nhất",
+    "now": "Đồng bộ ngay",
+    "syncing": "Đang đồng bộ…",
+    "done": "Đã đồng bộ ({{n}} thay đổi)",
+    "unpair": "Ngắt kết nối",
+    "unpairMsg": "Điện thoại sẽ ngừng đồng bộ với PC. Dữ liệu trên cả hai máy vẫn giữ nguyên.",
+    "err": {
+      "code": "Mã ghép đôi không đúng hoặc đã được dùng. Xem mã mới trên PC.",
+      "unpaired": "PC đã gỡ điện thoại này. Hãy ghép đôi lại.",
+      "tooMany": "Nhập sai quá nhiều lần. Thử lại sau 1 phút.",
+      "network": "Không kết nối được PC. Kiểm tra: cùng mạng Wi-Fi, PC đang mở HCN và đã bật đồng bộ, địa chỉ đúng.",
+      "timeout": "PC không phản hồi kịp. Thử lại khi tín hiệu Wi-Fi tốt hơn.",
+      "schema": "Hai máy dùng phiên bản dữ liệu khác nhau. Cập nhật app trên cả hai máy.",
+      "server": "PC báo lỗi khi đồng bộ. Thử lại sau.",
+      "addr": "Nhập địa chỉ PC."
+    }
+  }
+}

@@ -1,0 +1,130 @@
+/* Thẻ 3D Module 1 (mục 8.4) - đúng thông số đặc tả */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1023px) {
+  .metrics {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 70%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 4px 16px;
+  }
+  .metrics > .metric-card {
+    scroll-snap-align: start;
+  }
+}
+
+.metric-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 18px 20px 20px;
+  min-height: 116px;
+  background: linear-gradient(145deg, #1e2922, #121614);
+  border: 0;
+  border-radius: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.6), -4px -4px 12px rgba(255, 255, 255, 0.03);
+  transition: all 300ms ease-in-out;
+  cursor: pointer;
+  font: inherit;
+}
+.metric-card .metric-title {
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+}
+.metric-card .metric-value {
+  margin-top: 10px;
+  color: #f3f4f6;
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.metric-card .metric-sub {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Thẻ Quá hạn: thêm lớp bóng thứ 3 */
+.metric-card.is-over {
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.6), -4px -4px 12px rgba(255, 255, 255, 0.03), 0px 4px 20px rgba(245, 158, 11, 0.15);
+}
+.metric-card.is-over .metric-value {
+  color: #f59e0b;
+}
+
+/* Thẻ Hoàn thành: xanh pha lê, chữ đen đục (không dùng trắng) */
+.metric-card.is-done {
+  background: linear-gradient(145deg, #34d399, #059669);
+  border: none;
+  box-shadow: 0px 8px 24px rgba(16, 185, 129, 0.35), inset 2px 2px 5px rgba(255, 255, 255, 0.3), inset -3px -3px 7px rgba(0, 0, 0, 0.2);
+  color: #052e1f;
+}
+.metric-card.is-done .metric-title,
+.metric-card.is-done .metric-value,
+.metric-card.is-done .metric-sub {
+  color: #052e1f;
+}
+
+/* Hover chỉ khi có chuột */
+@media (hover: hover) {
+  .metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 12px 16px 28px rgba(0, 0, 0, 0.65), -6px -6px 16px rgba(255, 255, 255, 0.04);
+  }
+  .metric-card.is-over:hover {
+    box-shadow: 12px 16px 28px rgba(0, 0, 0, 0.65), -6px -6px 16px rgba(255, 255, 255, 0.04), 0px 6px 28px rgba(245, 158, 11, 0.22);
+  }
+  .metric-card.is-done:hover {
+    box-shadow: 0px 14px 32px rgba(16, 185, 129, 0.45), inset 2px 2px 5px rgba(255, 255, 255, 0.3), inset -3px -3px 7px rgba(0, 0, 0, 0.2);
+  }
+}
+.metric-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Light: nền trắng, bóng nhẹ hơn */
+[data-theme='light'] .metric-card {
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-left: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.08), -4px -4px 10px rgba(255, 255, 255, 0.9);
+}
+[data-theme='light'] .metric-card .metric-title,
+[data-theme='light'] .metric-card .metric-sub {
+  color: #6b7280;
+}
+[data-theme='light'] .metric-card .metric-value {
+  color: #111827;
+}
+[data-theme='light'] .metric-card.is-over {
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.08), -4px -4px 10px rgba(255, 255, 255, 0.9), 0px 4px 18px rgba(245, 158, 11, 0.18);
+}
+[data-theme='light'] .metric-card.is-over .metric-value {
+  color: #b45309;
+}
+[data-theme='light'] .metric-card.is-done {
+  background: linear-gradient(145deg, #34d399, #059669);
+  box-shadow: 0px 8px 20px rgba(16, 185, 129, 0.28), inset 2px 2px 5px rgba(255, 255, 255, 0.3), inset -3px -3px 7px rgba(0, 0, 0, 0.15);
+}
+[data-theme='light'] .metric-card.is-done .metric-title,
+[data-theme='light'] .metric-card.is-done .metric-value,
+[data-theme='light'] .metric-card.is-done .metric-sub {
+  color: #052e1f;
+}
+@media (hover: hover) {
+  [data-theme='light'] .metric-card:hover {
+    box-shadow: 10px 14px 24px rgba(0, 0, 0, 0.12), -4px -4px 10px rgba(255, 255, 255, 0.9);
+  }
+}

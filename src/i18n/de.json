@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "Daten werden geladen…",
+    "loadError": "Daten konnten nicht gelesen werden"
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "ok": "OK",
+    "close": "Schließen",
+    "clear": "Löschen",
+    "undo": "Rückgängig",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "today": "Heute",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Dieser Monat",
+    "untitled": "(ohne Titel)"
+  },
+  "tabs": {
+    "label": "Seiten",
+    "overview": "Übersicht",
+    "thang": "Monat",
+    "tuan": "Woche",
+    "ngay": "Tag"
+  },
+  "level": {
+    "thang": "Monatsaufgabe",
+    "tuan": "Wochenaufgabe",
+    "ngay": "Tagesaufgabe"
+  },
+  "levelShort": {
+    "thang": "Monat",
+    "tuan": "Woche",
+    "ngay": "Tag"
+  },
+  "status": {
+    "todo": "Offen",
+    "doing": "In Arbeit",
+    "done": "Erledigt",
+    "overdue": "Überfällig"
+  },
+  "loai": {
+    "ui": "Dringend - Wichtig",
+    "un": "Dringend - Nicht wichtig",
+    "ni": "Nicht dringend - Wichtig",
+    "nn": "Nicht dringend - Nicht wichtig"
+  },
+  "weekday": {
+    "0": "Mo",
+    "1": "Di",
+    "2": "Mi",
+    "3": "Do",
+    "4": "Fr",
+    "5": "Sa",
+    "6": "So"
+  },
+  "person": {
+    "unassigned": "Nicht zugewiesen"
+  },
+  "toolbar": {
+    "search": "Suchen",
+    "searchPlaceholder": "Code, Aufgabe, Person… oder /",
+    "quick": "Schnell anlegen"
+  },
+  "search": {
+    "commands": "Befehle",
+    "noCommand": "Kein passender Befehl",
+    "noResults": "Keine Aufgaben gefunden",
+    "filtering": "Die Tabelle ist nach Ihrer Suche gefiltert. Wählen Sie ein Ergebnis, um hinzuspringen.",
+    "slashTip": "/ eingeben für {{n}} Befehle"
+  },
+  "cmd": {
+    "create": "Schnell anlegen öffnen",
+    "today": "Heutige Aufgaben",
+    "overdue": "Überfällige Aufgaben",
+    "duesoon": "Bald fällig",
+    "mine": "Meine Aufgaben",
+    "export": "Alles nach Excel exportieren",
+    "backup": "Als .json sichern",
+    "restore": "Aus .json wiederherstellen",
+    "theme": "Dunkel / Hell wechseln",
+    "language": "Sprache ändern",
+    "settings": "Einstellungen öffnen"
+  },
+  "quick": {
+    "today": "Heute",
+    "overdue": "Überfällig",
+    "duesoon": "Bald fällig",
+    "mine": "Meine"
+  },
+  "sync": {
+    "saved": "Gespeichert",
+    "pending": "Wird gespeichert…",
+    "error": "Speichern fehlgeschlagen",
+    "errorDetail": "Schreiben fehlgeschlagen: {{msg}}. Änderungen bleiben im Speicher und werden erneut versucht."
+  },
+  "bell": {
+    "title": "Benachrichtigungen",
+    "empty": "Nichts überfällig oder bald fällig",
+    "overdue": "Überfällig ({{n}})",
+    "soon": "Fällig in {{d}} Tagen ({{n}})",
+    "due": "Fällig {{date}}"
+  },
+  "views": {
+    "add": "Filter speichern",
+    "namePlaceholder": "Filtername",
+    "needFilter": "Zuerst Filter oder Suche festlegen",
+    "saved": "Filter „{{name}}“ gespeichert",
+    "remove": "Filter {{name}} entfernen"
+  },
+  "metric": {
+    "total": "Gesamt",
+    "doing": "In Arbeit",
+    "overdue": "Überfällig",
+    "done": "Erledigt",
+    "subTotal": "Monatsaufgaben",
+    "subPct": "{{p}} % von gesamt",
+    "open": "Liste anzeigen"
+  },
+  "gantt": {
+    "code": "Code",
+    "hint": "Tag anklicken für die 24-Stunden-Zeitleiste",
+    "openDay": "Zeitleiste dieses Tages öffnen",
+    "noPlan": "Keine geplanten Daten",
+    "emptyMonth": "Keine Aufgaben in diesem Monat",
+    "emptyWeek": "Keine Wochenaufgaben in dieser Woche",
+    "backMonth": "Zurück zum Monat",
+    "backWeek": "Zurück zur Woche"
+  },
+  "timeline": {
+    "title": "Zeitleiste {{date}}",
+    "unscheduled": "Ohne Uhrzeit",
+    "trayEmpty": "Alles hat eine Uhrzeit",
+    "trayHint": "Klicken, um eine Zeit festzulegen",
+    "empty": "Keine geplanten Aufgaben an diesem Tag",
+    "totals": "Geplant {{p}} · Tatsächlich {{a}}",
+    "from": "Von",
+    "to": "Bis",
+    "zoom": "Zoom",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "nTasks": "{{n}} Aufgaben"
+  },
+  "tip": {
+    "plan": "Geplant",
+    "actual": "Tatsächlich",
+    "running": "läuft",
+    "diff": "Abweichung {{v}}",
+    "conflict": "Überschneidet sich mit einer anderen Aufgabe",
+    "hint": "Klick zum Anheften · Doppelklick zum Öffnen",
+    "open": "Details öffnen"
+  },
+  "col": {
+    "ma": "Code",
+    "loai": "Typ",
+    "task": "Aufgabe",
+    "content": "Inhalt",
+    "person": "Verantwortlich",
+    "planStart": "Geplanter Start",
+    "planDeadline": "Geplante Frist",
+    "actualStart": "Tatsächlicher Start",
+    "actualEnd": "Tatsächliches Ende",
+    "status": "Status",
+    "progress": "Fortschritt",
+    "note": "Notizen",
+    "parentThang": "Übergeordneter Monat",
+    "parentTuan": "Übergeordnete Woche",
+    "date": "Datum",
+    "planTime": "Geplante Zeit",
+    "actualTime": "Tatsächliche Zeit"
+  },
+  "grid": {
+    "selectAll": "Alle auswählen",
+    "selectRow": "{{ma}} auswählen",
+    "actions": "Aktionen",
+    "autoStatus": "Automatisch aus Unteraufgaben",
+    "dblEdit": "Doppelklick zum Bearbeiten",
+    "runningDays": "läuft seit {{n}} Tagen"
+  },
+  "qa": {
+    "start": "Starten",
+    "end": "Beenden",
+    "reset": "Zurücksetzen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+  "card": {
+    "plan": "Plan",
+    "actual": "Ist"
+  },
+  "swipe": {
+    "title": "Schnell erledigen",
+    "completeAll": "Alle Unteraufgaben erledigen?"
+  },
+  "filter": {
+    "status": "Statusfilter",
+    "person": "Personenfilter",
+    "allStatus": "Alle Status",
+    "allPeople": "Alle Personen",
+    "from": "Von Datum",
+    "to": "Bis Datum",
+    "clear": "Filter löschen",
+    "count": "{{n}} Aufgaben",
+    "countOf": "{{n}} von {{total}} Aufgaben",
+    "view": "Ansicht",
+    "table": "Tabelle",
+    "gantt": "Gantt"
+  },
+  "empty": {
+    "thang": "Noch keine Monatsaufgaben.",
+    "tuan": "Noch keine Wochenaufgaben.",
+    "ngay": "Noch keine Tagesaufgaben.",
+    "filtered": "Keine Aufgaben passen zu den Filtern."
+  },
+  "bulk": {
+    "label": "Sammelaktionen",
+    "selected": "{{n}} ausgewählt",
+    "status": "Status ändern",
+    "assign": "Neu zuweisen",
+    "export": "Auswahl exportieren",
+    "delete": "Auswahl löschen",
+    "clear": "Auswahl aufheben",
+    "skipped": "{{n}} Aufgaben mit Unteraufgaben übersprungen",
+    "statusDone": "{{n}} Aufgaben aktualisiert",
+    "assigned": "{{n}} Aufgaben neu zugewiesen"
+  },
+  "del": {
+    "title": "Aufgaben löschen",
+    "messageSimple": "{{n}} Tagesaufgaben werden gelöscht. Sind Sie sicher?",
+    "messageTuan": "{{n}} Wochenaufgaben und {{d}} Tagesaufgaben werden gelöscht. Sind Sie sicher?",
+    "messageThang": "{{n}} Monatsaufgaben mit {{w}} Wochen- und {{d}} Tagesaufgaben werden gelöscht. Sind Sie sicher?",
+    "confirm": "Löschen",
+    "done": "{{n}} Aufgaben gelöscht"
+  },
+  "form": {
+    "level": "Ebene",
+    "namePlaceholder": "Aufgabenname",
+    "choose": "— Auswählen —",
+    "details": "Details…",
+    "errName": "Aufgabenname eingeben",
+    "errParentThang": "Übergeordneten Monat wählen",
+    "errParentTuan": "Übergeordnete Woche wählen",
+    "errDate": "Datum wählen",
+    "errDeadline": "Die Frist darf nicht vor dem Start liegen",
+    "errActualEnd": "Das tatsächliche Ende darf nicht vor dem Start liegen",
+    "errBothTimes": "Beide geplanten Zeiten eingeben oder beide leer lassen",
+    "errTimeOrder": "Die Endzeit darf nicht vor der Startzeit liegen",
+    "errActualStartFirst": "Zuerst die tatsächliche Startzeit eingeben"
+  },
+  "drawer": {
+    "new": {
+      "thang": "Neue Monatsaufgabe",
+      "tuan": "Neue Wochenaufgabe",
+      "ngay": "Neue Tagesaufgabe"
+    },
+    "planFrom": "Geplant von",
+    "planTo": "Geplant bis",
+    "actualFrom": "Tatsächlich von",
+    "actualTo": "Tatsächlich bis",
+    "actualHint": "Tatsächliche Daten leer lassen, um sie aus Unteraufgaben zu berechnen.",
+    "ngayHint": "Mit tatsächlicher Endzeit gilt die Aufgabe als erledigt, nur mit Startzeit als in Arbeit."
+  },
+  "toast": {
+    "created": "{{ma}} angelegt",
+    "saved": "Änderungen gespeichert",
+    "undone": "Rückgängig gemacht",
+    "exported": "Excel-Datei exportiert",
+    "exportFail": "Excel-Export fehlgeschlagen: {{msg}}",
+    "backedUp": "Sicherung gespeichert",
+    "backupFail": "Sicherung fehlgeschlagen: {{msg}}",
+    "pickMe": "Wählen Sie „Ich bin…“ in den Einstellungen für Meine Aufgaben"
+  },
+  "restore": {
+    "title": "Daten wiederherstellen",
+    "preview": "Importiert {{m}} Monats-, {{w}} Wochen-, {{d}} Tagesaufgaben und {{p}} Personen. Die aktuellen Daten werden vorher gesichert.",
+    "confirm": "Wiederherstellen",
+    "done": "Daten wiederhergestellt",
+    "fail": "Wiederherstellung fehlgeschlagen: {{msg}}",
+    "invalid": "Ungültige Datei",
+    "future": "Diese Datei stammt aus einer neueren HCN-Version. Bitte App aktualisieren."
+  },
+  "notice": {
+    "restored": "data.json war beschädigt und wurde aus {{file}} wiederhergestellt",
+    "corrupt": "data.json war beschädigt, keine Sicherung vorhanden. Datei behalten als {{file}}",
+    "migrated": "Daten von Version {{v}} aktualisiert"
+  },
+  "notify": {
+    "title": "HCN: {{over}} überfällig, {{soon}} bald fällig",
+    "enable": "Windows-Benachrichtigungen",
+    "days": "Tage für „bald fällig“",
+    "hint": "Beim Start und alle 4 Stunden sendet HCN eine Zusammenfassung überfälliger und bald fälliger Aufgaben, die heute noch nicht gemeldet wurden."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "appearance": "Darstellung",
+    "people": "Personen",
+    "personal": "Persönlich",
+    "data": "Daten",
+    "update": "Updates",
+    "notify": "Benachrichtigungen",
+    "about": "Info",
+    "themeHint": "Gilt sofort.",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "darkMode": "Dunkler Modus",
+    "sync": "Synchronisierung"
+  },
+  "people": {
+    "hint": "Personen dienen zum Zuweisen von Aufgaben und als Avatar im Gantt.",
+    "name": "Name",
+    "namePlaceholder": "Name der neuen Person",
+    "add": "Hinzufügen",
+    "empty": "Noch niemand. Oben die erste Person hinzufügen.",
+    "color": "Avatarfarbe",
+    "photo": "Foto",
+    "removePhoto": "Foto entfernen",
+    "photoFail": "Bild konnte nicht gelesen werden",
+    "delete": "Person entfernen",
+    "deleteTitle": "Person entfernen",
+    "deleteAssigned": "{{name}} ist {{n}} Aufgaben zugewiesen. Diese werden „Nicht zugewiesen“.",
+    "duplicate": "Dieser Name existiert bereits",
+    "tasks": "{{n}} Aufgaben",
+    "unnamed": "Ohne Namen"
+  },
+  "personal": {
+    "hint": "Für den Filter „Meine Aufgaben“ und als Standard-Verantwortliche(r) neuer Aufgaben.",
+    "iam": "Ich bin…",
+    "none": "— Nicht gesetzt —",
+    "addPeople": "Personen hinzufügen"
+  },
+  "data": {
+    "backupTitle": "Sichern und wiederherstellen",
+    "backupHint": "Als .json sichern, aus .json wiederherstellen (auch Sicherungen der alten HTML-Version) oder Excel mit 4 Blättern exportieren.",
+    "backup": ".json sichern",
+    "restore": "Aus .json wiederherstellen",
+    "export": ".xlsx exportieren",
+    "location": "Speicherort der Daten",
+    "locationHint": "Die Daten liegen außerhalb des Installationsordners, Updates und Neuinstallationen behalten sie. Automatische Sicherungen liegen im Ordner backups.",
+    "openFolder": "Ordner öffnen",
+    "legacyTitle": "Daten aus der alten HTML-Version übernehmen",
+    "legacyHint": "Alte HTML-Version öffnen, auf Sichern klicken (cvkt-backup-….json) und oben „Aus .json wiederherstellen“ verwenden.",
+    "androidLocation": "Die Daten liegen im privaten App-Speicher dieses Telefons. Deinstallieren löscht sie – vorher mit dem PC synchronisieren oder als .json sichern."
+  },
+  "update": {
+    "current": "Aktuelle Version",
+    "lastCheck": "Zuletzt geprüft",
+    "never": "Nie",
+    "check": "Nach Updates suchen",
+    "checking": "Wird geprüft…",
+    "latest": "Sie haben die neueste Version",
+    "available": "Version {{v}} verfügbar",
+    "downloading": "Lade v{{v}}: {{p}} %",
+    "ready": "Update v{{v}} ist bereit.",
+    "installNow": "Installieren und neu starten",
+    "later": "Später",
+    "error": "Prüfung fehlgeschlagen: {{msg}}",
+    "auto": "Updates automatisch herunterladen",
+    "devNote": "Entwicklungsversion: Updateprüfung nur in der installierten App.",
+    "androidNote": "Unter Android das neue .apk über die alte Version installieren. Die Daten bleiben erhalten."
+  },
+  "about": {
+    "log": "Protokolldatei",
+    "openLog": "Protokoll öffnen",
+    "report": "Problem melden"
+  },
+  "excel": {
+    "sheetThang": "Monat",
+    "sheetTuan": "Woche",
+    "sheetNgay": "Tag",
+    "sheetPeople": "Personen",
+    "planFrom": "Geplant von",
+    "planTo": "Geplant bis",
+    "actualFrom": "Tatsächlich von",
+    "actualTo": "Tatsächlich bis",
+    "personName": "Name",
+    "personColor": "Farbe",
+    "personTasks": "Aufgaben"
+  },
+  "wifi": {
+    "unavailable": "Synchronisierung gibt es nur in der PC- und Android-App.",
+    "hubHint": "Dieser PC ist die Zentrale: Telefone im selben WLAN tauschen Änderungen aus, solange die PC-App geöffnet ist. Die Daten verlassen das lokale Netz nicht.",
+    "enable": "Synchronisierung per WLAN erlauben",
+    "addresses": "Adresse dieses PCs",
+    "addressesHint": "Diese Adresse am Telefon eingeben. Bei mehreren die aus demselben WLAN wählen (meist 192.168…).",
+    "noAddress": "Dieser PC ist mit keinem WLAN oder LAN verbunden.",
+    "code": "Kopplungscode",
+    "codeHint": "Jeder Code gilt nur einmal und ändert sich nach dem Koppeln.",
+    "regen": "Neuer Code",
+    "devices": "Gekoppelte Telefone",
+    "noDevices": "Noch keine Telefone. HCN am Telefon öffnen, Einstellungen > Synchronisierung, dann Adresse und Code von oben eingeben.",
+    "lastSeen": "Zuletzt synchronisiert: {{time}}",
+    "never": "nie",
+    "remove": "Telefon entfernen",
+    "removeTitle": "Telefon entfernen",
+    "removeMsg": "{{name}} kann erst nach erneutem Koppeln wieder synchronisieren. Die Daten auf dem Telefon bleiben.",
+    "lastSyncLine": "Letzte Synchronisierung {{time}}, {{n}} Änderungen.",
+    "firewall": "Beim ersten Mal fragt Windows evtl. nach Firewall-Zugriff für HCN Work Manage: für private Netzwerke Zulassen wählen. Telefon und PC müssen im selben WLAN sein.",
+    "clientHint": "Am PC HCN > Einstellungen > Synchronisierung öffnen, einschalten und hier Adresse und Code eingeben. Telefon und PC im selben WLAN.",
+    "addr": "PC-Adresse",
+    "addrPlaceholder": "z. B. 192.168.1.5:47821",
+    "pairCode": "Code (6 Ziffern)",
+    "deviceName": "Name dieses Telefons",
+    "connect": "Verbinden",
+    "connecting": "Verbinde…",
+    "connected": "Verbunden mit {{name}}",
+    "auto": "Synchronisiert beim Öffnen, nach Änderungen und alle 30 Sekunden im selben WLAN wie ein PC mit geöffnetem HCN. Unterwegs funktioniert alles normal und wird später synchronisiert.",
+    "hub": "PC",
+    "lastSync": "Zuletzt synchronisiert",
+    "now": "Jetzt synchronisieren",
+    "syncing": "Synchronisiere…",
+    "done": "Synchronisiert ({{n}} Änderungen)",
+    "unpair": "Trennen",
+    "unpairMsg": "Das Telefon synchronisiert nicht mehr mit dem PC. Die Daten bleiben auf beiden Geräten.",
+    "err": {
+      "code": "Code falsch oder schon benutzt. Neuen Code am PC ablesen.",
+      "unpaired": "Der PC hat dieses Telefon entfernt. Bitte neu koppeln.",
+      "tooMany": "Zu viele Fehlversuche. In einer Minute erneut versuchen.",
+      "network": "PC nicht erreichbar. Prüfen: selbes WLAN, HCN am PC geöffnet und Synchronisierung an, Adresse korrekt.",
+      "timeout": "Der PC hat nicht rechtzeitig geantwortet. Mit besserem WLAN erneut versuchen.",
+      "schema": "Die Geräte nutzen unterschiedliche Datenversionen. App auf beiden aktualisieren.",
+      "server": "Der PC meldet einen Fehler. Später erneut versuchen.",
+      "addr": "PC-Adresse eingeben."
+    }
+  }
+}

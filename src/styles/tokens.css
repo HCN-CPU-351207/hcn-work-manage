@@ -1,0 +1,81 @@
+/* Biến màu Dark (mặc định) và Light. Mọi màu đi qua CSS variables (mục 8.1). */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --app-bg: #121614;
+  --panel: #171d1a;
+  --panel-2: #1e2922;
+  --toolbar-bg: rgba(24, 29, 36, 0.8);
+  --toolbar-border: 1px solid rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --hover: rgba(255, 255, 255, 0.03);
+  --text-title: #9ca3af;
+  --text-value: #f3f4f6;
+  --text-dim: #6b7280;
+  --accent: #34d399;
+  --accent-dark: #059669;
+  --accent-soft: rgba(52, 211, 153, 0.14);
+  --row-accent: #10b981;
+  --ok: #34d399;
+  --okb: rgba(52, 211, 153, 0.14);
+  --info: #60a5fa;
+  --info-bar: #2563eb;
+  --info-soft: rgba(59, 130, 246, 0.18);
+  --warn: #f59e0b;
+  --warn-soft: rgba(245, 158, 11, 0.16);
+  --bad: #f87171;
+  --danger-soft: rgba(239, 68, 68, 0.2);
+  --danger-line: rgba(248, 113, 113, 0.75);
+  --idle: #9ca3af;
+  --idle-soft: rgba(156, 163, 175, 0.16);
+  --idle-bar: #4b5563;
+  --done-bar: #059669;
+  --now-line: #34d399;
+  --input-bg: rgba(0, 0, 0, 0.28);
+  --weekend: rgba(255, 255, 255, 0.028);
+  --today-col: rgba(52, 211, 153, 0.09);
+  --pop-bg: #1b221e;
+  --shadow-pop: 0 14px 44px rgba(0, 0, 0, 0.55);
+  --toolbar-h: 56px;
+  --subnav-h: 52px;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --app-bg: #f4f6f5;
+  --panel: #ffffff;
+  --panel-2: #f9fbfa;
+  --toolbar-bg: rgba(255, 255, 255, 0.85);
+  --toolbar-border: 1px solid rgba(0, 0, 0, 0.08);
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.18);
+  --hover: rgba(0, 0, 0, 0.035);
+  --text-title: #6b7280;
+  --text-value: #111827;
+  --text-dim: #9ca3af;
+  --accent: #34d399;
+  --accent-dark: #059669;
+  --accent-soft: rgba(5, 150, 105, 0.12);
+  --row-accent: #10b981;
+  --ok: #047857;
+  --okb: rgba(5, 150, 105, 0.14);
+  --info: #1d4ed8;
+  --info-bar: #2563eb;
+  --info-soft: rgba(37, 99, 235, 0.12);
+  --warn: #b45309;
+  --warn-soft: rgba(245, 158, 11, 0.18);
+  --bad: #dc2626;
+  --danger-soft: rgba(239, 68, 68, 0.14);
+  --danger-line: rgba(220, 38, 38, 0.7);
+  --idle: #6b7280;
+  --idle-soft: rgba(107, 114, 128, 0.14);
+  --idle-bar: #9ca3af;
+  --done-bar: #059669;
+  --now-line: #059669;
+  --input-bg: rgba(0, 0, 0, 0.05);
+  --weekend: rgba(0, 0, 0, 0.035);
+  --today-col: rgba(5, 150, 105, 0.1);
+  --pop-bg: #ffffff;
+  --shadow-pop: 0 14px 40px rgba(0, 0, 0, 0.18);
+}

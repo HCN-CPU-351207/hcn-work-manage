@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "データを読み込み中…",
+    "loadError": "データを読み込めません"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "ok": "OK",
+    "close": "閉じる",
+    "clear": "クリア",
+    "undo": "元に戻す",
+    "prev": "前へ",
+    "next": "次へ",
+    "today": "今日",
+    "thisWeek": "今週",
+    "thisMonth": "今月",
+    "untitled": "（無題）"
+  },
+  "tabs": {
+    "label": "ページ",
+    "overview": "概要",
+    "thang": "月次",
+    "tuan": "週次",
+    "ngay": "日次"
+  },
+  "level": {
+    "thang": "月次タスク",
+    "tuan": "週次タスク",
+    "ngay": "日次タスク"
+  },
+  "levelShort": {
+    "thang": "月",
+    "tuan": "週",
+    "ngay": "日"
+  },
+  "status": {
+    "todo": "未着手",
+    "doing": "進行中",
+    "done": "完了",
+    "overdue": "期限切れ"
+  },
+  "loai": {
+    "ui": "緊急 - 重要",
+    "un": "緊急 - 重要でない",
+    "ni": "緊急でない - 重要",
+    "nn": "緊急でない - 重要でない"
+  },
+  "weekday": {
+    "0": "月",
+    "1": "火",
+    "2": "水",
+    "3": "木",
+    "4": "金",
+    "5": "土",
+    "6": "日"
+  },
+  "person": {
+    "unassigned": "未割り当て"
+  },
+  "toolbar": {
+    "search": "検索",
+    "searchPlaceholder": "コード・タスク・担当者を検索…または /",
+    "quick": "クイック追加"
+  },
+  "search": {
+    "commands": "コマンド",
+    "noCommand": "一致するコマンドがありません",
+    "noResults": "タスクが見つかりません",
+    "filtering": "表はキーワードで絞り込まれています。結果を選ぶとその行へ移動します。",
+    "slashTip": "/ で {{n}} 個のコマンド"
+  },
+  "cmd": {
+    "create": "クイック追加を開く",
+    "today": "今日のタスク",
+    "overdue": "期限切れのタスク",
+    "duesoon": "期限間近",
+    "mine": "自分のタスク",
+    "export": "すべて Excel に書き出す",
+    "backup": ".json にバックアップ",
+    "restore": ".json から復元",
+    "theme": "ダーク / ライト切替",
+    "language": "言語を変更",
+    "settings": "設定を開く"
+  },
+  "quick": {
+    "today": "今日",
+    "overdue": "期限切れ",
+    "duesoon": "期限間近",
+    "mine": "自分のタスク"
+  },
+  "sync": {
+    "saved": "保存済み",
+    "pending": "保存待ち",
+    "error": "保存に失敗",
+    "errorDetail": "書き込みに失敗：{{msg}}。変更はメモリに保持され、再試行します。"
+  },
+  "bell": {
+    "title": "通知",
+    "empty": "期限切れ・期限間近のタスクはありません",
+    "overdue": "期限切れ（{{n}}）",
+    "soon": "{{d}} 日以内に期限（{{n}}）",
+    "due": "期限 {{date}}"
+  },
+  "views": {
+    "add": "フィルターを保存",
+    "namePlaceholder": "フィルター名",
+    "needFilter": "先にフィルターか検索を設定してください",
+    "saved": "フィルター「{{name}}」を保存しました",
+    "remove": "フィルター {{name}} を削除"
+  },
+  "metric": {
+    "total": "合計",
+    "doing": "進行中",
+    "overdue": "期限切れ",
+    "done": "完了",
+    "subTotal": "月次タスク",
+    "subPct": "全体の {{p}}%",
+    "open": "一覧を見る"
+  },
+  "gantt": {
+    "code": "コード",
+    "hint": "日付をクリックすると 24 時間タイムラインを表示",
+    "openDay": "この日のタイムラインを開く",
+    "noPlan": "予定日なし",
+    "emptyMonth": "この月のタスクはありません",
+    "emptyWeek": "この週の週次タスクはありません",
+    "backMonth": "月に戻る",
+    "backWeek": "週に戻る"
+  },
+  "timeline": {
+    "title": "{{date}} のタイムライン",
+    "unscheduled": "時間未設定",
+    "trayEmpty": "すべて時間設定済み",
+    "trayHint": "クリックして時間を設定",
+    "empty": "この日に時間設定済みのタスクはありません",
+    "totals": "予定 {{p}} · 実績 {{a}}",
+    "from": "開始",
+    "to": "終了",
+    "zoom": "ズーム",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小",
+    "nTasks": "{{n}} 件"
+  },
+  "tip": {
+    "plan": "予定",
+    "actual": "実績",
+    "running": "実行中",
+    "diff": "差 {{v}}",
+    "conflict": "他のタスクと時間が重なっています",
+    "hint": "クリックで固定・ダブルクリックで開く",
+    "open": "詳細を開く"
+  },
+  "col": {
+    "ma": "コード",
+    "loai": "種類",
+    "task": "タスク",
+    "content": "内容",
+    "person": "担当者",
+    "planStart": "予定開始",
+    "planDeadline": "予定期限",
+    "actualStart": "実績開始",
+    "actualEnd": "実績終了",
+    "status": "状態",
+    "progress": "進捗",
+    "note": "メモ",
+    "parentThang": "親の月",
+    "parentTuan": "親の週",
+    "date": "日付",
+    "planTime": "予定時間",
+    "actualTime": "実績時間"
+  },
+  "grid": {
+    "selectAll": "すべて選択",
+    "selectRow": "{{ma}} を選択",
+    "actions": "操作",
+    "autoStatus": "子タスクから自動計算",
+    "dblEdit": "ダブルクリックで編集",
+    "runningDays": "{{n}} 日目"
+  },
+  "qa": {
+    "start": "開始",
+    "end": "終了",
+    "reset": "リセット",
+    "edit": "編集",
+    "delete": "削除"
+  },
+  "card": {
+    "plan": "予定",
+    "actual": "実績"
+  },
+  "swipe": {
+    "title": "クイック完了",
+    "completeAll": "すべての子タスクを完了にしますか？"
+  },
+  "filter": {
+    "status": "状態フィルター",
+    "person": "担当者フィルター",
+    "allStatus": "すべての状態",
+    "allPeople": "全員",
+    "from": "開始日",
+    "to": "終了日",
+    "clear": "フィルター解除",
+    "count": "{{n}} 件",
+    "countOf": "{{total}} 件中 {{n}} 件",
+    "view": "表示",
+    "table": "表",
+    "gantt": "ガント"
+  },
+  "empty": {
+    "thang": "月次タスクはまだありません。",
+    "tuan": "週次タスクはまだありません。",
+    "ngay": "日次タスクはまだありません。",
+    "filtered": "条件に一致するタスクはありません。"
+  },
+  "bulk": {
+    "label": "一括操作",
+    "selected": "{{n}} 件選択中",
+    "status": "状態を変更",
+    "assign": "担当者を変更",
+    "export": "選択分を書き出す",
+    "delete": "一括削除",
+    "clear": "選択解除",
+    "skipped": "子タスクのある {{n}} 件をスキップしました",
+    "statusDone": "{{n}} 件を更新しました",
+    "assigned": "{{n}} 件の担当者を変更しました"
+  },
+  "del": {
+    "title": "タスクを削除",
+    "messageSimple": "日次タスク {{n}} 件を削除します。よろしいですか？",
+    "messageTuan": "週次タスク {{n}} 件と日次タスク {{d}} 件を削除します。よろしいですか？",
+    "messageThang": "月次タスク {{n}} 件と週次 {{w}} 件・日次 {{d}} 件を削除します。よろしいですか？",
+    "confirm": "削除",
+    "done": "{{n}} 件を削除しました"
+  },
+  "form": {
+    "level": "レベル",
+    "namePlaceholder": "タスク名",
+    "choose": "— 選択 —",
+    "details": "詳細…",
+    "errName": "タスク名を入力してください",
+    "errParentThang": "親の月を選択してください",
+    "errParentTuan": "親の週を選択してください",
+    "errDate": "日付を選択してください",
+    "errDeadline": "期限は開始日より前にできません",
+    "errActualEnd": "実績終了は実績開始より前にできません",
+    "errBothTimes": "予定の開始と終了を両方入力するか、両方空にしてください",
+    "errTimeOrder": "終了時刻は開始時刻より前にできません",
+    "errActualStartFirst": "先に実績の開始時刻を入力してください"
+  },
+  "drawer": {
+    "new": {
+      "thang": "新しい月次タスク",
+      "tuan": "新しい週次タスク",
+      "ngay": "新しい日次タスク"
+    },
+    "planFrom": "予定 開始",
+    "planTo": "予定 終了",
+    "actualFrom": "実績 開始",
+    "actualTo": "実績 終了",
+    "actualHint": "実績日を空にすると子タスクから自動計算します。",
+    "ngayHint": "実績終了があれば完了、開始のみなら進行中になります。"
+  },
+  "toast": {
+    "created": "{{ma}} を作成しました",
+    "saved": "変更を保存しました",
+    "undone": "元に戻しました",
+    "exported": "Excel ファイルを書き出しました",
+    "exportFail": "Excel の書き出しに失敗：{{msg}}",
+    "backedUp": "バックアップしました",
+    "backupFail": "バックアップに失敗：{{msg}}",
+    "pickMe": "「自分は…」を設定で選ぶと自分のタスクが使えます"
+  },
+  "restore": {
+    "title": "データを復元",
+    "preview": "月次 {{m}}・週次 {{w}}・日次 {{d}} 件、{{p}} 人を取り込みます。置き換える前に現在のデータをバックアップします。",
+    "confirm": "復元",
+    "done": "データを復元しました",
+    "fail": "復元に失敗：{{msg}}",
+    "invalid": "無効なファイル",
+    "future": "このファイルは新しいバージョンの HCN のものです。アプリを更新してください。"
+  },
+  "notice": {
+    "restored": "data.json が破損していたため {{file}} から復元しました",
+    "corrupt": "data.json が破損しバックアップもありません。破損ファイルは {{file}} として保存しました",
+    "migrated": "バージョン {{v}} からデータを更新しました"
+  },
+  "notify": {
+    "title": "HCN：期限切れ {{over}} 件、期限間近 {{soon}} 件",
+    "enable": "Windows 通知",
+    "days": "「期限間近」の日数",
+    "hint": "起動時と 4 時間ごとに、本日まだ通知していない期限切れ・期限間近のタスクをまとめて通知します。"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "appearance": "外観",
+    "people": "担当者",
+    "personal": "個人",
+    "data": "データ",
+    "update": "アップデート",
+    "notify": "通知",
+    "about": "このアプリについて",
+    "themeHint": "すぐに反映されます。",
+    "light": "ライト",
+    "dark": "ダーク",
+    "darkMode": "ダークモード",
+    "sync": "同期"
+  },
+  "people": {
+    "hint": "担当者はタスクの割り当てとガント上のアバター表示に使われます。",
+    "name": "名前",
+    "namePlaceholder": "新しい担当者の名前",
+    "add": "追加",
+    "empty": "まだ誰もいません。上で追加してください。",
+    "color": "アバターの色",
+    "photo": "写真",
+    "removePhoto": "写真を削除",
+    "photoFail": "画像を読み込めません",
+    "delete": "担当者を削除",
+    "deleteTitle": "担当者を削除",
+    "deleteAssigned": "{{name}} は {{n}} 件を担当しています。これらは「未割り当て」になります。",
+    "duplicate": "その名前は既にあります",
+    "tasks": "{{n}} 件",
+    "unnamed": "名前なし"
+  },
+  "personal": {
+    "hint": "「自分のタスク」フィルターと新規タスクの既定の担当者に使われます。",
+    "iam": "自分は…",
+    "none": "— 未設定 —",
+    "addPeople": "担当者を追加"
+  },
+  "data": {
+    "backupTitle": "バックアップと復元",
+    "backupHint": ".json へのバックアップ、.json からの復元（旧 HTML 版のバックアップを含む）、4 シートの Excel 書き出しができます。",
+    "backup": ".json バックアップ",
+    "restore": ".json から復元",
+    "export": ".xlsx 書き出し",
+    "location": "データの場所",
+    "locationHint": "データはインストール先とは別の場所にあるため、更新や再インストールで消えません。自動バックアップは backups フォルダーにあります。",
+    "openFolder": "フォルダーを開く",
+    "legacyTitle": "旧 HTML 版からデータを移行",
+    "legacyHint": "旧 HTML 版を開いて「バックアップ」で cvkt-backup-….json を作り、上の「.json から復元」で選択してください。",
+    "androidLocation": "データはこのスマホのアプリ専用領域に保存されます。アンインストールすると消えるため、事前にPCと同期するか .json にバックアップしてください。"
+  },
+  "update": {
+    "current": "現在のバージョン",
+    "lastCheck": "最終確認",
+    "never": "未確認",
+    "check": "アップデートを確認",
+    "checking": "確認中…",
+    "latest": "最新バージョンです",
+    "available": "v{{v}} があります",
+    "downloading": "v{{v}} をダウンロード中：{{p}}%",
+    "ready": "アップデート v{{v}} の準備ができました。",
+    "installNow": "インストールして再起動",
+    "later": "後で",
+    "error": "確認できません：{{msg}}",
+    "auto": "アップデートを自動ダウンロード",
+    "devNote": "開発版：アップデート確認はインストール版でのみ動作します。",
+    "androidNote": "Android では新しい .apk を上書きインストールして更新します。データは保持されます。"
+  },
+  "about": {
+    "log": "ログファイル",
+    "openLog": "ログを開く",
+    "report": "問題を報告"
+  },
+  "excel": {
+    "sheetThang": "月次",
+    "sheetTuan": "週次",
+    "sheetNgay": "日次",
+    "sheetPeople": "担当者",
+    "planFrom": "予定 開始",
+    "planTo": "予定 終了",
+    "actualFrom": "実績 開始",
+    "actualTo": "実績 終了",
+    "personName": "名前",
+    "personColor": "色",
+    "personTasks": "件数"
+  },
+  "wifi": {
+    "unavailable": "同期は PC 版と Android 版でのみ利用できます。",
+    "hubHint": "この PC がハブになります。同じ Wi-Fi のスマホは PC アプリが開いている間に変更を送受信します。データはローカルネットワークの外に出ません。",
+    "enable": "Wi-Fi でのスマホ同期を許可",
+    "addresses": "この PC のアドレス",
+    "addressesHint": "このアドレスをスマホに入力します。複数ある場合はスマホと同じ Wi-Fi のもの（通常 192.168 で始まる）を使ってください。",
+    "noAddress": "この PC は Wi-Fi にも有線ネットワークにも接続されていません。",
+    "code": "ペアリングコード",
+    "codeHint": "コードは一度だけ使えます。スマホがペアリングすると自動で変わります。",
+    "regen": "コードを変更",
+    "devices": "ペアリング済みのスマホ",
+    "noDevices": "まだスマホはありません。スマホで HCN を開き、設定 > 同期 で上のアドレスとコードを入力してください。",
+    "lastSeen": "最終同期：{{time}}",
+    "never": "未同期",
+    "remove": "スマホを削除",
+    "removeTitle": "スマホを削除",
+    "removeMsg": "{{name}} は再ペアリングするまで同期できません。スマホのデータは残ります。",
+    "lastSyncLine": "最終同期 {{time}}、変更 {{n}} 件。",
+    "firewall": "初回は Windows が HCN Work Manage のファイアウォール許可を求めることがあります。プライベートネットワークで「許可」を選んでください。スマホと PC は同じ Wi-Fi にある必要があります。",
+    "clientHint": "PC で HCN > 設定 > 同期 を開いて同期をオンにし、表示されたアドレスとコードを入力します。スマホと PC は同じ Wi-Fi にしてください。",
+    "addr": "PC のアドレス",
+    "addrPlaceholder": "例 192.168.1.5:47821",
+    "pairCode": "ペアリングコード（6 桁）",
+    "deviceName": "このスマホの名前",
+    "connect": "接続",
+    "connecting": "接続中…",
+    "connected": "{{name}} に接続しました",
+    "auto": "HCN を開いている PC と同じ Wi-Fi にいる間、起動時・変更時・30 秒ごとに自動同期します。外出先でも普段どおり使え、戻ったときに同期されます。",
+    "hub": "PC",
+    "lastSync": "最終同期",
+    "now": "今すぐ同期",
+    "syncing": "同期中…",
+    "done": "同期しました（変更 {{n}} 件）",
+    "unpair": "接続を解除",
+    "unpairMsg": "スマホは PC との同期を停止します。両方の端末のデータはそのまま残ります。",
+    "err": {
+      "code": "コードが違うか使用済みです。PC で新しいコードを確認してください。",
+      "unpaired": "PC がこのスマホを削除しました。再度ペアリングしてください。",
+      "tooMany": "誤りが多すぎます。1 分後にもう一度お試しください。",
+      "network": "PC に接続できません。同じ Wi-Fi か、PC で HCN が開いて同期がオンか、アドレスが正しいかを確認してください。",
+      "timeout": "PC が時間内に応答しませんでした。Wi-Fi の電波が良い場所で再試行してください。",
+      "schema": "端末間でデータのバージョンが異なります。両方のアプリを更新してください。",
+      "server": "PC でエラーが発生しました。後でもう一度お試しください。",
+      "addr": "PC のアドレスを入力してください。"
+    }
+  }
+}

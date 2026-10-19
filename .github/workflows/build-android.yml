@@ -1,0 +1,63 @@
+name: Build HCN (Android .apk)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm install
+      - run: npm test
+      # Giao diện bản Android
+      - run: npm run build:android
+      # Tạo dự án Android, icon, rồi vá cấu hình (http trong Wi-Fi, phiên bản, ký APK)
+      - run: npx cap add android
+      - run: npx @capacitor/assets generate --android --iconBackgroundColor "#34D399" --iconBackgroundColorDark "#059669" --splashBackgroundColor "#121614" --splashBackgroundColorDark "#121614"
+      - run: node scripts/android-prepare.mjs
+      - run: npx cap sync android
+      # Dùng keystore riêng nếu đã khai báo trong Settings > Secrets (khuyến nghị khi phát hành rộng)
+      - name: Keystore từ Secrets (nếu có)
+        env:
+          KS_B64: ${{ secrets.HCN_KEYSTORE_BASE64 }}
+        if: env.KS_B64 != ''
+        run: |
+          echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/hcn.jks"
+          echo "HCN_KEYSTORE=$RUNNER_TEMP/hcn.jks" >> "$GITHUB_ENV"
+      - name: Build APK
+        working-directory: android
+        env:
+          HCN_KEYSTORE_PASSWORD: ${{ secrets.HCN_KEYSTORE_PASSWORD }}
+          HCN_KEY_ALIAS: ${{ secrets.HCN_KEY_ALIAS }}
+          HCN_KEY_PASSWORD: ${{ secrets.HCN_KEY_PASSWORD }}
+        run: |
+          if [ -z "$HCN_KEYSTORE_PASSWORD" ]; then unset HCN_KEYSTORE_PASSWORD HCN_KEY_ALIAS HCN_KEY_PASSWORD; fi
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+      - name: Đặt tên file
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/app-release.apk "out/HCN-${VER}.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HCN-Android
+          path: out/*.apk
+      - name: Đính kèm vào GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.apk

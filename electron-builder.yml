@@ -1,0 +1,55 @@
+appId: com.hcn.workmanage
+productName: HCN Work Manage
+copyright: Copyright © HCN
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**
+  - dist-electron/**
+  - package.json
+  - build/icon.png
+  # gói Capacitor chỉ dùng cho bản Android
+  - "!node_modules/@capacitor/**"
+asar: true
+compression: normal
+win:
+  icon: build/icon.ico
+  executableName: HCN Work Manage
+  target:
+    - target: nsis
+      arch: [x64]
+nsis:
+  # Một file .exe duy nhất: HCN-Setup-{version}.exe, cài theo người dùng, không cần quyền Admin (mục 3.1)
+  artifactName: HCN-Setup-${version}.${ext}
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  # Shortcut Desktop do ô tích ở trang cuối tạo (build/installer.nsh), Start Menu do electron-builder tạo
+  createDesktopShortcut: false
+  createStartMenuShortcut: true
+  shortcutName: HCN Work Manage
+  menuCategory: false
+  runAfterFinish: true
+  # Dữ liệu chỉ bị xóa khi người dùng chọn "Có" lúc gỡ (build/installer.nsh)
+  deleteAppDataOnUninstall: false
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  uninstallDisplayName: HCN Work Manage
+  include: build/installer.nsh
+  installerLanguages: [vi_VN]
+  language: "1066"
+  unicode: true
+# Nguồn cập nhật (mục 4.1): chọn MỘT. Điền owner/repo thật trước khi phát hành.
+publish:
+  provider: github
+  owner: HCN-CPU-351207
+  repo: hcn-work-manage
+  releaseType: release
+# Hoặc server tĩnh (bỏ comment khối dưới và xóa khối github ở trên):
+# publish:
+#   provider: generic
+#   url: https://your-domain.example/hcn-updates/
+#   channel: latest

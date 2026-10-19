@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "Loading data…",
+    "loadError": "Could not load data"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "ok": "OK",
+    "close": "Close",
+    "clear": "Clear",
+    "undo": "Undo",
+    "prev": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "untitled": "(untitled)"
+  },
+  "tabs": {
+    "label": "Pages",
+    "overview": "Overview",
+    "thang": "Monthly",
+    "tuan": "Weekly",
+    "ngay": "Daily"
+  },
+  "level": {
+    "thang": "Monthly task",
+    "tuan": "Weekly task",
+    "ngay": "Daily task"
+  },
+  "levelShort": {
+    "thang": "Month",
+    "tuan": "Week",
+    "ngay": "Day"
+  },
+  "status": {
+    "todo": "To do",
+    "doing": "In progress",
+    "done": "Done",
+    "overdue": "Overdue"
+  },
+  "loai": {
+    "ui": "Urgent - Important",
+    "un": "Urgent - Not important",
+    "ni": "Not urgent - Important",
+    "nn": "Not urgent - Not important"
+  },
+  "weekday": {
+    "0": "Mon",
+    "1": "Tue",
+    "2": "Wed",
+    "3": "Thu",
+    "4": "Fri",
+    "5": "Sat",
+    "6": "Sun"
+  },
+  "person": {
+    "unassigned": "Unassigned"
+  },
+  "toolbar": {
+    "search": "Search",
+    "searchPlaceholder": "Search code, task, person… or type /",
+    "quick": "Quick add"
+  },
+  "search": {
+    "commands": "Commands",
+    "noCommand": "No matching command",
+    "noResults": "No tasks found",
+    "filtering": "The table is filtered by your search. Pick a result to jump to it.",
+    "slashTip": "Type / for {{n}} commands"
+  },
+  "cmd": {
+    "create": "Open quick add",
+    "today": "Today's tasks",
+    "overdue": "Overdue tasks",
+    "duesoon": "Tasks due soon",
+    "mine": "My tasks",
+    "export": "Export everything to Excel",
+    "backup": "Back up to a .json file",
+    "restore": "Restore from a .json file",
+    "theme": "Switch Dark / Light",
+    "language": "Change language",
+    "settings": "Open settings"
+  },
+  "quick": {
+    "today": "Today",
+    "overdue": "Overdue",
+    "duesoon": "Due soon",
+    "mine": "My tasks"
+  },
+  "sync": {
+    "saved": "Saved",
+    "pending": "Saving…",
+    "error": "Save failed",
+    "errorDetail": "Could not write data: {{msg}}. Your changes are kept in memory and will be retried."
+  },
+  "bell": {
+    "title": "Notifications",
+    "empty": "Nothing overdue or due soon",
+    "overdue": "Overdue ({{n}})",
+    "soon": "Due within {{d}} days ({{n}})",
+    "due": "Due {{date}}"
+  },
+  "views": {
+    "add": "Save filter",
+    "namePlaceholder": "Filter name",
+    "needFilter": "Set a filter or search before saving",
+    "saved": "Saved filter \"{{name}}\"",
+    "remove": "Remove filter {{name}}"
+  },
+  "metric": {
+    "total": "Total tasks",
+    "doing": "In progress",
+    "overdue": "Overdue",
+    "done": "Done",
+    "subTotal": "Monthly tasks",
+    "subPct": "{{p}}% of total",
+    "open": "Show list"
+  },
+  "gantt": {
+    "code": "Code",
+    "hint": "Click a day to open its 24-hour timeline",
+    "openDay": "Open this day's timeline",
+    "noPlan": "No planned dates",
+    "emptyMonth": "No tasks in this month",
+    "emptyWeek": "No weekly tasks this week",
+    "backMonth": "Back to month",
+    "backWeek": "Back to week"
+  },
+  "timeline": {
+    "title": "Timeline for {{date}}",
+    "unscheduled": "Unscheduled",
+    "trayEmpty": "Everything has a time",
+    "trayHint": "Click to set a time",
+    "empty": "No scheduled tasks on this day",
+    "totals": "Planned {{p}} · Actual {{a}}",
+    "from": "From",
+    "to": "To",
+    "zoom": "Zoom",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "nTasks": "{{n}} tasks"
+  },
+  "tip": {
+    "plan": "Planned",
+    "actual": "Actual",
+    "running": "running",
+    "diff": "Difference {{v}}",
+    "conflict": "Overlaps another task",
+    "hint": "Click to pin · Double-click to open",
+    "open": "Open details"
+  },
+  "col": {
+    "ma": "Code",
+    "loai": "Type",
+    "task": "Task",
+    "content": "Content",
+    "person": "Owner",
+    "planStart": "Planned start",
+    "planDeadline": "Planned deadline",
+    "actualStart": "Actual start",
+    "actualEnd": "Actual end",
+    "status": "Status",
+    "progress": "Progress",
+    "note": "Notes",
+    "parentThang": "Parent month",
+    "parentTuan": "Parent week",
+    "date": "Date",
+    "planTime": "Planned time",
+    "actualTime": "Actual time"
+  },
+  "grid": {
+    "selectAll": "Select all",
+    "selectRow": "Select {{ma}}",
+    "actions": "Actions",
+    "autoStatus": "Set automatically from subtasks",
+    "dblEdit": "Double-click to edit",
+    "runningDays": "running {{n}} days"
+  },
+  "qa": {
+    "start": "Start",
+    "end": "Finish",
+    "reset": "Reset",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "card": {
+    "plan": "Plan",
+    "actual": "Actual"
+  },
+  "swipe": {
+    "title": "Quick complete",
+    "completeAll": "Mark all subtasks as done?"
+  },
+  "filter": {
+    "status": "Status filter",
+    "person": "Owner filter",
+    "allStatus": "All statuses",
+    "allPeople": "Everyone",
+    "from": "From date",
+    "to": "To date",
+    "clear": "Clear filters",
+    "count": "{{n}} tasks",
+    "countOf": "{{n}} of {{total}} tasks",
+    "view": "View",
+    "table": "Table",
+    "gantt": "Gantt"
+  },
+  "empty": {
+    "thang": "No monthly tasks yet.",
+    "tuan": "No weekly tasks yet.",
+    "ngay": "No daily tasks yet.",
+    "filtered": "No tasks match the filters."
+  },
+  "bulk": {
+    "label": "Bulk actions",
+    "selected": "{{n}} selected",
+    "status": "Change status",
+    "assign": "Reassign",
+    "export": "Export selected",
+    "delete": "Delete selected",
+    "clear": "Clear selection",
+    "skipped": "Skipped {{n}} tasks that have subtasks",
+    "statusDone": "Updated {{n}} tasks",
+    "assigned": "Reassigned {{n}} tasks"
+  },
+  "del": {
+    "title": "Delete tasks",
+    "messageSimple": "This deletes {{n}} daily tasks. Are you sure?",
+    "messageTuan": "This deletes {{n}} weekly tasks and {{d}} daily tasks. Are you sure?",
+    "messageThang": "This deletes {{n}} monthly tasks with {{w}} weekly and {{d}} daily tasks. Are you sure?",
+    "confirm": "Delete",
+    "done": "Deleted {{n}} tasks"
+  },
+  "form": {
+    "level": "Level",
+    "namePlaceholder": "Task name",
+    "choose": "— Choose —",
+    "details": "Details…",
+    "errName": "Enter a task name",
+    "errParentThang": "Choose a parent month",
+    "errParentTuan": "Choose a parent week",
+    "errDate": "Choose a date",
+    "errDeadline": "The deadline can't be before the start date",
+    "errActualEnd": "The actual end can't be before the actual start",
+    "errBothTimes": "Enter both planned times, or leave both empty",
+    "errTimeOrder": "The end time can't be before the start time",
+    "errActualStartFirst": "Enter the actual start time first"
+  },
+  "drawer": {
+    "new": {
+      "thang": "New monthly task",
+      "tuan": "New weekly task",
+      "ngay": "New daily task"
+    },
+    "planFrom": "Planned from",
+    "planTo": "Planned to",
+    "actualFrom": "Actual from",
+    "actualTo": "Actual to",
+    "actualHint": "Leave actual dates empty to calculate them from subtasks.",
+    "ngayHint": "An actual end time marks the task Done; only a start time marks it In progress."
+  },
+  "toast": {
+    "created": "Created {{ma}}",
+    "saved": "Changes saved",
+    "undone": "Undone",
+    "exported": "Excel file exported",
+    "exportFail": "Could not export Excel: {{msg}}",
+    "backedUp": "Backup saved",
+    "backupFail": "Backup failed: {{msg}}",
+    "pickMe": "Choose \"I am…\" in Settings to use My tasks"
+  },
+  "restore": {
+    "title": "Restore data",
+    "preview": "This imports {{m}} monthly, {{w}} weekly, {{d}} daily tasks and {{p}} people. Your current data is backed up before it is replaced.",
+    "confirm": "Restore",
+    "done": "Data restored",
+    "fail": "Restore failed: {{msg}}",
+    "invalid": "Invalid file",
+    "future": "This file comes from a newer HCN version. Update the app first."
+  },
+  "notice": {
+    "restored": "data.json was damaged, so it was restored from backup {{file}}",
+    "corrupt": "data.json was damaged and no backup exists. The damaged file was kept as {{file}}",
+    "migrated": "Data upgraded from version {{v}}"
+  },
+  "notify": {
+    "title": "HCN: {{over}} overdue, {{soon}} due soon",
+    "enable": "Windows notifications",
+    "days": "\"Due soon\" window (days)",
+    "hint": "On launch and every 4 hours, HCN sends one summary of overdue and due-soon tasks not yet notified today."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "people": "People",
+    "personal": "Personal",
+    "data": "Data",
+    "update": "Updates",
+    "notify": "Notifications",
+    "about": "About",
+    "themeHint": "Applies immediately.",
+    "light": "Light",
+    "dark": "Dark",
+    "darkMode": "Dark mode",
+    "sync": "Sync"
+  },
+  "people": {
+    "hint": "People are used to assign tasks and show avatars on the Gantt.",
+    "name": "Name",
+    "namePlaceholder": "New person's name",
+    "add": "Add",
+    "empty": "No one yet. Add the first person above.",
+    "color": "Avatar color",
+    "photo": "Photo",
+    "removePhoto": "Remove photo",
+    "photoFail": "Could not read the image",
+    "delete": "Remove person",
+    "deleteTitle": "Remove person",
+    "deleteAssigned": "{{name}} is assigned to {{n}} tasks. They will become \"Unassigned\".",
+    "duplicate": "That name is already in the list",
+    "tasks": "{{n}} tasks",
+    "unnamed": "Unnamed"
+  },
+  "personal": {
+    "hint": "Used by the \"My tasks\" filter and as the default owner for new tasks.",
+    "iam": "I am…",
+    "none": "— Not set —",
+    "addPeople": "Add people"
+  },
+  "data": {
+    "backupTitle": "Backup and restore",
+    "backupHint": "Save a .json backup, restore from a .json file (including backups from the old HTML version), or export a 4-sheet Excel file.",
+    "backup": "Back up .json",
+    "restore": "Restore from .json",
+    "export": "Export .xlsx",
+    "location": "Data location",
+    "locationHint": "Data lives outside the install folder, so updating or reinstalling keeps it. Automatic backups are in the backups folder.",
+    "openFolder": "Open folder",
+    "legacyTitle": "Move data from the old HTML version",
+    "legacyHint": "Open the old HTML version, click Backup to get a cvkt-backup-….json file, then use Restore from .json above.",
+    "androidLocation": "Data is stored in the app's private storage on this phone. Uninstalling the app deletes it, so sync with your PC or back up to .json first."
+  },
+  "update": {
+    "current": "Current version",
+    "lastCheck": "Last checked",
+    "never": "Never",
+    "check": "Check for updates",
+    "checking": "Checking…",
+    "latest": "You're on the latest version",
+    "available": "Version {{v}} is available",
+    "downloading": "Downloading v{{v}}: {{p}}%",
+    "ready": "Update v{{v}} is ready.",
+    "installNow": "Install and restart",
+    "later": "Later",
+    "error": "Couldn't check: {{msg}}",
+    "auto": "Download updates automatically",
+    "devNote": "Development build: update checks only work in the installed app.",
+    "androidNote": "On Android, update by installing the new .apk over the old one. Your data is kept."
+  },
+  "about": {
+    "log": "Log file",
+    "openLog": "Open log",
+    "report": "Report a problem"
+  },
+  "excel": {
+    "sheetThang": "Monthly",
+    "sheetTuan": "Weekly",
+    "sheetNgay": "Daily",
+    "sheetPeople": "People",
+    "planFrom": "Planned from",
+    "planTo": "Planned to",
+    "actualFrom": "Actual from",
+    "actualTo": "Actual to",
+    "personName": "Name",
+    "personColor": "Color",
+    "personTasks": "Tasks"
+  },
+  "wifi": {
+    "unavailable": "Sync is only available in the PC and Android apps.",
+    "hubHint": "This PC acts as the hub: phones on the same Wi-Fi send and receive changes while the PC app is open. Data never leaves your local network.",
+    "enable": "Allow phones to sync over Wi-Fi",
+    "addresses": "This PC's address",
+    "addressesHint": "Enter this address on the phone. If there are several, use the one on the phone's Wi-Fi (usually starting with 192.168).",
+    "noAddress": "This PC isn't connected to Wi-Fi or a wired network.",
+    "code": "Pairing code",
+    "codeHint": "Each code works once. It changes automatically after a phone pairs.",
+    "regen": "New code",
+    "devices": "Paired phones",
+    "noDevices": "No phones yet. Open HCN on the phone, go to Settings > Sync and enter the address and code above.",
+    "lastSeen": "Last sync: {{time}}",
+    "never": "never",
+    "remove": "Remove phone",
+    "removeTitle": "Remove phone",
+    "removeMsg": "{{name}} won't be able to sync until it pairs again. Data on the phone stays.",
+    "lastSyncLine": "Last sync at {{time}}, {{n}} changes.",
+    "firewall": "The first time, Windows may ask for firewall access for HCN Work Manage: choose Allow for Private networks. The phone and PC must be on the same Wi-Fi.",
+    "clientHint": "On the PC, open HCN > Settings > Sync, turn sync on, then enter the address and code shown there. The phone and PC must be on the same Wi-Fi.",
+    "addr": "PC address",
+    "addrPlaceholder": "e.g. 192.168.1.5:47821",
+    "pairCode": "Pairing code (6 digits)",
+    "deviceName": "This phone's name",
+    "connect": "Connect",
+    "connecting": "Connecting…",
+    "connected": "Connected to {{name}}",
+    "auto": "Syncs automatically on open, after changes and every 30 seconds while on the same Wi-Fi as a PC running HCN. Elsewhere it works normally and syncs when you're back.",
+    "hub": "PC",
+    "lastSync": "Last sync",
+    "now": "Sync now",
+    "syncing": "Syncing…",
+    "done": "Synced ({{n}} changes)",
+    "unpair": "Disconnect",
+    "unpairMsg": "The phone stops syncing with the PC. Data on both devices is kept.",
+    "err": {
+      "code": "The pairing code is wrong or already used. Check the new code on the PC.",
+      "unpaired": "The PC removed this phone. Pair again.",
+      "tooMany": "Too many wrong attempts. Try again in a minute.",
+      "network": "Can't reach the PC. Check: same Wi-Fi, HCN open on the PC with sync on, correct address.",
+      "timeout": "The PC didn't respond in time. Try again with a better Wi-Fi signal.",
+      "schema": "The devices use different data versions. Update the app on both.",
+      "server": "The PC reported an error. Try again later.",
+      "addr": "Enter the PC address."
+    }
+  }
+}

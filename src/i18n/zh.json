@@ -1,0 +1,428 @@
+{
+  "app": {
+    "name": "HCN Work Manage",
+    "loading": "正在加载数据…",
+    "loadError": "无法读取数据"
+  },
+  "common": {
+    "cancel": "取消",
+    "save": "保存",
+    "ok": "确定",
+    "close": "关闭",
+    "clear": "清除",
+    "undo": "撤销",
+    "prev": "上一个",
+    "next": "下一个",
+    "today": "今天",
+    "thisWeek": "本周",
+    "thisMonth": "本月",
+    "untitled": "（未命名）"
+  },
+  "tabs": {
+    "label": "页面",
+    "overview": "总览",
+    "thang": "月任务",
+    "tuan": "周任务",
+    "ngay": "日任务"
+  },
+  "level": {
+    "thang": "月任务",
+    "tuan": "周任务",
+    "ngay": "日任务"
+  },
+  "levelShort": {
+    "thang": "月",
+    "tuan": "周",
+    "ngay": "日"
+  },
+  "status": {
+    "todo": "未开始",
+    "doing": "进行中",
+    "done": "已完成",
+    "overdue": "已逾期"
+  },
+  "loai": {
+    "ui": "紧急 - 重要",
+    "un": "紧急 - 不重要",
+    "ni": "不紧急 - 重要",
+    "nn": "不紧急 - 不重要"
+  },
+  "weekday": {
+    "0": "一",
+    "1": "二",
+    "2": "三",
+    "3": "四",
+    "4": "五",
+    "5": "六",
+    "6": "日"
+  },
+  "person": {
+    "unassigned": "未分配"
+  },
+  "toolbar": {
+    "search": "搜索",
+    "searchPlaceholder": "搜索编号、任务、人员…或输入 /",
+    "quick": "快速新建"
+  },
+  "search": {
+    "commands": "快捷命令",
+    "noCommand": "没有匹配的命令",
+    "noResults": "未找到任务",
+    "filtering": "表格已按关键字筛选。选择结果可跳转到该行。",
+    "slashTip": "输入 / 查看 {{n}} 个命令"
+  },
+  "cmd": {
+    "create": "打开快速新建",
+    "today": "今天的任务",
+    "overdue": "逾期任务",
+    "duesoon": "即将到期",
+    "mine": "我的任务",
+    "export": "全部导出到 Excel",
+    "backup": "备份为 .json 文件",
+    "restore": "从 .json 文件恢复",
+    "theme": "切换深色 / 浅色",
+    "language": "更改语言",
+    "settings": "打开设置"
+  },
+  "quick": {
+    "today": "今天",
+    "overdue": "已逾期",
+    "duesoon": "即将到期",
+    "mine": "我的任务"
+  },
+  "sync": {
+    "saved": "已保存",
+    "pending": "等待保存",
+    "error": "保存失败",
+    "errorDetail": "写入数据失败：{{msg}}。修改仍保留在内存中，正在重试。"
+  },
+  "bell": {
+    "title": "通知",
+    "empty": "没有逾期或即将到期的任务",
+    "overdue": "已逾期（{{n}}）",
+    "soon": "{{d}} 天内到期（{{n}}）",
+    "due": "截止 {{date}}"
+  },
+  "views": {
+    "add": "保存筛选",
+    "namePlaceholder": "筛选名称",
+    "needFilter": "请先设置筛选或关键字",
+    "saved": "已保存筛选“{{name}}”",
+    "remove": "删除筛选 {{name}}"
+  },
+  "metric": {
+    "total": "任务总数",
+    "doing": "进行中",
+    "overdue": "已逾期",
+    "done": "已完成",
+    "subTotal": "月任务",
+    "subPct": "占总数 {{p}}%",
+    "open": "查看列表"
+  },
+  "gantt": {
+    "code": "编号",
+    "hint": "点击某一天打开 24 小时时间轴",
+    "openDay": "打开当天时间轴",
+    "noPlan": "未设定计划日期",
+    "emptyMonth": "本月没有任务",
+    "emptyWeek": "本周没有周任务",
+    "backMonth": "返回月视图",
+    "backWeek": "返回周视图"
+  },
+  "timeline": {
+    "title": "{{date}} 时间轴",
+    "unscheduled": "未排时间",
+    "trayEmpty": "所有任务都已排时间",
+    "trayHint": "点击设置时间",
+    "empty": "当天没有已排时间的任务",
+    "totals": "计划 {{p}} · 实际 {{a}}",
+    "from": "开始时间",
+    "to": "结束时间",
+    "zoom": "缩放",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "nTasks": "{{n}} 个任务"
+  },
+  "tip": {
+    "plan": "计划",
+    "actual": "实际",
+    "running": "进行中",
+    "diff": "差异 {{v}}",
+    "conflict": "与其他任务时间重叠",
+    "hint": "单击固定 · 双击打开",
+    "open": "打开详情"
+  },
+  "col": {
+    "ma": "编号",
+    "loai": "类型",
+    "task": "任务",
+    "content": "内容",
+    "person": "负责人",
+    "planStart": "计划开始",
+    "planDeadline": "计划截止",
+    "actualStart": "实际开始",
+    "actualEnd": "实际结束",
+    "status": "状态",
+    "progress": "进度",
+    "note": "备注",
+    "parentThang": "所属月任务",
+    "parentTuan": "所属周任务",
+    "date": "日期",
+    "planTime": "计划时间",
+    "actualTime": "实际时间"
+  },
+  "grid": {
+    "selectAll": "全选",
+    "selectRow": "选择 {{ma}}",
+    "actions": "操作",
+    "autoStatus": "由子任务自动计算",
+    "dblEdit": "双击编辑",
+    "runningDays": "已进行 {{n}} 天"
+  },
+  "qa": {
+    "start": "开始",
+    "end": "结束",
+    "reset": "重置",
+    "edit": "编辑",
+    "delete": "删除"
+  },
+  "card": {
+    "plan": "计划",
+    "actual": "实际"
+  },
+  "swipe": {
+    "title": "快速完成",
+    "completeAll": "将所有子任务标记为完成？"
+  },
+  "filter": {
+    "status": "状态筛选",
+    "person": "负责人筛选",
+    "allStatus": "全部状态",
+    "allPeople": "所有人",
+    "from": "开始日期",
+    "to": "结束日期",
+    "clear": "清除筛选",
+    "count": "{{n}} 个任务",
+    "countOf": "{{n}} / {{total}} 个任务",
+    "view": "视图",
+    "table": "表格",
+    "gantt": "甘特图"
+  },
+  "empty": {
+    "thang": "还没有月任务。",
+    "tuan": "还没有周任务。",
+    "ngay": "还没有日任务。",
+    "filtered": "没有符合筛选条件的任务。"
+  },
+  "bulk": {
+    "label": "批量操作",
+    "selected": "已选择 {{n}} 个",
+    "status": "更改状态",
+    "assign": "重新分配",
+    "export": "导出所选",
+    "delete": "批量删除",
+    "clear": "取消选择",
+    "skipped": "已跳过 {{n}} 个有子任务的任务",
+    "statusDone": "已更新 {{n}} 个任务",
+    "assigned": "已重新分配 {{n}} 个任务"
+  },
+  "del": {
+    "title": "删除任务",
+    "messageSimple": "将删除 {{n}} 个日任务。确定吗？",
+    "messageTuan": "将删除 {{n}} 个周任务及 {{d}} 个日任务。确定吗？",
+    "messageThang": "将删除 {{n}} 个月任务及 {{w}} 个周任务、{{d}} 个日任务。确定吗？",
+    "confirm": "删除",
+    "done": "已删除 {{n}} 个任务"
+  },
+  "form": {
+    "level": "级别",
+    "namePlaceholder": "任务名称",
+    "choose": "— 选择 —",
+    "details": "详情…",
+    "errName": "请输入任务名称",
+    "errParentThang": "请选择所属月任务",
+    "errParentTuan": "请选择所属周任务",
+    "errDate": "请选择日期",
+    "errDeadline": "截止日期不能早于开始日期",
+    "errActualEnd": "实际结束不能早于实际开始",
+    "errBothTimes": "请同时填写计划开始和结束时间，或都留空",
+    "errTimeOrder": "结束时间不能早于开始时间",
+    "errActualStartFirst": "请先填写实际开始时间"
+  },
+  "drawer": {
+    "new": {
+      "thang": "新建月任务",
+      "tuan": "新建周任务",
+      "ngay": "新建日任务"
+    },
+    "planFrom": "计划开始时间",
+    "planTo": "计划结束时间",
+    "actualFrom": "实际开始时间",
+    "actualTo": "实际结束时间",
+    "actualHint": "实际日期留空则由子任务自动计算。",
+    "ngayHint": "填写实际结束时间即视为已完成；只有开始时间则为进行中。"
+  },
+  "toast": {
+    "created": "已创建 {{ma}}",
+    "saved": "已保存修改",
+    "undone": "已撤销",
+    "exported": "已导出 Excel 文件",
+    "exportFail": "导出 Excel 失败：{{msg}}",
+    "backedUp": "已备份",
+    "backupFail": "备份失败：{{msg}}",
+    "pickMe": "请在设置中选择“我是…”以使用我的任务"
+  },
+  "restore": {
+    "title": "恢复数据",
+    "preview": "将导入 {{m}} 个月任务、{{w}} 个周任务、{{d}} 个日任务、{{p}} 位人员。替换前会先备份当前数据。",
+    "confirm": "恢复",
+    "done": "已恢复数据",
+    "fail": "恢复失败：{{msg}}",
+    "invalid": "文件无效",
+    "future": "该文件来自更新版本的 HCN，请先更新应用。"
+  },
+  "notice": {
+    "restored": "data.json 已损坏，已从备份 {{file}} 恢复",
+    "corrupt": "data.json 已损坏且没有备份。损坏的文件已保留为 {{file}}",
+    "migrated": "已从版本 {{v}} 升级数据"
+  },
+  "notify": {
+    "title": "HCN：{{over}} 个逾期，{{soon}} 个即将到期",
+    "enable": "启用 Windows 通知",
+    "days": "“即将到期”天数",
+    "hint": "启动时及每 4 小时，HCN 会汇总当天尚未提醒的逾期和即将到期任务发送一条通知。"
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "appearance": "外观",
+    "people": "人员",
+    "personal": "个人",
+    "data": "数据",
+    "update": "更新",
+    "notify": "通知",
+    "about": "关于",
+    "themeHint": "立即生效。",
+    "light": "浅色",
+    "dark": "深色",
+    "darkMode": "深色模式",
+    "sync": "同步"
+  },
+  "people": {
+    "hint": "人员用于分配任务并在甘特图上显示头像。",
+    "name": "姓名",
+    "namePlaceholder": "新人员姓名",
+    "add": "添加",
+    "empty": "还没有人员。请在上方添加。",
+    "color": "头像颜色",
+    "photo": "照片",
+    "removePhoto": "移除照片",
+    "photoFail": "无法读取图片",
+    "delete": "删除人员",
+    "deleteTitle": "删除人员",
+    "deleteAssigned": "{{name}} 负责 {{n}} 个任务。这些任务将变为“未分配”。",
+    "duplicate": "该姓名已存在",
+    "tasks": "{{n}} 个任务",
+    "unnamed": "未命名"
+  },
+  "personal": {
+    "hint": "用于“我的任务”筛选，并作为新任务的默认负责人。",
+    "iam": "我是…",
+    "none": "— 未设置 —",
+    "addPeople": "添加人员"
+  },
+  "data": {
+    "backupTitle": "备份与恢复",
+    "backupHint": "备份为 .json 文件，从 .json 恢复（包括旧 HTML 版的备份），或导出 4 个工作表的 Excel。",
+    "backup": "备份 .json",
+    "restore": "从 .json 恢复",
+    "export": "导出 Excel .xlsx",
+    "location": "数据位置",
+    "locationHint": "数据不在安装目录中，因此更新或重装不会丢失数据。自动备份位于 backups 文件夹。",
+    "openFolder": "打开文件夹",
+    "legacyTitle": "从旧 HTML 版迁移数据",
+    "legacyHint": "打开旧 HTML 版，点击“备份”得到 cvkt-backup-….json 文件，然后在上方使用“从 .json 恢复”。",
+    "androidLocation": "数据保存在手机上应用的私有存储中。卸载应用会删除数据，请先与电脑同步或备份为 .json。"
+  },
+  "update": {
+    "current": "当前版本",
+    "lastCheck": "上次检查",
+    "never": "从未检查",
+    "check": "检查更新",
+    "checking": "正在检查…",
+    "latest": "已是最新版本",
+    "available": "有新版本 v{{v}}",
+    "downloading": "正在下载 v{{v}}：{{p}}%",
+    "ready": "更新 v{{v}} 已就绪。",
+    "installNow": "安装并重启",
+    "later": "稍后",
+    "error": "无法检查：{{msg}}",
+    "auto": "自动下载更新",
+    "devNote": "开发版：检查更新仅在已安装的应用中有效。",
+    "androidNote": "在 Android 上，直接覆盖安装新的 .apk 即可更新，数据会保留。"
+  },
+  "about": {
+    "log": "日志文件",
+    "openLog": "打开日志",
+    "report": "报告问题"
+  },
+  "excel": {
+    "sheetThang": "月",
+    "sheetTuan": "周",
+    "sheetNgay": "日",
+    "sheetPeople": "人员",
+    "planFrom": "计划开始",
+    "planTo": "计划结束",
+    "actualFrom": "实际开始",
+    "actualTo": "实际结束",
+    "personName": "姓名",
+    "personColor": "颜色",
+    "personTasks": "任务数"
+  },
+  "wifi": {
+    "unavailable": "同步仅在电脑版和 Android 版中可用。",
+    "hubHint": "本机作为同步中心：同一 Wi-Fi 下的手机在电脑端应用打开时收发更改。数据不会离开局域网。",
+    "enable": "允许手机通过 Wi-Fi 同步",
+    "addresses": "本机地址",
+    "addressesHint": "在手机上输入此地址。如有多个，请选择与手机同一 Wi-Fi 的那个（通常以 192.168 开头）。",
+    "noAddress": "本机未连接 Wi-Fi 或有线网络。",
+    "code": "配对码",
+    "codeHint": "每个配对码只能使用一次，手机配对后会自动更换。",
+    "regen": "更换配对码",
+    "devices": "已配对的手机",
+    "noDevices": "还没有手机。在手机上打开 HCN，进入 设置 > 同步，输入上面的地址和配对码。",
+    "lastSeen": "上次同步：{{time}}",
+    "never": "从未",
+    "remove": "移除手机",
+    "removeTitle": "移除手机",
+    "removeMsg": "{{name}} 在重新配对前将无法同步，手机上的数据会保留。",
+    "lastSyncLine": "上次同步于 {{time}}，{{n}} 处更改。",
+    "firewall": "首次开启时，Windows 可能会询问 HCN Work Manage 的防火墙权限：请对专用网络选择允许。手机和电脑必须在同一 Wi-Fi。",
+    "clientHint": "在电脑上打开 HCN > 设置 > 同步，开启同步，然后输入显示的地址和配对码。手机和电脑必须在同一 Wi-Fi。",
+    "addr": "电脑地址",
+    "addrPlaceholder": "例如 192.168.1.5:47821",
+    "pairCode": "配对码（6 位数字）",
+    "deviceName": "本机名称",
+    "connect": "连接",
+    "connecting": "正在连接…",
+    "connected": "已连接到 {{name}}",
+    "auto": "在与运行 HCN 的电脑处于同一 Wi-Fi 时，打开应用、有更改时及每 30 秒自动同步。不在同一网络时照常使用，回来后再同步。",
+    "hub": "电脑",
+    "lastSync": "上次同步",
+    "now": "立即同步",
+    "syncing": "正在同步…",
+    "done": "已同步（{{n}} 处更改）",
+    "unpair": "断开连接",
+    "unpairMsg": "手机将停止与电脑同步，两台设备上的数据都会保留。",
+    "err": {
+      "code": "配对码错误或已使用，请查看电脑上的新配对码。",
+      "unpaired": "电脑已移除本机，请重新配对。",
+      "tooMany": "错误次数过多，请 1 分钟后重试。",
+      "network": "无法连接电脑。请检查：同一 Wi-Fi、电脑已打开 HCN 并开启同步、地址正确。",
+      "timeout": "电脑响应超时，请在 Wi-Fi 信号更好时重试。",
+      "schema": "两台设备的数据版本不同，请在两边都更新应用。",
+      "server": "电脑同步出错，请稍后重试。",
+      "addr": "请输入电脑地址。"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "hcn-work-manage",
+  "productName": "HCN Work Manage",
+  "version": "1.0.0",
+  "description": "HCN Work Manage - quản lý công việc Tháng, Tuần, Ngày",
+  "author": "HCN",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "dist-electron/main.cjs",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "node scripts/build-electron.mjs && concurrently -k \"vite\" \"wait-on tcp:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build && node scripts/build-electron.mjs",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder --win nsis --x64 --publish never",
+    "release": "npm run build && electron-builder --win nsis --x64 --publish always",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "build:android": "vite build --mode android",
+    "android:sync": "npm run build:android && cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/local-notifications": "^8.2.1",
+    "@capacitor/share": "^8.0.3",
+    "electron-updater": "^6.6.2",
+    "exceljs": "^4.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.1",
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/node": "^22.15.0",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.6.0",
+    "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
+    "date-fns": "^4.1.0",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.5",
+    "i18next": "^25.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.6.0",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.4",
+    "wait-on": "^8.0.3",
+    "zustand": "^5.0.6"
+  }
+}
