@@ -84,7 +84,7 @@ npm run typecheck
 |---|---|
 | Kiểu cài | Theo người dùng, **không cần quyền Admin**, được chọn thư mục cài |
 | Thư mục cài mặc định | `%LOCALAPPDATA%\Programs\HCN Work Manage\` |
-| Shortcut | Start Menu luôn có; Desktop có ô tích ở trang cuối trình cài (mặc định bật) |
+| Shortcut | Start Menu luôn có; Desktop và Start Menu luôn được tạo |
 | Dữ liệu | `%APPDATA%\HCN\` gồm `data.json`, `settings.json`, `sync.json`, `backups\`, `logs\`, `tmp\` |
 | Ghi dữ liệu | Nguyên tử (ghi `tmp\data.json.part` rồi đổi tên), debounce 300 ms, lỗi thì thử lại mỗi 10 giây |
 | Sao lưu tự động | Mỗi ngày 1 bản (giữ 7), trước mỗi lần cập nhật (giữ 3), trước khi khôi phục |

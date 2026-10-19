@@ -26,8 +26,7 @@ nsis:
   perMachine: false
   allowElevation: false
   allowToChangeInstallationDirectory: true
-  # Shortcut Desktop do ô tích ở trang cuối tạo (build/installer.nsh), Start Menu do electron-builder tạo
-  createDesktopShortcut: false
+  createDesktopShortcut: always
   createStartMenuShortcut: true
   shortcutName: HCN Work Manage
   menuCategory: false
