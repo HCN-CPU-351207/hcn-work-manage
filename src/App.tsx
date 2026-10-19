@@ -1,6 +1,7 @@
 // Khung ứng dụng: Toolbar, Sub-Nav, trang theo tab, lớp phủ; phím tắt, thông báo, cập nhật
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Capacitor, SystemBars, SystemBarsStyle } from '@capacitor/core';
 import i18n from './i18n/index.ts';
 import { useApp } from './store/app.ts';
 import { api } from './lib/devApi.ts';
@@ -90,6 +91,8 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    // Android: chữ/biểu tượng thanh trạng thái sáng trên nền tối và ngược lại
+    if (Capacitor.isNativePlatform()) void SystemBars.setStyle({ style: theme === 'dark' ? SystemBarsStyle.Dark : SystemBarsStyle.Light }).catch(() => undefined);
   }, [theme]);
   useEffect(() => {
     void i18n.changeLanguage(lang);

@@ -11,7 +11,9 @@ const config: CapacitorConfig = {
   plugins: {
     // fetch đi qua lớp mạng gốc của Android (không vướng CORS / mixed content)
     CapacitorHttp: { enabled: true },
-    LocalNotifications: { iconColor: '#059669' }
+    LocalNotifications: { iconColor: '#059669' },
+    // Android 15+ vẽ app tràn dưới thanh trạng thái; tiêm biến --safe-area-inset-* để CSS chừa đúng khoảng
+    SystemBars: { insetsHandling: 'css', style: 'DARK' }
   }
 };
 
