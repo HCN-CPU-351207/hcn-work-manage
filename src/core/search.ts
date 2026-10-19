@@ -7,10 +7,10 @@ import type { Data, Display, Level, Quick, Status, ViewFilter } from './model.ts
 export const fold = (s: string): string =>
   s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'd').toLowerCase().trim();
 
-export function matchesQuery(parts: { ma: string; ten: string; person: string }, q: string): boolean {
+export function matchesQuery(parts: { ma: string; ten: string; person: string; extra?: string }, q: string): boolean {
   const f = fold(q);
   if (!f) return true;
-  return fold(parts.ma).includes(f) || fold(parts.ten).includes(f) || fold(parts.person).includes(f);
+  return fold(parts.ma).includes(f) || fold(parts.ten).includes(f) || fold(parts.person).includes(f) || (!!parts.extra && fold(parts.extra).includes(f));
 }
 
 export interface Hit {
@@ -90,6 +90,10 @@ export interface RowFacts {
   raw: Status;
   start: string | null; // bd hoặc ngay
   end: string | null; // dl hoặc ngay
+  cat?: string | null;
+  place?: string | null;
+  /** chữ phụ để tìm: tên phân loại, vị trí, ghi rõ địa điểm */
+  extra?: string;
 }
 export interface FilterCtx {
   today: string;
@@ -99,6 +103,10 @@ export interface FilterCtx {
 }
 
 export const NONE_PERSON = '__none__';
+/** giá trị lọc "Chưa phân loại" / "Chưa có vị trí" */
+export const NONE_OPT = '__none__';
+const inSet = (v: string | null | undefined, set: string[] | undefined): boolean =>
+  !set || !set.length || set.includes(v ? v : NONE_OPT);
 
 export function rowMatches(r: RowFacts, f: ViewFilter, ctx: FilterCtx): boolean {
   if (f.q && !matchesQuery(r, f.q)) return false;
@@ -106,6 +114,8 @@ export function rowMatches(r: RowFacts, f: ViewFilter, ctx: FilterCtx): boolean 
   if (f.personId) {
     if (f.personId === NONE_PERSON ? r.personId !== null : r.personId !== f.personId) return false;
   }
+  if (!inSet(r.cat, f.cats)) return false;
+  if (ctx.level === 'ngay' && !inSet(r.place, f.places)) return false;
   if (f.from || f.to) {
     const s = r.start ?? r.end;
     const e = r.end ?? r.start;
@@ -137,5 +147,5 @@ function quickMatches(r: RowFacts, quick: Quick | null, ctx: FilterCtx): boolean
 }
 
 export const isFilterEmpty = (f: ViewFilter | undefined): boolean =>
-  !f || (!f.q && !f.status && !f.personId && !f.from && !f.to && !f.quick);
+  !f || (!f.q && !f.status && !f.personId && !f.from && !f.to && !f.quick && !f.cats?.length && !f.places?.length);
 

@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "Código",
-    "loai": "Tipo",
+    "loai": "Prioridade",
     "task": "Tarefa",
     "content": "Conteúdo",
     "person": "Responsável",
@@ -173,7 +173,9 @@
     "parentTuan": "Semana pai",
     "date": "Data",
     "planTime": "Hora prevista",
-    "actualTime": "Hora real"
+    "actualTime": "Hora real",
+    "cat": "Categoria",
+    "place": "Local"
   },
   "grid": {
     "selectAll": "Selecionar tudo",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} de {{total}} tarefas",
     "view": "Vista",
     "table": "Tabela",
-    "gantt": "Gantt"
+    "gantt": "Gantt",
+    "columns": "Colunas",
+    "showAllCols": "Mostrar todas",
+    "clearPick": "Limpar"
   },
   "empty": {
     "thang": "Ainda não há tarefas mensais.",
@@ -228,7 +233,8 @@
     "clear": "Limpar seleção",
     "skipped": "{{n}} tarefas com subtarefas ignoradas",
     "statusDone": "{{n}} tarefas atualizadas",
-    "assigned": "{{n}} tarefas reatribuídas"
+    "assigned": "{{n}} tarefas reatribuídas",
+    "patched": "{{n}} tarefas atualizadas"
   },
   "del": {
     "title": "Eliminar tarefas",
@@ -264,7 +270,9 @@
     "actualFrom": "Real de",
     "actualTo": "Real até",
     "actualHint": "Deixe as datas reais vazias para calculá-las a partir das subtarefas.",
-    "ngayHint": "Com hora real de fim fica Concluída; só com início fica Em curso."
+    "ngayHint": "Com hora real de fim fica Concluída; só com início fica Em curso.",
+    "placeNote": "Local exato",
+    "placeNotePh": "ex.: Obra Norte"
   },
   "toast": {
     "created": "{{ma}} criada",
@@ -334,7 +342,8 @@
     "light": "Claro",
     "dark": "Escuro",
     "darkMode": "Modo escuro",
-    "sync": "Sincronização"
+    "sync": "Sincronização",
+    "lists": "Listas"
   },
   "people": {
     "hint": "As pessoas servem para atribuir tarefas e mostrar avatares no Gantt.",
@@ -477,5 +486,49 @@
     "start": "Começa às {{when}}: {{ma}}",
     "late": "Passou da hora de fim {{when}}: {{ma}}",
     "summary": "HCN: {{n}} lembretes"
+  },
+  "opt": {
+    "c-chuyenmon": "Técnico",
+    "c-thuongnhat": "Rotina",
+    "c-dotxuat": "Imprevisto",
+    "c-hanhchinh": "Administrativo",
+    "c-hop": "Reuniões",
+    "c-daotao": "Formação",
+    "c-hotro": "Apoio a colegas",
+    "c-khac": "Outro",
+    "pl-congty": "Empresa",
+    "pl-nha": "Casa",
+    "pl-congtruong": "Obra",
+    "pl-nhamay": "Fábrica",
+    "pl-khac": "Outro",
+    "noneCat": "Sem categoria",
+    "nonePlace": "Sem local"
+  },
+  "lists": {
+    "catsHint": "Usada nas tarefas mensais, semanais e diárias. As subtarefas herdam a categoria da tarefa-mãe e podem ser alteradas. Partilhada entre aparelhos sincronizados.",
+    "placesHint": "Usado nas tarefas diárias. Um item oculto deixa de aparecer na escolha, mas as tarefas existentes mantêm-no.",
+    "newPh": "Nome do novo item",
+    "name": "Nome",
+    "add": "Adicionar",
+    "duplicate": "Já existe um item com este nome",
+    "hide": "Ocultar",
+    "show": "Mostrar",
+    "hideHint": "Ocultar da escolha (tarefas existentes inalteradas)",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar item?",
+    "deleteUsed": "“{{name}}” é usado em {{n}} tarefas. Ao eliminar, ficam vazias. Para manter nas antigas, use Ocultar.",
+    "restore": "Repor {{n}} itens predefinidos"
+  },
+  "stats": {
+    "title": "Tempo por categoria e local",
+    "range": "Período",
+    "week": "Esta semana",
+    "month": "Este mês",
+    "byCat": "Por categoria",
+    "byPlace": "Por local",
+    "total": "Total {{h}}",
+    "empty": "Sem tarefas diárias com horário neste período.",
+    "hint": "A partir das tarefas diárias: tempo real quando iniciadas e concluídas, senão o planeado. Clique numa linha para ver as tarefas.",
+    "rowTip": "{{name}}: {{h}} · {{n}} tarefas · {{p}}%"
   }
 }

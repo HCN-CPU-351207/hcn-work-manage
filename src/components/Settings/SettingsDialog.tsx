@@ -14,9 +14,10 @@ import { backupNow, exportAll, restoreFlow } from '../../lib/flows.ts';
 import { ISSUE_URL, cx } from '../../lib/labels.ts';
 import { Avatar } from '../Common/bits.tsx';
 import { SyncSection } from './SyncSection.tsx';
+import { ListsSection } from './ListsSection.tsx';
 import { IDownload, IFolder, IPlus, ISheet, ITrash, IUpload, IX } from '../Common/Icons.tsx';
 
-const SECTIONS: SettingsSection[] = ['language', 'appearance', 'people', 'personal', 'data', 'sync', 'update', 'notify', 'about'];
+const SECTIONS: SettingsSection[] = ['language', 'appearance', 'people', 'lists', 'personal', 'data', 'sync', 'update', 'notify', 'about'];
 const isAndroid = () => api().platform === 'android';
 
 export function SettingsDialog() {
@@ -51,6 +52,7 @@ export function SettingsDialog() {
           {open === 'language' && <LanguageSection />}
           {open === 'appearance' && <AppearanceSection />}
           {open === 'people' && <PeopleSection />}
+          {open === 'lists' && <ListsSection />}
           {open === 'personal' && <PersonalSection />}
           {open === 'data' && <DataSection />}
           {open === 'sync' && <SyncSection />}

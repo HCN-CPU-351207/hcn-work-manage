@@ -7,6 +7,7 @@ import { useApp } from '../../store/app.ts';
 import { confirmDelete, exportSelected } from '../../lib/flows.ts';
 import { STATUS_KEY, cx } from '../../lib/labels.ts';
 import { IX } from '../Common/Icons.tsx';
+import { optLabel, placeIcon, useOpts } from '../../lib/opts.ts';
 
 const NONE: string[] = [];
 
@@ -20,8 +21,11 @@ export function FloatingBulkBar() {
   const setSelection = useApp((s) => s.setSelection);
   const bulkStatus = useApp((s) => s.bulkStatus);
   const bulkPerson = useApp((s) => s.bulkPerson);
+  const bulkPatch = useApp((s) => s.bulkPatch);
+  const cats = useOpts('cats').filter((o) => !o.hidden);
+  const places = useOpts('places').filter((o) => !o.hidden);
   const toast = useApp((s) => s.toast);
-  const [menu, setMenu] = useState<'status' | 'person' | null>(null);
+  const [menu, setMenu] = useState<'status' | 'person' | 'cat' | 'place' | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   // chỉ đếm các id còn tồn tại
@@ -83,6 +87,37 @@ export function FloatingBulkBar() {
           </div>
         )}
       </div>
+      {(['cat', 'place'] as const).filter((m) => m === 'cat' || level === 'ngay').map((m) => {
+        const list = m === 'cat' ? cats : places;
+        const apply = (v: string | null) => {
+          setMenu(null);
+          bulkPatch(level!, ids, m === 'cat' ? { cat: v } : { place: v });
+          toast(t('bulk.patched', { n: ids.length }), 'ok');
+        };
+        return (
+          <div key={m} className="bulk-menu-wrap">
+            <button className="btn btn-sm" tabIndex={show ? 0 : -1} onClick={() => setMenu(menu === m ? null : m)} aria-expanded={menu === m}>
+              {t(m === 'cat' ? 'col.cat' : 'col.place')}
+            </button>
+            {menu === m && (
+              <div className="bulk-menu" role="menu">
+                <button role="menuitem" className="drop-item" onClick={() => apply(null)}>
+                  {t(m === 'cat' ? 'opt.noneCat' : 'opt.nonePlace')}
+                </button>
+                {list.map((o) => {
+                  const Icon = m === 'place' ? placeIcon(o.id) : null;
+                  return (
+                    <button key={o.id} role="menuitem" className="drop-item" onClick={() => apply(o.id)}>
+                      {Icon ? <Icon size={14} style={{ color: o.color }} /> : <span className="dot" style={{ background: o.color }} />}
+                      {optLabel(o)}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
       <button className="btn btn-sm" tabIndex={show ? 0 : -1} onClick={() => level && void exportSelected(level, ids)}>
         {t('bulk.export')}
       </button>

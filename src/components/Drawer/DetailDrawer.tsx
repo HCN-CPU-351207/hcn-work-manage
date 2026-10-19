@@ -12,6 +12,7 @@ import { useToday } from '../../lib/hooks.ts';
 import { hhmm } from '../../lib/fmt.ts';
 import { LOAI_KEY, STATUS_KEY } from '../../lib/labels.ts';
 import { ILock, IX } from '../Common/Icons.tsx';
+import { optLabel, useOpts } from '../../lib/opts.ts';
 
 type Form = Record<string, string>;
 
@@ -24,21 +25,24 @@ function initForm(level: Level, item: Thang | Tuan | Ngay | undefined, draft: Re
     const x = item as Thang | undefined;
     return {
       loai: x?.loai ?? 'Không gấp-Quan trọng', ten: x?.ten ?? s(d.ten), personId: s(x ? x.personId : d.personId ?? me),
-      bd: s(x ? x.bd : d.bd), dl: s(x ? x.dl : d.dl), tt: x?.tt ?? 'Chưa làm', bdtt: s(x?.bdtt), kttt: s(x?.kttt), gc: x?.gc ?? ''
+      bd: s(x ? x.bd : d.bd), dl: s(x ? x.dl : d.dl), tt: x?.tt ?? 'Chưa làm', bdtt: s(x?.bdtt), kttt: s(x?.kttt), gc: x?.gc ?? '',
+      cat: s(x ? x.cat : d.cat)
     };
   }
   if (level === 'tuan') {
     const x = item as Tuan | undefined;
     return {
       parentMa: x?.parentMa ?? s(d.parentMa), ten: x?.ten ?? s(d.ten), personId: s(x ? x.personId : d.personId ?? me),
-      bd: s(x ? x.bd : d.bd), dl: s(x ? x.dl : d.dl), tt: x?.tt ?? 'Chưa làm', bdtt: s(x?.bdtt), kttt: s(x?.kttt), gc: x?.gc ?? ''
+      bd: s(x ? x.bd : d.bd), dl: s(x ? x.dl : d.dl), tt: x?.tt ?? 'Chưa làm', bdtt: s(x?.bdtt), kttt: s(x?.kttt), gc: x?.gc ?? '',
+      cat: s(x ? x.cat : d.cat)
     };
   }
   const x = item as Ngay | undefined;
   return {
     ngay: x?.ngay ?? (s(d.ngay) || today), parentId: x?.parentId ?? s(d.parentId), ten: x?.ten ?? s(d.ten),
     personId: s(x ? x.personId : d.personId), g1: s(x?.g1), g2: s(x?.g2), a1: hhmm(x?.a1), a2: hhmm(x?.a2),
-    a1date: x?.a1 ? x.a1.slice(0, 10) : '', a2date: x?.a2 ? x.a2.slice(0, 10) : '', tt: x?.tt ?? 'Chưa làm', gc: x?.gc ?? ''
+    a1date: x?.a1 ? x.a1.slice(0, 10) : '', a2date: x?.a2 ? x.a2.slice(0, 10) : '', tt: x?.tt ?? 'Chưa làm', gc: x?.gc ?? '',
+    cat: s(x ? x.cat : d.cat), place: s(x ? x.place : (d.place as string | null | undefined)), placeNote: x?.placeNote ?? s(d.placeNote as string | undefined)
   };
 }
 
@@ -64,6 +68,9 @@ function DrawerInner() {
   );
   const [f, setF] = useState<Form>(() => initForm(level, item, dr.draft, today, me));
   const [touchedPerson, setTouchedPerson] = useState(!!item);
+  const [touchedCat, setTouchedCat] = useState(!!item || !!(dr.draft as { cat?: string } | undefined)?.cat);
+  const cats = useOpts('cats');
+  const places = useOpts('places');
   const [err, setErr] = useState('');
   const firstRef = useRef<HTMLInputElement>(null);
   const kids = dr.id ? hasKids(data, level, dr.id) : false;
@@ -79,6 +86,13 @@ function DrawerInner() {
     const p = data.tuan.find((w) => w.id === f.parentId)?.personId ?? '';
     setF((x) => ({ ...x, personId: p }));
   }, [f.parentId, level, touchedPerson, data.tuan]);
+
+  // Phân loại mặc định lấy từ việc cha (sửa tay thì thôi)
+  useEffect(() => {
+    if (touchedCat || level === 'thang') return;
+    const c = level === 'tuan' ? data.thang.find((m) => m.ma === f.parentMa)?.cat : data.tuan.find((w) => w.id === f.parentId)?.cat;
+    setF((x) => ({ ...x, cat: c ?? '' }));
+  }, [f.parentMa, f.parentId, level, touchedCat, data.thang, data.tuan]);
 
   if (dr.id && !item) return null; // đã bị xóa
   const set = (k: string) => (v: string) => setF((x) => ({ ...x, [k]: v }));
@@ -110,18 +124,19 @@ function DrawerInner() {
     const S = st();
     const personId = n(f.personId);
     if (level === 'thang') {
-      const patch: Partial<Thang> = { loai: f.loai as Loai, ten: f.ten.trim(), personId, bd: n(f.bd), dl: n(f.dl), bdtt: n(f.bdtt), kttt: n(f.kttt), gc: f.gc, ...(kids ? {} : { tt: f.tt as Status }) };
+      const patch: Partial<Thang> = { cat: n(f.cat), loai: f.loai as Loai, ten: f.ten.trim(), personId, bd: n(f.bd), dl: n(f.dl), bdtt: n(f.bdtt), kttt: n(f.kttt), gc: f.gc, ...(kids ? {} : { tt: f.tt as Status }) };
       if (dr.id) S.updateItem('thang', dr.id, patch);
       else S.toast(t('toast.created', { ma: S.createThang(patch).ma }), 'ok');
     } else if (level === 'tuan') {
-      const patch: Partial<Tuan> = { parentMa: f.parentMa, ten: f.ten.trim(), personId, bd: n(f.bd), dl: n(f.dl), bdtt: n(f.bdtt), kttt: n(f.kttt), gc: f.gc, ...(kids ? {} : { tt: f.tt as Status }) };
+      const patch: Partial<Tuan> = { cat: n(f.cat), parentMa: f.parentMa, ten: f.ten.trim(), personId, bd: n(f.bd), dl: n(f.dl), bdtt: n(f.bdtt), kttt: n(f.kttt), gc: f.gc, ...(kids ? {} : { tt: f.tt as Status }) };
       if (dr.id) S.updateItem('tuan', dr.id, patch);
       else S.toast(t('toast.created', { ma: S.createTuan(patch as Partial<Tuan> & { parentMa: string }).ma }), 'ok');
     } else {
       const iso = (date: string, hm: string) => (hm ? `${date || f.ngay}T${hm}:00` : null);
       const base = {
         ngay: f.ngay, parentId: f.parentId, ten: f.ten.trim(), personId, g1: n(f.g1), g2: n(f.g2),
-        a1: iso(f.a1date, f.a1), a2: iso(f.a2date, f.a2), tt: f.tt as Status, gc: f.gc
+        a1: iso(f.a1date, f.a1), a2: iso(f.a2date, f.a2), tt: f.tt as Status, gc: f.gc,
+        cat: n(f.cat), place: n(f.place), placeNote: f.placeNote.trim()
       };
       const actualChanged = f.a1 !== original.current.a1 || f.a2 !== original.current.a2;
       if (dr.id) {
@@ -160,6 +175,25 @@ function DrawerInner() {
       )}
     </Field>
   );
+  const optSelect = (kind: 'cats' | 'places', key: 'cat' | 'place', none: string) => (
+    <select
+      value={f[key]}
+      onChange={(e) => {
+        set(key)(e.target.value);
+        if (key === 'cat') setTouchedCat(true);
+      }}
+    >
+      <option value="">{none}</option>
+      {(kind === 'cats' ? cats : places)
+        .filter((o) => !o.hidden || o.id === f[key])
+        .map((o) => (
+          <option key={o.id} value={o.id}>
+            {optLabel(o)}
+          </option>
+        ))}
+    </select>
+  );
+  const catField = <Field label={t('col.cat')}>{optSelect('cats', 'cat', t('opt.noneCat'))}</Field>;
   const personField = (
     <Field label={t('col.person')}>
       <select value={f.personId} onChange={(e) => { set('personId')(e.target.value); setTouchedPerson(true); }}>
@@ -204,7 +238,10 @@ function DrawerInner() {
               <Field label={t('col.task')}>
                 <input ref={firstRef} value={f.ten} onChange={(e) => set('ten')(e.target.value)} />
               </Field>
-              {personField}
+              <Row2>
+                {catField}
+                {personField}
+              </Row2>
               <Row2>
                 <Field label={t('col.planStart')}><input type="date" value={f.bd} onChange={(e) => set('bd')(e.target.value)} /></Field>
                 <Field label={t('col.planDeadline')}><input type="date" value={f.dl} min={f.bd || undefined} onChange={(e) => set('dl')(e.target.value)} /></Field>
@@ -230,7 +267,10 @@ function DrawerInner() {
               <Field label={t('col.task')}>
                 <input ref={firstRef} value={f.ten} onChange={(e) => set('ten')(e.target.value)} />
               </Field>
-              {personField}
+              <Row2>
+                {catField}
+                {personField}
+              </Row2>
               <Row2>
                 <Field label={t('col.planStart')}><input type="date" value={f.bd} onChange={(e) => set('bd')(e.target.value)} /></Field>
                 <Field label={t('col.planDeadline')}><input type="date" value={f.dl} min={f.bd || undefined} onChange={(e) => set('dl')(e.target.value)} /></Field>
@@ -259,7 +299,16 @@ function DrawerInner() {
               <Field label={t('col.content')}>
                 <input ref={firstRef} value={f.ten} onChange={(e) => set('ten')(e.target.value)} />
               </Field>
-              {personField}
+              <Row2>
+                {catField}
+                {personField}
+              </Row2>
+              <Row2>
+                <Field label={t('col.place')}>{optSelect('places', 'place', t('opt.nonePlace'))}</Field>
+                <Field label={t('drawer.placeNote')}>
+                  <input value={f.placeNote} maxLength={120} placeholder={t('drawer.placeNotePh')} onChange={(e) => set('placeNote')(e.target.value)} />
+                </Field>
+              </Row2>
               <Row2>
                 <Field label={t('drawer.planFrom')}><input type="time" step={600} value={f.g1} onChange={(e) => set('g1')(e.target.value)} /></Field>
                 <Field label={t('drawer.planTo')}><input type="time" step={600} value={f.g2} min={f.g1 || undefined} onChange={(e) => set('g2')(e.target.value)} /></Field>

@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "编号",
-    "loai": "类型",
+    "loai": "优先级",
     "task": "任务",
     "content": "内容",
     "person": "负责人",
@@ -173,7 +173,9 @@
     "parentTuan": "所属周任务",
     "date": "日期",
     "planTime": "计划时间",
-    "actualTime": "实际时间"
+    "actualTime": "实际时间",
+    "cat": "分类",
+    "place": "地点"
   },
   "grid": {
     "selectAll": "全选",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} / {{total}} 个任务",
     "view": "视图",
     "table": "表格",
-    "gantt": "甘特图"
+    "gantt": "甘特图",
+    "columns": "显示列",
+    "showAllCols": "显示全部列",
+    "clearPick": "清除"
   },
   "empty": {
     "thang": "还没有月任务。",
@@ -228,7 +233,8 @@
     "clear": "取消选择",
     "skipped": "已跳过 {{n}} 个有子任务的任务",
     "statusDone": "已更新 {{n}} 个任务",
-    "assigned": "已重新分配 {{n}} 个任务"
+    "assigned": "已重新分配 {{n}} 个任务",
+    "patched": "已更新 {{n}} 项"
   },
   "del": {
     "title": "删除任务",
@@ -264,7 +270,9 @@
     "actualFrom": "实际开始时间",
     "actualTo": "实际结束时间",
     "actualHint": "实际日期留空则由子任务自动计算。",
-    "ngayHint": "填写实际结束时间即视为已完成；只有开始时间则为进行中。"
+    "ngayHint": "填写实际结束时间即视为已完成；只有开始时间则为进行中。",
+    "placeNote": "具体地点",
+    "placeNotePh": "例：北区工地"
   },
   "toast": {
     "created": "已创建 {{ma}}",
@@ -334,7 +342,8 @@
     "light": "浅色",
     "dark": "深色",
     "darkMode": "深色模式",
-    "sync": "同步"
+    "sync": "同步",
+    "lists": "分类与地点"
   },
   "people": {
     "hint": "人员用于分配任务并在甘特图上显示头像。",
@@ -477,5 +486,49 @@
     "start": "{{when}} 开始：{{ma}}",
     "late": "已超过结束时间 {{when}}：{{ma}}",
     "summary": "HCN：{{n}} 条提醒"
+  },
+  "opt": {
+    "c-chuyenmon": "专业工作",
+    "c-thuongnhat": "日常工作",
+    "c-dotxuat": "突发工作",
+    "c-hanhchinh": "行政文书",
+    "c-hop": "会议沟通",
+    "c-daotao": "培训学习",
+    "c-hotro": "协助同事",
+    "c-khac": "其他",
+    "pl-congty": "公司",
+    "pl-nha": "家",
+    "pl-congtruong": "工地",
+    "pl-nhamay": "工厂",
+    "pl-khac": "其他",
+    "noneCat": "未分类",
+    "nonePlace": "无地点"
+  },
+  "lists": {
+    "catsHint": "用于月、周、日任务。子任务默认继承父任务的分类，之后可单独修改。所有已同步设备共用。",
+    "placesHint": "用于日任务。隐藏的项不会出现在选择列表中，但已有任务保持不变。",
+    "newPh": "新项目名称",
+    "name": "名称",
+    "add": "添加",
+    "duplicate": "名称已存在",
+    "hide": "隐藏",
+    "show": "显示",
+    "hideHint": "从选择列表中隐藏（已有任务不变）",
+    "delete": "删除",
+    "deleteTitle": "删除该项？",
+    "deleteUsed": "“{{name}}”正被 {{n}} 项任务使用。删除后这些任务将变为空。如需保留，请改用隐藏。",
+    "restore": "恢复 {{n}} 个已删除的默认项"
+  },
+  "stats": {
+    "title": "按分类和地点统计时间",
+    "range": "时间范围",
+    "week": "本周",
+    "month": "本月",
+    "byCat": "按分类",
+    "byPlace": "按地点",
+    "total": "合计 {{h}}",
+    "empty": "此期间没有带时间的日任务。",
+    "hint": "基于日任务：已开始并结束的按实际时间，否则按计划时间。点击一行查看任务。",
+    "rowTip": "{{name}}：{{h}} · {{n}} 项 · {{p}}%"
   }
 }

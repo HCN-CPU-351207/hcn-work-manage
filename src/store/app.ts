@@ -4,13 +4,13 @@ import { nextCode } from '../core/codes.ts';
 import { todayStr, ymOf } from '../core/dates.ts';
 import { newId } from '../core/ids.ts';
 import { defaultSettings, emptyData } from '../core/model.ts';
-import type { Data, Display, Level, Ngay, SavedView, Settings, Status, Tab, Thang, Tuan, ViewFilter } from '../core/model.ts';
+import type { Data, Display, Level, Ngay, Opt, OptKind, SavedView, Settings, Status, Tab, Thang, Tuan, ViewFilter } from '../core/model.ts';
 import type { AppInfo, LoadNotice, UpdateEvent } from '../core/api.ts';
 import { bulkAssign, bulkSetStatus, removeItems } from '../core/ops.ts';
 import { api } from '../lib/devApi.ts';
 
 export type SyncState = 'saved' | 'pending' | 'error';
-export type SettingsSection = 'language' | 'appearance' | 'people' | 'personal' | 'data' | 'sync' | 'update' | 'notify' | 'about';
+export type SettingsSection = 'language' | 'appearance' | 'people' | 'lists' | 'personal' | 'data' | 'sync' | 'update' | 'notify' | 'about';
 export type ViewMode = 'table' | 'chart';
 
 export interface DrawerState {
@@ -59,6 +59,8 @@ export interface UpdateState {
   dismissed?: boolean;
 }
 
+/** cột ẩn sẵn khi chưa chỉnh: giữ bảng gọn như trước */
+export const DEFAULT_HIDDEN: Record<Level, string[]> = { thang: [], tuan: [], ngay: [] };
 const EMPTY_FILTERS: Record<Level, ViewFilter> = { thang: {}, tuan: {}, ngay: {} };
 const EMPTY_SEL: Record<Level, string[]> = { thang: [], tuan: [], ngay: [] };
 
@@ -111,6 +113,12 @@ export interface AppState {
   undoNow(): void;
   bulkStatus(level: Level, ids: string[], status: Status): number;
   bulkPerson(level: Level, ids: string[], personId: string | null): void;
+  /** gán hàng loạt Phân loại / Vị trí */
+  bulkPatch(level: Level, ids: string[], patch: { cat?: string | null; place?: string | null }): void;
+  /** lưu danh mục Phân loại / Vị trí; mục bị xóa thì bỏ trống ở các việc đang dùng */
+  setOpts(kind: OptKind, list: Opt[]): void;
+  /** ẩn/hiện cột của bảng */
+  toggleCol(level: Level, key: string): void;
 
   setTab(tab: Tab): void;
   setQuery(q: string): void;
@@ -276,7 +284,9 @@ export const useApp = create<AppState>()((set, get) => {
     },
     createTuan(f) {
       const { code, counters } = nextCode('W', get().data);
+      const pcat = get().data.thang.find((m) => m.ma === f.parentMa)?.cat;
       const item: Tuan = {
+        ...(pcat ? { cat: pcat } : {}),
         ten: '', personId: null, bd: null, dl: null, tt: 'Chưa làm', bdtt: null, kttt: null, gc: '',
         ...f, id: newId('w'), ma: code
       };
@@ -287,6 +297,7 @@ export const useApp = create<AppState>()((set, get) => {
       const { code, counters } = nextCode('D', get().data);
       const parent = get().data.tuan.find((t) => t.id === f.parentId);
       const item: Ngay = {
+        ...(parent?.cat ? { cat: parent.cat } : {}),
         ten: '', personId: parent?.personId ?? null, g1: null, g2: null, a1: null, a2: null, tt: 'Chưa làm', gc: '',
         ...f, id: newId('d'), ma: code
       };
@@ -325,6 +336,27 @@ export const useApp = create<AppState>()((set, get) => {
     },
     bulkPerson(level, ids, personId) {
       get().mutate((d) => bulkAssign(d, level, ids, personId));
+    },
+    bulkPatch(level, ids, patch) {
+      const set_ = new Set(ids);
+      const p = level === 'ngay' ? patch : { cat: patch.cat };
+      get().mutate((d) => {
+        const upd = <T extends { id: string }>(arr: T[]): T[] => arr.map((x) => (set_.has(x.id) ? { ...x, ...p } : x));
+        return level === 'thang' ? { ...d, thang: upd(d.thang) } : level === 'tuan' ? { ...d, tuan: upd(d.tuan) } : { ...d, ngay: upd(d.ngay) };
+      });
+    },
+    setOpts(kind, list) {
+      const ids = new Set(list.map((o) => o.id));
+      get().mutate((d) => {
+        const clr = <T extends { cat?: string | null }>(arr: T[]): T[] => arr.map((x) => (x.cat && !ids.has(x.cat) ? { ...x, cat: null } : x));
+        if (kind === 'cats') return { ...d, cats: list, thang: clr(d.thang), tuan: clr(d.tuan), ngay: clr(d.ngay) };
+        return { ...d, places: list, ngay: d.ngay.map((x) => (x.place && !ids.has(x.place) ? { ...x, place: null } : x)) };
+      });
+    },
+    toggleCol(level, key) {
+      const cur = get().settings.hiddenCols ?? {};
+      const list = cur[level] ?? DEFAULT_HIDDEN[level];
+      get().setSettings({ hiddenCols: { ...cur, [level]: list.includes(key) ? list.filter((x) => x !== key) : [...list, key] } });
     },
 
     setTab(tab) {

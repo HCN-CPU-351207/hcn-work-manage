@@ -52,3 +52,10 @@ export const IClock = mk(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2"
 export const IUser = mk(<><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>);
 export const IFilter = mk(<path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z" />);
 export const IBookmark = mk(<path d="M6 3h12v18l-6-4-6 4V3Z" />);
+// Vị trí / Phân loại / Cột
+export const IBuilding = mk(<><rect x="5" y="3" width="14" height="18" rx="1.5" /><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10 21v-3h4v3" /></>);
+export const IHome = mk(<><path d="m3 11 9-7 9 7" /><path d="M5 10v10h14V10" /><path d="M10 20v-6h4v6" /></>);
+export const IHardHat = mk(<><path d="M3 17h18v2H3z" /><path d="M5 17a7 7 0 0 1 14 0" /><path d="M10 10V6h4v4" /></>);
+export const IFactory = mk(<><path d="M3 21V10l6 4V10l6 4V5h3l1 16Z" /><path d="M7 18h2M12 18h2" /></>);
+export const IPin = mk(<><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></>);
+export const IColumns = mk(<><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16M15 4v16" /></>);

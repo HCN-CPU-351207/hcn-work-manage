@@ -6,38 +6,42 @@ import type { Derived } from '../core/status.ts';
 import { countAssigned } from '../core/ops.ts';
 import { LOAI_KEY, STATUS_KEY } from './labels.ts';
 import { hhmm } from './fmt.ts';
+import { optsOf } from '../core/model.ts';
+import { optLabel } from './opts.ts';
 
 export function buildSheet(level: Level, data: Data, d: Derived, t: TFunction, ids?: Set<string>): SheetSpec {
   const pn = new Map(data.people.map((p) => [p.id, p.name]));
   const person = (id: string | null) => (id ? pn.get(id) ?? '' : t('person.unassigned'));
   const st = (k: keyof typeof STATUS_KEY) => t(`status.${STATUS_KEY[k]}`);
   const keep = <T extends { id: string }>(arr: T[]) => (ids ? arr.filter((x) => ids.has(x.id)) : arr);
+  const om = { cats: new Map(optsOf(data, 'cats').map((o) => [o.id, optLabel(o)])), places: new Map(optsOf(data, 'places').map((o) => [o.id, optLabel(o)])) };
+  const on = (k: 'cats' | 'places', id: string | null | undefined) => (id ? om[k].get(id) ?? '' : '');
 
   if (level === 'thang') {
     return {
       name: t('excel.sheetThang'),
-      columns: [t('col.ma'), t('col.loai'), t('col.task'), t('col.person'), t('col.planStart'), t('col.planDeadline'), t('col.actualStart'), t('col.actualEnd'), t('col.status'), t('col.progress'), t('col.note')],
+      columns: [t('col.ma'), t('col.loai'), t('col.cat'), t('col.task'), t('col.person'), t('col.planStart'), t('col.planDeadline'), t('col.actualStart'), t('col.actualEnd'), t('col.status'), t('col.progress'), t('col.note')],
       rows: keep(data.thang).map((x) => {
         const i = d.thang.get(x.id)!;
-        return [x.ma, t(`loai.${LOAI_KEY[x.loai]}`), x.ten, person(x.personId), x.bd, x.dl, i.actual.start, i.actual.end, st(i.display), Math.round(i.progress * 100), x.gc];
+        return [x.ma, t(`loai.${LOAI_KEY[x.loai]}`), on('cats', x.cat), x.ten, person(x.personId), x.bd, x.dl, i.actual.start, i.actual.end, st(i.display), Math.round(i.progress * 100), x.gc];
       })
     };
   }
   if (level === 'tuan') {
     return {
       name: t('excel.sheetTuan'),
-      columns: [t('col.ma'), t('col.parentThang'), t('col.task'), t('col.person'), t('col.planStart'), t('col.planDeadline'), t('col.actualStart'), t('col.actualEnd'), t('col.status'), t('col.progress'), t('col.note')],
+      columns: [t('col.ma'), t('col.parentThang'), t('col.cat'), t('col.task'), t('col.person'), t('col.planStart'), t('col.planDeadline'), t('col.actualStart'), t('col.actualEnd'), t('col.status'), t('col.progress'), t('col.note')],
       rows: keep(data.tuan).map((x) => {
         const i = d.tuan.get(x.id)!;
-        return [x.ma, x.parentMa, x.ten, person(x.personId), x.bd, x.dl, i.actual.start, i.actual.end, st(i.display), Math.round(i.progress * 100), x.gc];
+        return [x.ma, x.parentMa, on('cats', x.cat), x.ten, person(x.personId), x.bd, x.dl, i.actual.start, i.actual.end, st(i.display), Math.round(i.progress * 100), x.gc];
       })
     };
   }
   const wMa = new Map(data.tuan.map((w) => [w.id, w.ma]));
   return {
     name: t('excel.sheetNgay'),
-    columns: [t('col.ma'), t('col.parentTuan'), t('col.date'), t('col.content'), t('col.person'), t('excel.planFrom'), t('excel.planTo'), t('excel.actualFrom'), t('excel.actualTo'), t('col.status'), t('col.note')],
-    rows: keep(data.ngay).map((x) => [x.ma, wMa.get(x.parentId) ?? '', x.ngay, x.ten, person(x.personId), x.g1, x.g2, hhmm(x.a1), hhmm(x.a2), st(x.tt), x.gc])
+    columns: [t('col.ma'), t('col.parentTuan'), t('col.date'), t('col.content'), t('col.cat'), t('col.place'), t('drawer.placeNote'), t('col.person'), t('excel.planFrom'), t('excel.planTo'), t('excel.actualFrom'), t('excel.actualTo'), t('col.status'), t('col.note')],
+    rows: keep(data.ngay).map((x) => [x.ma, wMa.get(x.parentId) ?? '', x.ngay, x.ten, on('cats', x.cat), on('places', x.place), x.placeNote ?? '', person(x.personId), x.g1, x.g2, hhmm(x.a1), hhmm(x.a2), st(x.tt), x.gc])
   };
 }
 

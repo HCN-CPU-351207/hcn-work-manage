@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "Code",
-    "loai": "Typ",
+    "loai": "Priorität",
     "task": "Aufgabe",
     "content": "Inhalt",
     "person": "Verantwortlich",
@@ -173,7 +173,9 @@
     "parentTuan": "Übergeordnete Woche",
     "date": "Datum",
     "planTime": "Geplante Zeit",
-    "actualTime": "Tatsächliche Zeit"
+    "actualTime": "Tatsächliche Zeit",
+    "cat": "Kategorie",
+    "place": "Ort"
   },
   "grid": {
     "selectAll": "Alle auswählen",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} von {{total}} Aufgaben",
     "view": "Ansicht",
     "table": "Tabelle",
-    "gantt": "Gantt"
+    "gantt": "Gantt",
+    "columns": "Spalten",
+    "showAllCols": "Alle anzeigen",
+    "clearPick": "Leeren"
   },
   "empty": {
     "thang": "Noch keine Monatsaufgaben.",
@@ -228,7 +233,8 @@
     "clear": "Auswahl aufheben",
     "skipped": "{{n}} Aufgaben mit Unteraufgaben übersprungen",
     "statusDone": "{{n}} Aufgaben aktualisiert",
-    "assigned": "{{n}} Aufgaben neu zugewiesen"
+    "assigned": "{{n}} Aufgaben neu zugewiesen",
+    "patched": "{{n}} Aufgaben aktualisiert"
   },
   "del": {
     "title": "Aufgaben löschen",
@@ -264,7 +270,9 @@
     "actualFrom": "Tatsächlich von",
     "actualTo": "Tatsächlich bis",
     "actualHint": "Tatsächliche Daten leer lassen, um sie aus Unteraufgaben zu berechnen.",
-    "ngayHint": "Mit tatsächlicher Endzeit gilt die Aufgabe als erledigt, nur mit Startzeit als in Arbeit."
+    "ngayHint": "Mit tatsächlicher Endzeit gilt die Aufgabe als erledigt, nur mit Startzeit als in Arbeit.",
+    "placeNote": "Genauer Ort",
+    "placeNotePh": "z. B. Baustelle Nord"
   },
   "toast": {
     "created": "{{ma}} angelegt",
@@ -334,7 +342,8 @@
     "light": "Hell",
     "dark": "Dunkel",
     "darkMode": "Dunkler Modus",
-    "sync": "Synchronisierung"
+    "sync": "Synchronisierung",
+    "lists": "Listen"
   },
   "people": {
     "hint": "Personen dienen zum Zuweisen von Aufgaben und als Avatar im Gantt.",
@@ -477,5 +486,49 @@
     "start": "Beginnt um {{when}}: {{ma}}",
     "late": "Endzeit {{when}} überschritten: {{ma}}",
     "summary": "HCN: {{n}} Erinnerungen"
+  },
+  "opt": {
+    "c-chuyenmon": "Fachlich",
+    "c-thuongnhat": "Routine",
+    "c-dotxuat": "Ungeplant",
+    "c-hanhchinh": "Verwaltung",
+    "c-hop": "Besprechungen",
+    "c-daotao": "Schulung",
+    "c-hotro": "Kollegen unterstützen",
+    "c-khac": "Sonstiges",
+    "pl-congty": "Büro",
+    "pl-nha": "Zuhause",
+    "pl-congtruong": "Baustelle",
+    "pl-nhamay": "Werk",
+    "pl-khac": "Sonstiges",
+    "noneCat": "Ohne Kategorie",
+    "nonePlace": "Ohne Ort"
+  },
+  "lists": {
+    "catsHint": "Für Monats-, Wochen- und Tagesaufgaben. Unteraufgaben übernehmen die Kategorie der übergeordneten Aufgabe und sind danach änderbar. Gilt für alle synchronisierten Geräte.",
+    "placesHint": "Für Tagesaufgaben. Ausgeblendete Einträge stehen nicht mehr zur Auswahl, bestehende Aufgaben behalten sie.",
+    "newPh": "Name des neuen Eintrags",
+    "name": "Name",
+    "add": "Hinzufügen",
+    "duplicate": "Eintrag mit diesem Namen existiert bereits",
+    "hide": "Ausblenden",
+    "show": "Einblenden",
+    "hideHint": "Aus der Auswahl ausblenden (bestehende Aufgaben bleiben)",
+    "delete": "Löschen",
+    "deleteTitle": "Eintrag löschen?",
+    "deleteUsed": "„{{name}}“ wird von {{n}} Aufgaben verwendet. Beim Löschen wird es dort entfernt. Zum Behalten lieber ausblenden.",
+    "restore": "{{n}} Standardeinträge wiederherstellen"
+  },
+  "stats": {
+    "title": "Zeit nach Kategorie und Ort",
+    "range": "Zeitraum",
+    "week": "Diese Woche",
+    "month": "Dieser Monat",
+    "byCat": "Nach Kategorie",
+    "byPlace": "Nach Ort",
+    "total": "Gesamt {{h}}",
+    "empty": "Keine Tagesaufgaben mit Zeiten in diesem Zeitraum.",
+    "hint": "Aus Tagesaufgaben: tatsächliche Zeit, wenn gestartet und beendet, sonst geplante Zeit. Zeile anklicken, um die Aufgaben zu sehen.",
+    "rowTip": "{{name}}: {{h}} · {{n}} Aufgaben · {{p}} %"
   }
 }

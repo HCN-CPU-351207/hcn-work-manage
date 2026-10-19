@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "Code",
-    "loai": "Type",
+    "loai": "Priorité",
     "task": "Tâche",
     "content": "Contenu",
     "person": "Responsable",
@@ -173,7 +173,9 @@
     "parentTuan": "Semaine parente",
     "date": "Date",
     "planTime": "Heure prévue",
-    "actualTime": "Heure réelle"
+    "actualTime": "Heure réelle",
+    "cat": "Catégorie",
+    "place": "Lieu"
   },
   "grid": {
     "selectAll": "Tout sélectionner",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} sur {{total}} tâches",
     "view": "Vue",
     "table": "Tableau",
-    "gantt": "Gantt"
+    "gantt": "Gantt",
+    "columns": "Colonnes",
+    "showAllCols": "Tout afficher",
+    "clearPick": "Effacer"
   },
   "empty": {
     "thang": "Aucune tâche mensuelle pour l'instant.",
@@ -228,7 +233,8 @@
     "clear": "Désélectionner",
     "skipped": "{{n}} tâches avec sous-tâches ignorées",
     "statusDone": "{{n}} tâches mises à jour",
-    "assigned": "{{n}} tâches réattribuées"
+    "assigned": "{{n}} tâches réattribuées",
+    "patched": "{{n}} tâches mises à jour"
   },
   "del": {
     "title": "Supprimer des tâches",
@@ -264,7 +270,9 @@
     "actualFrom": "Réel de",
     "actualTo": "Réel à",
     "actualHint": "Laissez les dates réelles vides pour les calculer à partir des sous-tâches.",
-    "ngayHint": "Une heure de fin réelle marque la tâche Terminée ; seule l'heure de début la marque En cours."
+    "ngayHint": "Une heure de fin réelle marque la tâche Terminée ; seule l'heure de début la marque En cours.",
+    "placeNote": "Lieu précis",
+    "placeNotePh": "ex. Chantier Nord"
   },
   "toast": {
     "created": "{{ma}} créée",
@@ -334,7 +342,8 @@
     "light": "Clair",
     "dark": "Sombre",
     "darkMode": "Mode sombre",
-    "sync": "Synchronisation"
+    "sync": "Synchronisation",
+    "lists": "Listes"
   },
   "people": {
     "hint": "Les personnes servent à attribuer les tâches et à afficher les avatars sur le Gantt.",
@@ -477,5 +486,49 @@
     "start": "Commence à {{when}} : {{ma}}",
     "late": "Heure de fin {{when}} dépassée : {{ma}}",
     "summary": "HCN : {{n}} rappels"
+  },
+  "opt": {
+    "c-chuyenmon": "Métier",
+    "c-thuongnhat": "Courant",
+    "c-dotxuat": "Imprévu",
+    "c-hanhchinh": "Administratif",
+    "c-hop": "Réunions",
+    "c-daotao": "Formation",
+    "c-hotro": "Aide aux collègues",
+    "c-khac": "Autre",
+    "pl-congty": "Bureau",
+    "pl-nha": "Domicile",
+    "pl-congtruong": "Chantier",
+    "pl-nhamay": "Usine",
+    "pl-khac": "Autre",
+    "noneCat": "Sans catégorie",
+    "nonePlace": "Sans lieu"
+  },
+  "lists": {
+    "catsHint": "Utilisée pour les tâches mensuelles, hebdomadaires et quotidiennes. Les sous-tâches héritent de la catégorie du parent, modifiable ensuite. Partagée entre appareils synchronisés.",
+    "placesHint": "Utilisé pour les tâches quotidiennes. Un élément masqué n'apparaît plus dans les choix, mais les tâches existantes le gardent.",
+    "newPh": "Nom du nouvel élément",
+    "name": "Nom",
+    "add": "Ajouter",
+    "duplicate": "Un élément porte déjà ce nom",
+    "hide": "Masquer",
+    "show": "Afficher",
+    "hideHint": "Masquer des choix (tâches existantes inchangées)",
+    "delete": "Supprimer",
+    "deleteTitle": "Supprimer l'élément ?",
+    "deleteUsed": "« {{name}} » est utilisé par {{n}} tâches. La suppression les vide. Pour le conserver, utilisez Masquer.",
+    "restore": "Rétablir {{n}} éléments par défaut"
+  },
+  "stats": {
+    "title": "Temps par catégorie et lieu",
+    "range": "Période",
+    "week": "Cette semaine",
+    "month": "Ce mois-ci",
+    "byCat": "Par catégorie",
+    "byPlace": "Par lieu",
+    "total": "Total {{h}}",
+    "empty": "Aucune tâche quotidienne horodatée sur cette période.",
+    "hint": "D'après les tâches quotidiennes : temps réel si démarrées et terminées, sinon temps prévu. Cliquez sur une ligne pour voir les tâches.",
+    "rowTip": "{{name}} : {{h}} · {{n}} tâches · {{p}} %"
   }
 }

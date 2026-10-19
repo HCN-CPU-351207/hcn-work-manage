@@ -40,12 +40,16 @@ export interface NgayRow extends RowBase {
 }
 export type Row = ThangRow | TuanRow | NgayRow;
 
-export function buildRows(level: 'thang', data: Data, d: Derived, people: Map<string, Person>): ThangRow[];
-export function buildRows(level: 'tuan', data: Data, d: Derived, people: Map<string, Person>): TuanRow[];
-export function buildRows(level: 'ngay', data: Data, d: Derived, people: Map<string, Person>): NgayRow[];
-export function buildRows(level: Level, data: Data, d: Derived, people: Map<string, Person>): Row[];
-export function buildRows(level: Level, data: Data, d: Derived, people: Map<string, Person>): Row[] {
+type OptName = (k: 'cats' | 'places', id: string | null | undefined) => string;
+export function buildRows(level: 'thang', data: Data, d: Derived, people: Map<string, Person>, optName?: OptName): ThangRow[];
+export function buildRows(level: 'tuan', data: Data, d: Derived, people: Map<string, Person>, optName?: OptName): TuanRow[];
+export function buildRows(level: 'ngay', data: Data, d: Derived, people: Map<string, Person>, optName?: OptName): NgayRow[];
+export function buildRows(level: Level, data: Data, d: Derived, people: Map<string, Person>, optName?: OptName): Row[];
+export function buildRows(level: Level, data: Data, d: Derived, people: Map<string, Person>, optName?: (k: 'cats' | 'places', id: string | null | undefined) => string): Row[] {
   const pname = (id: string | null) => (id ? people.get(id)?.name ?? '' : '');
+  const on = optName ?? (() => '');
+  const ex = (x: { cat?: string | null; place?: string | null; placeNote?: string }) =>
+    ({ cat: x.cat ?? null, place: x.place ?? null, extra: [on('cats', x.cat), on('places', x.place), x.placeNote ?? ''].filter(Boolean).join(' ') });
   if (level === 'thang') {
     return sortByPlan(data.thang).map((x): ThangRow => {
       const i = d.thang.get(x.id)!;
@@ -53,7 +57,7 @@ export function buildRows(level: Level, data: Data, d: Derived, people: Map<stri
         level: 'thang', id: x.id, ma: x.ma, ten: x.ten, personId: x.personId, person: x.personId ? people.get(x.personId) : undefined,
         display: i.display, raw: i.raw, progress: i.progress, childCount: i.childCount, locked: i.childCount > 0,
         item: x, actualStart: i.actual.start, actualEnd: i.actual.end,
-        facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: i.display, raw: i.raw, start: x.bd, end: x.dl }
+        facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: i.display, raw: i.raw, start: x.bd, end: x.dl, ...ex(x) }
       };
     });
   }
@@ -65,7 +69,7 @@ export function buildRows(level: Level, data: Data, d: Derived, people: Map<stri
         level: 'tuan', id: x.id, ma: x.ma, ten: x.ten, personId: x.personId, person: x.personId ? people.get(x.personId) : undefined,
         display: i.display, raw: i.raw, progress: i.progress, childCount: i.childCount, locked: i.childCount > 0,
         item: x, actualStart: i.actual.start, actualEnd: i.actual.end, parentTen: thangTen.get(x.parentMa) ?? '',
-        facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: i.display, raw: i.raw, start: x.bd, end: x.dl }
+        facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: i.display, raw: i.raw, start: x.bd, end: x.dl, ...ex(x) }
       };
     });
   }
@@ -74,7 +78,7 @@ export function buildRows(level: Level, data: Data, d: Derived, people: Map<stri
     level: 'ngay', id: x.id, ma: x.ma, ten: x.ten, personId: x.personId, person: x.personId ? people.get(x.personId) : undefined,
     display: x.tt, raw: x.tt, progress: null, childCount: 0, locked: false,
     item: x, parentMa: wMa.get(x.parentId) ?? '', conflict: d.conflicts.has(x.id),
-    facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: x.tt, raw: x.tt, start: x.ngay || null, end: x.ngay || null }
+    facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: x.tt, raw: x.tt, start: x.ngay || null, end: x.ngay || null, ...ex(x) }
   }));
 }
 

@@ -28,10 +28,41 @@ export interface Person {
   photo: string | null;
 }
 
+/** Mục trong danh mục tự sửa được (Phân loại, Vị trí). name rỗng = tên mặc định theo ngôn ngữ */
+export interface Opt {
+  id: string;
+  name: string;
+  color: string;
+  hidden?: boolean;
+}
+export type OptKind = 'cats' | 'places';
+
+export const DEFAULT_CATS: Opt[] = [
+  { id: 'c-chuyenmon', name: '', color: '#60A5FA' },
+  { id: 'c-thuongnhat', name: '', color: '#34D399' },
+  { id: 'c-dotxuat', name: '', color: '#F87171' },
+  { id: 'c-hanhchinh', name: '', color: '#A78BFA' },
+  { id: 'c-hop', name: '', color: '#F59E0B' },
+  { id: 'c-daotao', name: '', color: '#2DD4BF' },
+  { id: 'c-hotro', name: '', color: '#F472B6' },
+  { id: 'c-khac', name: '', color: '#94A3B8' }
+];
+export const DEFAULT_PLACES: Opt[] = [
+  { id: 'pl-congty', name: '', color: '#60A5FA' },
+  { id: 'pl-nha', name: '', color: '#34D399' },
+  { id: 'pl-congtruong', name: '', color: '#F59E0B' },
+  { id: 'pl-nhamay', name: '', color: '#A78BFA' },
+  { id: 'pl-khac', name: '', color: '#94A3B8' }
+];
+/** danh mục đang dùng: chưa sửa lần nào thì lấy mặc định */
+export const optsOf = (d: { cats?: Opt[]; places?: Opt[] }, k: OptKind): Opt[] => d[k] ?? (k === 'cats' ? DEFAULT_CATS : DEFAULT_PLACES);
+
 export interface Thang {
   id: string;
   ma: string; // M001...
   loai: Loai;
+  /** Phân loại công việc (id trong danh mục cats) */
+  cat?: string | null;
   ten: string;
   personId: string | null;
   bd: string | null;
@@ -46,6 +77,7 @@ export interface Tuan {
   id: string;
   ma: string; // W001...
   parentMa: string; // mã tháng cha, ví dụ 'M001'
+  cat?: string | null;
   ten: string;
   personId: string | null;
   bd: string | null;
@@ -61,6 +93,10 @@ export interface Ngay {
   ma: string; // D001...
   ngay: string; // 'YYYY-MM-DD'
   parentId: string; // id của Tuan cha
+  cat?: string | null;
+  /** Vị trí (id trong danh mục places) + ghi rõ địa điểm */
+  place?: string | null;
+  placeNote?: string;
   ten: string;
   personId: string | null;
   g1: string | null; // 'HH:MM'
@@ -87,6 +123,9 @@ export interface Data {
   tuan: Tuan[];
   ngay: Ngay[];
   counters?: Counters;
+  /** danh mục Phân loại / Vị trí (dùng chung giữa các máy); thiếu = mặc định */
+  cats?: Opt[];
+  places?: Opt[];
   /** nhắc việc đã báo: khóa mốc → thời điểm báo (ms); gộp khi đồng bộ để máy kia không báo lặp */
   reminded?: Record<string, number>;
 }
@@ -97,6 +136,9 @@ export interface ViewFilter {
   q?: string;
   status?: Display | '';
   personId?: string;
+  /** chọn nhiều; NONE_OPT = chưa có */
+  cats?: string[];
+  places?: string[];
   from?: string;
   to?: string;
   quick?: Quick | null;
@@ -141,13 +183,15 @@ export interface Settings {
   launchAtLogin: boolean;
   /** mục chuông đã xem trên máy này: khóa `${level}:${id}:${kind}:${dl}` → ngày xem */
   bellSeen?: Record<string, string>;
+  /** cột đang ẩn theo từng bảng (máy nào nhớ máy đó) */
+  hiddenCols?: Partial<Record<Level, string[]>>;
 }
 
 export interface BackupFile {
   app: 'HCN';
   schemaVersion: number;
   exportedAt: string;
-  data: { people: Person[]; thang: Thang[]; tuan: Tuan[]; ngay: Ngay[]; counters?: Counters };
+  data: { people: Person[]; thang: Thang[]; tuan: Tuan[]; ngay: Ngay[]; counters?: Counters; cats?: Opt[]; places?: Opt[] };
 }
 
 export function emptyData(): Data {

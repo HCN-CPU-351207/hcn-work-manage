@@ -7,7 +7,9 @@ import { runningDays } from '../../core/actions.ts';
 import { STATUSES } from '../../core/model.ts';
 import type { Level, Status } from '../../core/model.ts';
 import { actualMinutes, diffLabel, diffMinutes, diffTone, plannedMinutes } from '../../core/time.ts';
-import { useApp } from '../../store/app.ts';
+import { DEFAULT_HIDDEN, useApp } from '../../store/app.ts';
+import { optMap, useOpts } from '../../lib/opts.ts';
+import { CatChip, PlaceChip } from '../Common/OptChip.tsx';
 import { confirmDelete, quickAction, setStatusInline } from '../../lib/flows.ts';
 import { fmtDay, hhmm } from '../../lib/fmt.ts';
 import { useIsTablet } from '../../lib/hooks.ts';
@@ -38,6 +40,33 @@ export function useRowHighlight(level: Level) {
   return { active, containerRef };
 }
 
+export interface GridCol {
+  key: string;
+  label: string;
+  cls?: string;
+  /** cột bắt buộc, không ẩn được */
+  fixed?: boolean;
+}
+type T = (k: string) => string;
+export function gridCols(level: Level, t: T): GridCol[] {
+  const ma = { key: 'ma', label: t('col.ma'), fixed: true };
+  const cat = { key: 'cat', label: t('col.cat'), cls: 'col-cat' };
+  const tail = [
+    { key: 'person', label: t('col.person') }, { key: 'bd', label: t('col.planStart') }, { key: 'dl', label: t('col.planDeadline') },
+    { key: 'as', label: t('col.actualStart') }, { key: 'ae', label: t('col.actualEnd') }, { key: 'st', label: t('col.status') },
+    { key: 'pg', label: t('col.progress'), cls: 'col-progress' }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
+  ];
+  if (level === 'thang')
+    return [ma, { key: 'loai', label: t('col.loai'), cls: 'col-loai' }, cat, { key: 'task', label: t('col.task'), cls: 'col-task', fixed: true }, ...tail];
+  if (level === 'tuan') return [ma, { key: 'parent', label: t('col.parentThang') }, cat, { key: 'task', label: t('col.task'), cls: 'col-task', fixed: true }, ...tail];
+  return [
+    ma, { key: 'parent', label: t('col.parentTuan') }, { key: 'task', label: t('col.content'), cls: 'col-task', fixed: true },
+    cat, { key: 'place', label: t('col.place'), cls: 'col-place' },
+    { key: 'person', label: t('col.person') }, { key: 'gdk', label: t('col.planTime') }, { key: 'gtt', label: t('col.actualTime') },
+    { key: 'st', label: t('col.status') }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
+  ];
+}
+
 export function SmartGrid({ level, rows, today, emptyText }: { level: Level; rows: Row[]; today: string; emptyText: ReactNode }) {
   const { t } = useTranslation();
   const tablet = useIsTablet();
@@ -48,27 +77,9 @@ export function SmartGrid({ level, rows, today, emptyText }: { level: Level; row
   const allOn = rows.length > 0 && ids.every((id) => selected.includes(id));
   const someOn = !allOn && ids.some((id) => selected.includes(id));
 
-  const cols: { key: string; label: string; cls?: string }[] =
-    level === 'thang'
-      ? [
-          { key: 'ma', label: t('col.ma') }, { key: 'loai', label: t('col.loai'), cls: 'col-loai' }, { key: 'task', label: t('col.task'), cls: 'col-task' },
-          { key: 'person', label: t('col.person') }, { key: 'bd', label: t('col.planStart') }, { key: 'dl', label: t('col.planDeadline') },
-          { key: 'as', label: t('col.actualStart') }, { key: 'ae', label: t('col.actualEnd') }, { key: 'st', label: t('col.status') },
-          { key: 'pg', label: t('col.progress'), cls: 'col-progress' }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
-        ]
-      : level === 'tuan'
-        ? [
-            { key: 'ma', label: t('col.ma') }, { key: 'parent', label: t('col.parentThang') }, { key: 'task', label: t('col.task'), cls: 'col-task' },
-            { key: 'person', label: t('col.person') }, { key: 'bd', label: t('col.planStart') }, { key: 'dl', label: t('col.planDeadline') },
-            { key: 'as', label: t('col.actualStart') }, { key: 'ae', label: t('col.actualEnd') }, { key: 'st', label: t('col.status') },
-            { key: 'pg', label: t('col.progress'), cls: 'col-progress' }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
-          ]
-        : [
-            { key: 'ma', label: t('col.ma') }, { key: 'parent', label: t('col.parentTuan') }, { key: 'task', label: t('col.content'), cls: 'col-task' },
-            { key: 'person', label: t('col.person') }, { key: 'gdk', label: t('col.planTime') }, { key: 'gtt', label: t('col.actualTime') },
-            { key: 'st', label: t('col.status') }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
-          ];
-  const visible = tablet ? cols.filter((c) => c.key !== 'gc' && c.key !== 'pg') : cols;
+  const cols = gridCols(level, t);
+  const hidden = useApp((st) => st.settings.hiddenCols?.[level] ?? DEFAULT_HIDDEN[level]);
+  const visible = cols.filter((c) => !hidden.includes(c.key) && !(tablet && (c.key === 'gc' || c.key === 'pg')));
 
   return (
     <div className="grid-wrap" ref={containerRef}>
@@ -116,6 +127,8 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
   const openDrawer = useApp((s) => s.openDrawer);
   const year = today.slice(0, 4);
   const d = (s: string | null) => fmtDay(s, lang, year);
+  const cats = optMap(useOpts('cats'));
+  const places = optMap(useOpts('places'));
 
   const cell = (key: string): ReactNode => {
     switch (key) {
@@ -123,6 +136,10 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
         return <span className="code-tag">{row.ma}</span>;
       case 'loai':
         return row.level === 'thang' ? <span className={cx('loai', `loai-${LOAI_KEY[row.item.loai]}`)}>{t(`loai.${LOAI_KEY[row.item.loai]}`)}</span> : null;
+      case 'cat':
+        return <CatChip opt={row.item.cat ? cats.get(row.item.cat) : undefined} />;
+      case 'place':
+        return row.level === 'ngay' ? <PlaceChip opt={row.item.place ? places.get(row.item.place) : undefined} note={row.item.placeNote} /> : null;
       case 'parent':
         return row.level === 'tuan' ? (
           <span className="code-tag dim" title={(row as TuanRow).parentTen}>{row.item.parentMa}</span>
@@ -194,7 +211,7 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
     }
   };
 
-  const cls: Record<string, string> = { task: 'col-task', pg: 'col-progress', gc: 'col-note', loai: 'col-loai' };
+  const cls: Record<string, string> = { task: 'col-task', pg: 'col-progress', gc: 'col-note', loai: 'col-loai', cat: 'col-cat', place: 'col-place' };
   return (
     <tr data-id={row.id} className={cx('grid-row', hl && 'row-hl', checked && 'row-checked')} onDoubleClick={(e) => {
       if ((e.target as HTMLElement).closest('[data-inline]')) return;

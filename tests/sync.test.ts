@@ -165,3 +165,38 @@ describe('lưu từ giao diện khi dữ liệu vừa đồng bộ (applyEdit)',
     expect(countDiff(start, ed)).toBe(2);
   });
 });
+
+describe('danh mục Phân loại / Vị trí', () => {
+  it('máy chưa sửa danh mục không xóa danh mục của máy kia; gộp giữ phân loại của việc', () => {
+    const a = base();
+    const am = initMeta(a, 1);
+    const b0 = base();
+    const b = edit(b0, (x) => ({
+      ...x,
+      cats: [{ id: 'c-dotxuat', name: 'Gấp ngoài kế hoạch', color: '#f00' }, { id: 'c-moi', name: 'Thiết kế', color: '#0f0' }],
+      ngay: x.ngay.map((n) => ({ ...n, cat: 'c-moi', place: 'pl-congtruong', placeNote: 'Vĩnh Phúc' }))
+    }));
+    const bm = stampChanges(b0, b, initMeta(b0, 1), 100);
+    const r = mergeData(a, am, b, bm, 200);
+    expect(r.data.cats?.map((o) => o.id)).toEqual(['c-dotxuat', 'c-moi']);
+    expect(r.data.ngay[0].cat).toBe('c-moi');
+    expect(r.data.ngay[0].placeNote).toBe('Vĩnh Phúc');
+    expect(r.data.places).toBe(undefined);
+  });
+  it('cả hai máy chưa sửa thì vẫn để trống (dùng mặc định)', () => {
+    const a = base();
+    const r = mergeData(a, initMeta(a, 1), base(), initMeta(base(), 1), 10);
+    expect('cats' in r.data).toBe(false);
+  });
+  it('xóa mục ở một máy → việc đang dùng mục đó ở máy kia trở về trống', () => {
+    const start = edit(base(), (x) => ({ ...x, cats: [{ id: 'c1', name: 'A', color: '#000' }, { id: 'c2', name: 'B', color: '#111' }] }));
+    const m0 = initMeta(start, 1);
+    const a = edit(start, (x) => ({ ...x, cats: x.cats!.filter((o) => o.id !== 'c2') }));
+    const am = stampChanges(start, a, m0, 50);
+    const b = edit(start, (x) => ({ ...x, thang: x.thang.map((t) => ({ ...t, cat: 'c2' })) }));
+    const bm = stampChanges(start, b, m0, 60);
+    const r = mergeData(a, am, b, bm, 100);
+    expect(r.data.cats?.map((o) => o.id)).toEqual(['c1']);
+    expect(r.data.thang[0].cat).toBe(null);
+  });
+});

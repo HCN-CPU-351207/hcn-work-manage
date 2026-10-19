@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "Mã",
-    "loai": "Loại",
+    "loai": "Ưu tiên",
     "task": "Công việc",
     "content": "Nội dung",
     "person": "Người",
@@ -173,7 +173,9 @@
     "parentTuan": "Tuần cha",
     "date": "Ngày",
     "planTime": "Giờ DK",
-    "actualTime": "Giờ TT"
+    "actualTime": "Giờ TT",
+    "cat": "Phân loại",
+    "place": "Vị trí"
   },
   "grid": {
     "selectAll": "Chọn tất cả",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} / {{total}} việc",
     "view": "Kiểu xem",
     "table": "Bảng",
-    "gantt": "Gantt"
+    "gantt": "Gantt",
+    "columns": "Cột hiển thị",
+    "showAllCols": "Hiện tất cả cột",
+    "clearPick": "Bỏ chọn"
   },
   "empty": {
     "thang": "Chưa có công việc tháng nào.",
@@ -228,7 +233,8 @@
     "clear": "Bỏ chọn",
     "skipped": "Đã bỏ qua {{n}} việc có việc con",
     "statusDone": "Đã đổi trạng thái {{n}} việc",
-    "assigned": "Đã phân công {{n}} việc"
+    "assigned": "Đã phân công {{n}} việc",
+    "patched": "Đã cập nhật {{n}} việc"
   },
   "del": {
     "title": "Xóa công việc",
@@ -264,7 +270,9 @@
     "actualFrom": "Giờ TT từ",
     "actualTo": "Giờ TT đến",
     "actualHint": "Để trống ngày thực tế để tự tính từ việc con.",
-    "ngayHint": "Có giờ TT đến thì việc được tính là Hoàn thành; chỉ có giờ TT từ là Đang làm."
+    "ngayHint": "Có giờ TT đến thì việc được tính là Hoàn thành; chỉ có giờ TT từ là Đang làm.",
+    "placeNote": "Địa điểm cụ thể",
+    "placeNotePh": "vd. Công trường Vĩnh Phúc"
   },
   "toast": {
     "created": "Đã tạo {{ma}}",
@@ -334,7 +342,8 @@
     "light": "Light",
     "dark": "Dark",
     "darkMode": "Giao diện tối",
-    "sync": "Đồng bộ"
+    "sync": "Đồng bộ",
+    "lists": "Danh mục"
   },
   "people": {
     "hint": "Người phụ trách dùng để gán việc và hiện avatar trên Gantt.",
@@ -477,5 +486,49 @@
     "start": "Sắp bắt đầu lúc {{when}}: {{ma}}",
     "late": "Quá giờ kết thúc {{when}}: {{ma}}",
     "summary": "HCN: {{n}} nhắc việc"
+  },
+  "opt": {
+    "c-chuyenmon": "Chuyên môn",
+    "c-thuongnhat": "Thường nhật",
+    "c-dotxuat": "Đột xuất",
+    "c-hanhchinh": "Hành chính – giấy tờ",
+    "c-hop": "Họp – trao đổi",
+    "c-daotao": "Đào tạo – học tập",
+    "c-hotro": "Hỗ trợ đồng nghiệp",
+    "c-khac": "Khác",
+    "pl-congty": "Công ty",
+    "pl-nha": "Nhà",
+    "pl-congtruong": "Công trường",
+    "pl-nhamay": "Nhà máy",
+    "pl-khac": "Khác",
+    "noneCat": "Chưa phân loại",
+    "nonePlace": "Chưa có vị trí"
+  },
+  "lists": {
+    "catsHint": "Dùng cho CV Tháng, Tuần và Ngày. Việc con tự lấy phân loại của việc cha, sau đó vẫn đổi riêng được. Danh mục dùng chung cho mọi máy đã đồng bộ.",
+    "placesHint": "Dùng cho CV Ngày. Ẩn một mục thì không còn trong danh sách chọn nhưng việc cũ vẫn giữ nguyên.",
+    "newPh": "Tên mục mới",
+    "name": "Tên",
+    "add": "Thêm",
+    "duplicate": "Đã có mục trùng tên",
+    "hide": "Ẩn",
+    "show": "Hiện",
+    "hideHint": "Ẩn khỏi danh sách chọn (việc cũ giữ nguyên)",
+    "delete": "Xóa",
+    "deleteTitle": "Xóa mục?",
+    "deleteUsed": "“{{name}}” đang dùng ở {{n}} việc. Xóa thì các việc đó trở về trống. Muốn giữ lại cho việc cũ, hãy bấm Ẩn thay vì Xóa.",
+    "restore": "Thêm lại {{n}} mục mặc định đã xóa"
+  },
+  "stats": {
+    "title": "Thời gian theo Phân loại và Vị trí",
+    "range": "Khoảng thời gian",
+    "week": "Tuần này",
+    "month": "Tháng này",
+    "byCat": "Theo phân loại",
+    "byPlace": "Theo vị trí",
+    "total": "Tổng {{h}}",
+    "empty": "Chưa có CV Ngày nào có giờ trong khoảng này.",
+    "hint": "Tính từ CV Ngày: dùng giờ thực tế khi đã bấm bắt đầu và kết thúc, chưa có thì dùng giờ kế hoạch. Bấm một dòng để xem danh sách việc.",
+    "rowTip": "{{name}}: {{h}} · {{n}} việc · {{p}}%"
   }
 }

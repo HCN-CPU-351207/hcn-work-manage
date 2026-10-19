@@ -6,11 +6,13 @@ import type { FilterCtx } from '../core/search.ts';
 import { useApp } from '../store/app.ts';
 import { useDerived, useIsMobile, usePeopleMap } from '../lib/hooks.ts';
 import { buildRows, filterRows } from '../lib/rows.ts';
+import { useOptName } from '../lib/opts.ts';
 import { DayChart, MonthChart, WeekChart } from '../components/Gantt/Charts.tsx';
 import { FilterBar } from '../components/Grid/FilterBar.tsx';
 import { SmartGrid } from '../components/Grid/SmartGrid.tsx';
 import { TaskCards } from '../components/Mobile/TaskCards.tsx';
 import { MetricGrid } from '../components/Overview/MetricGrid.tsx';
+import { HoursPanel } from '../components/Overview/HoursPanel.tsx';
 import { IPlus } from '../components/Common/Icons.tsx';
 
 function useCtx(level: Level): FilterCtx {
@@ -32,6 +34,7 @@ export function OverviewPage() {
     <div className="page page-overview">
       <MetricGrid />
       <MonthChart rows={thang} ngayRows={ngay} today={today} />
+      <HoursPanel />
     </div>
   );
 }
@@ -48,12 +51,13 @@ export function LevelPage({ level }: { level: Level }) {
   const ctx = useCtx(level);
   const ctxN = useCtx('ngay');
 
-  const all = useMemo(() => buildRows(level, data, derived, people), [level, data, derived, people]);
+  const optName = useOptName();
+  const all = useMemo(() => buildRows(level, data, derived, people, optName), [level, data, derived, people, optName]);
   const rows = useMemo(() => filterRows(all, filter, query, ctx), [all, filter, query, ctx]);
   // biểu đồ Tuần/Tháng cần CV Ngày để mở Timeline khi chia đôi
   const ngayRows = useMemo(
-    () => (level === 'ngay' ? rows : filterRows(buildRows('ngay', data, derived, people), {}, query, ctxN)),
-    [level, rows, data, derived, people, query, ctxN]
+    () => (level === 'ngay' ? rows : filterRows(buildRows('ngay', data, derived, people, optName), {}, query, ctxN)),
+    [level, rows, data, derived, people, query, ctxN, optName]
   );
 
   const empty =

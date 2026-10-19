@@ -11,6 +11,8 @@ import type { Row } from '../../lib/rows.ts';
 import { useRowHighlight } from '../Grid/SmartGrid.tsx';
 import { Avatar, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
 import { ICheck, IEdit, ITrash } from '../Common/Icons.tsx';
+import { CatChip, PlaceChip } from '../Common/OptChip.tsx';
+import { optMap, useOpts } from '../../lib/opts.ts';
 
 const THRESHOLD = 60;
 const REVEAL = 172;
@@ -96,6 +98,11 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
       </>
     );
 
+  const cats = optMap(useOpts('cats'));
+  const places = optMap(useOpts('places'));
+  const cat = row.item.cat ? cats.get(row.item.cat) : undefined;
+  const place = row.level === 'ngay' && row.item.place ? places.get(row.item.place) : undefined;
+  const placeNote = row.level === 'ngay' ? row.item.placeNote : undefined;
   const running = row.level === 'ngay' && !!row.item.a1 && !row.item.a2 && row.item.ngay === today;
 
   return (
@@ -137,6 +144,12 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
           <span>{row.person?.name ?? t('person.unassigned')}</span>
           {row.progress !== null && <MiniProgress value={row.progress} />}
         </div>
+        {(cat || place || placeNote) && (
+          <div className="tc-tags">
+            {cat && <CatChip opt={cat} />}
+            {(place || placeNote) && <PlaceChip opt={place} note={placeNote} />}
+          </div>
+        )}
         <div className="tc-meta">{meta}</div>
       </article>
     </div>

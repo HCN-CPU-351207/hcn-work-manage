@@ -3,7 +3,7 @@ import { syncCounters, formatCode } from './codes.ts';
 import { isDate } from './dates.ts';
 import { newId } from './ids.ts';
 import { LOAI_LIST, SCHEMA_VERSION, STATUSES } from './model.ts';
-import type { Counters, Data, Loai, Ngay, Person, Status, Thang, Tuan } from './model.ts';
+import type { Counters, Data, Loai, Ngay, Opt, Person, Status, Thang, Tuan } from './model.ts';
 
 export type MigrationErrorCode = 'INVALID_FILE' | 'FUTURE_SCHEMA' | 'MIGRATION_FAILED';
 export class MigrationError extends Error {
@@ -94,6 +94,34 @@ function normPerson(x: unknown, i: number): Person | null {
   };
 }
 
+const optRef = (x: unknown): string | null => (typeof x === 'string' && x ? x : null);
+/** chỉ thêm trường khi có giá trị (giữ dữ liệu cũ y nguyên) */
+const extra = (x: Obj, ngay: boolean): Record<string, unknown> => {
+  const o: Record<string, unknown> = {};
+  const c = optRef(x.cat);
+  if (c) o.cat = c;
+  if (ngay) {
+    const p = optRef(x.place);
+    if (p) o.place = p;
+    const note = str(x.placeNote).trim();
+    if (note) o.placeNote = note.slice(0, 120);
+  }
+  return o;
+};
+function normOpts(x: unknown): Opt[] | undefined {
+  if (!Array.isArray(x)) return undefined;
+  const seen = new Set<string>();
+  const out: Opt[] = [];
+  for (const o of x) {
+    if (!isObj(o)) continue;
+    const id = str(o.id);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, name: str(o.name).slice(0, 60), color: typeof o.color === 'string' && o.color ? o.color : '#94A3B8', ...(o.hidden ? { hidden: true } : {}) });
+  }
+  return out;
+}
+
 const asIso = (x: unknown): string | null =>
   typeof x === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(x) ? (x.length === 16 ? `${x}:00` : x.slice(0, 19)) : null;
 
@@ -116,7 +144,8 @@ export function normalizeData(d: Obj): Data {
     tt: asStatus(x.tt),
     bdtt: asDate(x.bdtt),
     kttt: asDate(x.kttt),
-    gc: str(x.gc)
+    gc: str(x.gc),
+    ...extra(x, false)
   }));
   const tuan: Tuan[] = (Array.isArray(d.tuan) ? d.tuan : []).filter(isObj).map((x) => ({
     id: str(x.id) || newId('w'),
@@ -129,7 +158,8 @@ export function normalizeData(d: Obj): Data {
     tt: asStatus(x.tt),
     bdtt: asDate(x.bdtt),
     kttt: asDate(x.kttt),
-    gc: str(x.gc)
+    gc: str(x.gc),
+    ...extra(x, false)
   }));
   const ngay: Ngay[] = (Array.isArray(d.ngay) ? d.ngay : []).filter(isObj).map((x) => ({
     id: str(x.id) || newId('d'),
@@ -143,7 +173,8 @@ export function normalizeData(d: Obj): Data {
     a1: asIso(x.a1),
     a2: asIso(x.a2),
     tt: asStatus(x.tt),
-    gc: str(x.gc)
+    gc: str(x.gc),
+    ...extra(x, true)
   }));
   const reminded: Record<string, number> = {};
   if (isObj(d.reminded)) for (const [k, v] of Object.entries(d.reminded)) if (typeof v === 'number') reminded[k] = v;
@@ -154,6 +185,8 @@ export function normalizeData(d: Obj): Data {
     tuan,
     ngay,
     counters: isObj(d.counters) ? (d.counters as unknown as Counters) : undefined,
+    ...(normOpts(d.cats) ? { cats: normOpts(d.cats) } : {}),
+    ...(normOpts(d.places) ? { places: normOpts(d.places) } : {}),
     ...(Object.keys(reminded).length ? { reminded } : {})
   };
   fillCodes(data);

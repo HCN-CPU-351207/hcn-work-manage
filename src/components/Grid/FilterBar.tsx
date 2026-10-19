@@ -2,13 +2,16 @@
 import { useTranslation } from 'react-i18next';
 import { DISPLAYS } from '../../core/model.ts';
 import type { Display, Level } from '../../core/model.ts';
-import { NONE_PERSON, isFilterEmpty } from '../../core/search.ts';
-import { useApp } from '../../store/app.ts';
+import { NONE_OPT, NONE_PERSON, isFilterEmpty } from '../../core/search.ts';
+import { DEFAULT_HIDDEN, useApp } from '../../store/app.ts';
+import { optLabel, placeIcon, useOpts } from '../../lib/opts.ts';
+import { MultiPick } from '../Common/MultiPick.tsx';
+import { gridCols } from './SmartGrid.tsx';
 import type { ViewMode } from '../../store/app.ts';
 import { useIsMobile } from '../../lib/hooks.ts';
 import { STATUS_KEY } from '../../lib/labels.ts';
 import { Segmented } from '../Common/bits.tsx';
-import { IGantt, ITable, IX } from '../Common/Icons.tsx';
+import { IColumns, IGantt, ITable, IX } from '../Common/Icons.tsx';
 
 export function FilterBar({ level, count, total }: { level: Level; count: number; total: number }) {
   const { t } = useTranslation();
@@ -22,6 +25,29 @@ export function FilterBar({ level, count, total }: { level: Level; count: number
   const mobile = useIsMobile();
   const statuses = level === 'ngay' ? DISPLAYS.filter((d) => d !== 'Quá hạn') : DISPLAYS;
   const empty = isFilterEmpty(f) && !query;
+  const cats = useOpts('cats');
+  const places = useOpts('places');
+  const hiddenCols = useApp((s) => s.settings.hiddenCols);
+  const setSettings = useApp((s) => s.setSettings);
+  const cols = gridCols(level, t);
+  const hidden = hiddenCols?.[level] ?? DEFAULT_HIDDEN[level];
+  const optItems = (list: typeof cats, kind: 'cats' | 'places') => [
+    ...list
+      .filter((o) => !o.hidden || (f[kind] ?? []).includes(o.id))
+      .map((o) => {
+        const Icon = kind === 'places' ? placeIcon(o.id) : null;
+        return {
+          value: o.id,
+          label: (
+            <span className="opt-chip" style={{ ['--oc' as string]: o.color }}>
+              {Icon ? <Icon size={13} /> : <span className="opt-dot" />}
+              {optLabel(o)}
+            </span>
+          )
+        };
+      }),
+    { value: NONE_OPT, label: <span className="dim">{t(kind === 'cats' ? 'opt.noneCat' : 'opt.nonePlace')}</span> }
+  ];
 
   return (
     <div className="filterbar">
@@ -43,6 +69,10 @@ export function FilterBar({ level, count, total }: { level: Level; count: number
             </option>
           ))}
         </select>
+        <MultiPick label={t('col.cat')} items={optItems(cats, 'cats')} value={f.cats ?? []} onChange={(v) => setFilter(level, { cats: v.length ? v : undefined })} />
+        {level === 'ngay' && (
+          <MultiPick label={t('col.place')} items={optItems(places, 'places')} value={f.places ?? []} onChange={(v) => setFilter(level, { places: v.length ? v : undefined })} />
+        )}
         {!mobile && (
           <span className="fb-range">
             <input type="date" aria-label={t('filter.from')} value={f.from ?? ''} onChange={(e) => setFilter(level, { from: e.target.value || undefined })} />
@@ -66,6 +96,21 @@ export function FilterBar({ level, count, total }: { level: Level; count: number
         )}
         <span className="fb-count">{count === total ? t('filter.count', { n: total }) : t('filter.countOf', { n: count, total })}</span>
       </div>
+      <span className="fb-right">
+      {!mobile && mode === 'table' && (
+        <MultiPick
+          label={t('filter.columns')}
+          icon={<IColumns size={15} />}
+          align="right"
+          showCount={false}
+          resetLabel={t('filter.showAllCols')}
+          items={cols.map((c) => ({ value: c.key, label: c.label, disabled: c.fixed }))}
+          value={cols.filter((c) => c.fixed || !hidden.includes(c.key)).map((c) => c.key)}
+          onChange={(v) =>
+            setSettings({ hiddenCols: { ...(hiddenCols ?? {}), [level]: v.length ? cols.filter((c) => !c.fixed && !v.includes(c.key)).map((c) => c.key) : [] } })
+          }
+        />
+      )}
       <Segmented<ViewMode>
         label={t('filter.view')}
         value={mode}
@@ -75,6 +120,7 @@ export function FilterBar({ level, count, total }: { level: Level; count: number
           { value: 'chart', label: t('filter.gantt'), icon: <IGantt size={14} /> }
         ]}
       />
+      </span>
     </div>
   );
 }

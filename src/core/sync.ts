@@ -7,8 +7,10 @@ import type { Prefix } from './codes.ts';
 import type { Data, Ngay, Thang, Tuan } from './model.ts';
 import { mergeReminded } from './reminders.ts';
 
-export type Kind = 'people' | 'thang' | 'tuan' | 'ngay';
-export const KINDS: Kind[] = ['people', 'thang', 'tuan', 'ngay'];
+export type Kind = 'people' | 'thang' | 'tuan' | 'ngay' | 'cats' | 'places';
+export const KINDS: Kind[] = ['people', 'thang', 'tuan', 'ngay', 'cats', 'places'];
+/** danh mục: máy chưa sửa lần nào không gửi gì (dùng mặc định) */
+const OPT_KINDS: Kind[] = ['cats', 'places'];
 
 export interface SyncMeta {
   v: 1;
@@ -25,7 +27,7 @@ export const emptyMeta = (): SyncMeta => ({ v: 1, stamps: {}, tomb: {} });
 export const skey = (k: Kind, id: string): string => `${k}:${id}`;
 
 type Rec = { id: string };
-const recs = (d: Data, k: Kind): Rec[] => d[k] as Rec[];
+const recs = (d: Data, k: Kind): Rec[] => (d[k] as Rec[] | undefined) ?? [];
 
 export function isMeta(x: unknown): x is SyncMeta {
   return !!x && typeof x === 'object' && typeof (x as SyncMeta).stamps === 'object' && typeof (x as SyncMeta).tomb === 'object';
@@ -86,6 +88,14 @@ export function sameData(a: Data, b: Data): boolean {
 
 function clone(d: Data): Data {
   return { ...d, people: [...d.people], thang: [...d.thang], tuan: [...d.tuan], ngay: [...d.ngay] };
+}
+/** danh mục rỗng sau gộp mà cả hai bên chưa từng có → để trống (dùng mặc định) */
+function setRecs(out: Data, k: Kind, list: Rec[], had: boolean): void {
+  if (OPT_KINDS.includes(k) && !had && !list.length) {
+    delete (out as unknown as Record<string, unknown>)[k];
+    return;
+  }
+  (out as unknown as Record<Kind, Rec[]>)[k] = list;
 }
 
 /**
@@ -156,6 +166,17 @@ export function reconcile(input: Data, meta: SyncMeta, otherOnly: Set<string>): 
   d.tuan = unassign(d.tuan);
   d.ngay = unassign(d.ngay);
 
+  // 4) Phân loại / Vị trí đã bị xóa khỏi danh mục → bỏ trống
+  const catIds = d.cats ? new Set(d.cats.map((o) => o.id)) : null;
+  const placeIds = d.places ? new Set(d.places.map((o) => o.id)) : null;
+  const dropCat = <T extends { cat?: string | null }>(arr: T[]): T[] =>
+    catIds && arr.some((x) => x.cat && !catIds.has(x.cat)) ? arr.map((x) => (x.cat && !catIds.has(x.cat) ? { ...x, cat: null } : x)) : arr;
+  d.thang = dropCat(d.thang);
+  d.tuan = dropCat(d.tuan);
+  d.ngay = dropCat(d.ngay);
+  if (placeIds && d.ngay.some((x) => x.place && !placeIds.has(x.place)))
+    d.ngay = d.ngay.map((x) => (x.place && !placeIds.has(x.place) ? { ...x, place: null } : x));
+
   d.counters = syncCounters({ ...d, counters });
   return d;
 }
@@ -212,7 +233,7 @@ export function mergeData(a: Data, am: SyncMeta, b: Data, bm: SyncMeta, now: num
       stamps[key] = s;
       result.push(rec);
     }
-    (out as unknown as Record<Kind, Rec[]>)[k] = result;
+    setRecs(out, k, result, a[k] !== undefined || b[k] !== undefined);
   }
   for (const src of [am.tomb, bm.tomb])
     for (const [key, t] of Object.entries(src)) if (stamps[key] === undefined) tomb[key] = Math.max(tomb[key] ?? -1, t);
@@ -254,7 +275,7 @@ export function applyEdit(base: Data, edited: Data, current: Data, meta: SyncMet
         localNew.add(skey(k, id));
       }
     }
-    (out as unknown as Record<Kind, Rec[]>)[k] = list;
+    setRecs(out, k, list, current[k] !== undefined || edited[k] !== undefined);
   }
   out.counters = {
     M: Math.max(current.counters?.M ?? 0, edited.counters?.M ?? 0),

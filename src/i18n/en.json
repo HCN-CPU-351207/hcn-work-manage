@@ -158,7 +158,7 @@
   },
   "col": {
     "ma": "Code",
-    "loai": "Type",
+    "loai": "Priority",
     "task": "Task",
     "content": "Content",
     "person": "Owner",
@@ -173,7 +173,9 @@
     "parentTuan": "Parent week",
     "date": "Date",
     "planTime": "Planned time",
-    "actualTime": "Actual time"
+    "actualTime": "Actual time",
+    "cat": "Category",
+    "place": "Location"
   },
   "grid": {
     "selectAll": "Select all",
@@ -210,7 +212,10 @@
     "countOf": "{{n}} of {{total}} tasks",
     "view": "View",
     "table": "Table",
-    "gantt": "Gantt"
+    "gantt": "Gantt",
+    "columns": "Columns",
+    "showAllCols": "Show all columns",
+    "clearPick": "Clear"
   },
   "empty": {
     "thang": "No monthly tasks yet.",
@@ -228,7 +233,8 @@
     "clear": "Clear selection",
     "skipped": "Skipped {{n}} tasks that have subtasks",
     "statusDone": "Updated {{n}} tasks",
-    "assigned": "Reassigned {{n}} tasks"
+    "assigned": "Reassigned {{n}} tasks",
+    "patched": "Updated {{n}} tasks"
   },
   "del": {
     "title": "Delete tasks",
@@ -264,7 +270,9 @@
     "actualFrom": "Actual from",
     "actualTo": "Actual to",
     "actualHint": "Leave actual dates empty to calculate them from subtasks.",
-    "ngayHint": "An actual end time marks the task Done; only a start time marks it In progress."
+    "ngayHint": "An actual end time marks the task Done; only a start time marks it In progress.",
+    "placeNote": "Exact place",
+    "placeNotePh": "e.g. North site"
   },
   "toast": {
     "created": "Created {{ma}}",
@@ -334,7 +342,8 @@
     "light": "Light",
     "dark": "Dark",
     "darkMode": "Dark mode",
-    "sync": "Sync"
+    "sync": "Sync",
+    "lists": "Lists"
   },
   "people": {
     "hint": "People are used to assign tasks and show avatars on the Gantt.",
@@ -477,5 +486,49 @@
     "start": "Starts at {{when}}: {{ma}}",
     "late": "Past its {{when}} end time: {{ma}}",
     "summary": "HCN: {{n}} reminders"
+  },
+  "opt": {
+    "c-chuyenmon": "Professional",
+    "c-thuongnhat": "Routine",
+    "c-dotxuat": "Unplanned",
+    "c-hanhchinh": "Admin & paperwork",
+    "c-hop": "Meetings",
+    "c-daotao": "Training & learning",
+    "c-hotro": "Helping colleagues",
+    "c-khac": "Other",
+    "pl-congty": "Office",
+    "pl-nha": "Home",
+    "pl-congtruong": "Construction site",
+    "pl-nhamay": "Factory",
+    "pl-khac": "Other",
+    "noneCat": "Uncategorized",
+    "nonePlace": "No location"
+  },
+  "lists": {
+    "catsHint": "Used by monthly, weekly and daily tasks. Child tasks take their parent's category and can be changed afterwards. Shared with every synced device.",
+    "placesHint": "Used by daily tasks. A hidden item disappears from pickers, but existing tasks keep it.",
+    "newPh": "New item name",
+    "name": "Name",
+    "add": "Add",
+    "duplicate": "An item with this name already exists",
+    "hide": "Hide",
+    "show": "Show",
+    "hideHint": "Hide from pickers (existing tasks unchanged)",
+    "delete": "Delete",
+    "deleteTitle": "Delete item?",
+    "deleteUsed": "“{{name}}” is used by {{n}} tasks. Deleting clears it from them. To keep it on old tasks, use Hide instead.",
+    "restore": "Restore {{n}} deleted default items"
+  },
+  "stats": {
+    "title": "Time by category and location",
+    "range": "Period",
+    "week": "This week",
+    "month": "This month",
+    "byCat": "By category",
+    "byPlace": "By location",
+    "total": "Total {{h}}",
+    "empty": "No timed daily tasks in this period.",
+    "hint": "From daily tasks: actual time when started and finished, otherwise planned time. Click a row to see the tasks.",
+    "rowTip": "{{name}}: {{h}} · {{n}} tasks · {{p}}%"
   }
 }
