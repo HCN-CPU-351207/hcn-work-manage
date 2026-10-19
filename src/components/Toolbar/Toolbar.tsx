@@ -16,7 +16,7 @@ export function Toolbar() {
   return (
     <header className="toolbar">
       <div className="brand">
-        <img src="./logo.png" alt="" width={26} height={26} />
+        <img src="./logo.png" alt="" width={30} height={30} />
         <span className="brand-name">{t('app.name')}</span>
       </div>
       <SearchPill />
