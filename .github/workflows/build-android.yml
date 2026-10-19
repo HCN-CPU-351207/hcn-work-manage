@@ -26,7 +26,7 @@ jobs:
       - run: npm run build:android
       # Tạo dự án Android, icon, rồi vá cấu hình (http trong Wi-Fi, phiên bản, ký APK)
       - run: npx cap add android
-      - run: npx @capacitor/assets generate --android --iconBackgroundColor "#000000" --iconBackgroundColorDark "#000000" --splashBackgroundColor "#000000" --splashBackgroundColorDark "#000000"
+      - run: npx @capacitor/assets generate --android --iconBackgroundColor "#121614" --iconBackgroundColorDark "#121614" --splashBackgroundColor "#121614" --splashBackgroundColorDark "#121614"
       - run: node scripts/android-prepare.mjs
       - run: npx cap sync android
       # Dùng keystore riêng nếu đã khai báo trong Settings > Secrets (khuyến nghị khi phát hành rộng)
