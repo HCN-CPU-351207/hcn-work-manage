@@ -34,10 +34,22 @@ jobs:
             release/HCN-Setup-*.exe.blockmap
             release/latest.yml
       # Khi đẩy tag (ví dụ v1.0.0): đính kèm vào GitHub Release để electron-updater tải được
+      - name: Lấy số phiên bản
+        id: ver
+        run: echo "v=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+        shell: bash
       - name: Publish release assets
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          # build từ main: đăng vào Release theo số phiên bản (vd. v1.0.0) để ai cũng tải được, không cần đăng nhập
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', steps.ver.outputs.v) }}
+          name: HCN Work Manage ${{ steps.ver.outputs.v }}
+          make_latest: true
+          body: |
+            Tải file cài ở mục Assets bên dưới:
+            - Máy tính Windows: HCN-Setup-${{ steps.ver.outputs.v }}.exe
+            - Điện thoại Android: HCN-${{ steps.ver.outputs.v }}.apk
           files: |
             release/HCN-Setup-*.exe
             release/HCN-Setup-*.exe.blockmap
