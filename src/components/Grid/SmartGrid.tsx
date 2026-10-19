@@ -8,6 +8,9 @@ import { STATUSES } from '../../core/model.ts';
 import type { Level, Status } from '../../core/model.ts';
 import { actualMinutes, diffLabel, diffMinutes, diffTone, plannedMinutes } from '../../core/time.ts';
 import { DEFAULT_HIDDEN, useApp } from '../../store/app.ts';
+import { applyColFilters } from '../../core/colFilter.ts';
+import { useColValue } from '../../lib/colValues.ts';
+import { ColFilterButton } from './ColumnFilter.tsx';
 import { optMap, useOpts } from '../../lib/opts.ts';
 import { CatChip, PlaceChip } from '../Common/OptChip.tsx';
 import { confirmDelete, quickAction, setStatusInline } from '../../lib/flows.ts';
@@ -67,7 +70,7 @@ export function gridCols(level: Level, t: T): GridCol[] {
   ];
 }
 
-export function SmartGrid({ level, rows, today, emptyText }: { level: Level; rows: Row[]; today: string; emptyText: ReactNode }) {
+export function SmartGrid({ level, rows, pool, today, emptyText }: { level: Level; rows: Row[]; pool?: Row[]; today: string; emptyText: ReactNode }) {
   const { t } = useTranslation();
   const tablet = useIsTablet();
   const selected = useApp((s) => s.selected[level]);
@@ -78,6 +81,10 @@ export function SmartGrid({ level, rows, today, emptyText }: { level: Level; row
   const someOn = !allOn && ids.some((id) => selected.includes(id));
 
   const cols = gridCols(level, t);
+  const val = useColValue();
+  const f = useApp((st) => st.filters[level]);
+  /** danh sách giá trị của mỗi cột tính trên các dòng đã qua bộ lọc khác (giống Excel) */
+  const poolFor = (col: string) => applyColFilters(pool ?? rows, f.cols, val, col);
   const hidden = useApp((st) => st.settings.hiddenCols?.[level] ?? DEFAULT_HIDDEN[level]);
   const visible = cols.filter((c) => !hidden.includes(c.key) && !(tablet && (c.key === 'gc' || c.key === 'pg')));
 
@@ -98,8 +105,11 @@ export function SmartGrid({ level, rows, today, emptyText }: { level: Level; row
               />
             </th>
             {visible.map((c) => (
-              <th key={c.key} className={c.cls}>
-                {c.label}
+              <th key={c.key} className={cx(c.cls, 'th-f', (f.cols?.[c.key] || f.sort?.key === c.key) && 'th-on')}>
+                <span className="th-in">
+                  <span className="th-label">{c.label}</span>
+                  <ColFilterButton level={level} col={c.key} label={c.label} pool={poolFor(c.key)} val={val} />
+                </span>
               </th>
             ))}
             <th className="col-actions" aria-label={t('grid.actions')} />
@@ -125,6 +135,8 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
   const lang = useApp((s) => s.settings.language);
   const toggle = useApp((s) => s.toggleSelect);
   const openDrawer = useApp((s) => s.openDrawer);
+  const openPanel = useApp((s) => s.openPanel);
+  const active = useApp((s) => s.panel?.id === row.id);
   const year = today.slice(0, 4);
   const d = (s: string | null) => fmtDay(s, lang, year);
   const cats = optMap(useOpts('cats'));
@@ -213,10 +225,20 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
 
   const cls: Record<string, string> = { task: 'col-task', pg: 'col-progress', gc: 'col-note', loai: 'col-loai', cat: 'col-cat', place: 'col-place' };
   return (
-    <tr data-id={row.id} className={cx('grid-row', hl && 'row-hl', checked && 'row-checked')} onDoubleClick={(e) => {
-      if ((e.target as HTMLElement).closest('[data-inline]')) return;
-      openDrawer({ level: row.level, id: row.id });
-    }}>
+    <tr
+      data-id={row.id}
+      className={cx('grid-row', hl && 'row-hl', checked && 'row-checked', active && 'row-active', row.level !== 'ngay' && 'row-click')}
+      onClick={(e) => {
+        // CV Tháng / Tuần: bấm 1 lần mở Tổng quan dự án (bỏ qua ô tích, nút, ô sửa nhanh)
+        if (row.level === 'ngay' || (e.target as HTMLElement).closest('input, button, select, a, [data-inline], .qa')) return;
+        if (e.detail > 1) return;
+        openPanel(active ? null : { level: row.level, id: row.id });
+      }}
+      onDoubleClick={(e) => {
+        if ((e.target as HTMLElement).closest('[data-inline]')) return;
+        openDrawer({ level: row.level, id: row.id });
+      }}
+    >
       <td className="col-check">
         <input type="checkbox" aria-label={t('grid.selectRow', { ma: row.ma })} checked={checked} onChange={() => toggle(row.level, row.id)} />
       </td>

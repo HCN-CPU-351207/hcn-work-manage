@@ -7,11 +7,13 @@ import { useApp } from './store/app.ts';
 import { api } from './lib/devApi.ts';
 import { startReminders } from './lib/reminderRunner.ts';
 import { isTyping } from './lib/hooks.ts';
+import { cx } from './lib/labels.ts';
 import { Toolbar } from './components/Toolbar/Toolbar.tsx';
 import { SubNav } from './components/SubNav/SubNav.tsx';
 import { LevelPage, OverviewPage } from './pages/Pages.tsx';
 import { FloatingBulkBar } from './components/BulkBar/FloatingBulkBar.tsx';
 import { DetailDrawer } from './components/Drawer/DetailDrawer.tsx';
+import { ProjectPanel } from './components/Panel/ProjectPanel.tsx';
 import { SettingsDialog } from './components/Settings/SettingsDialog.tsx';
 import { TaskTooltip } from './components/Tooltip/TaskTooltip.tsx';
 import { ConfirmDialog, Toasts, UpdateToast } from './components/Common/Overlays.tsx';
@@ -40,6 +42,7 @@ function closeTopLayer(): boolean {
   else if (st.settingsOpen) st.openSettings(null);
   else if (st.quickOpen) st.setQuickOpen(false);
   else if (st.splitDay) st.setSplitDay(null);
+  else if (st.panel) st.openPanel(null);
   else return false;
   return true;
 }
@@ -51,6 +54,7 @@ export function App() {
   const tab = useApp((s) => s.tab);
   const theme = useApp((s) => s.settings.theme);
   const lang = useApp((s) => s.settings.language);
+  const panelOpen = useApp((s) => !!s.panel && s.tab === s.panel.level);
 
   useEffect(() => {
     void useApp.getState().init().then(() => {
@@ -158,7 +162,8 @@ export function App() {
     <div className="app">
       <Toolbar />
       <SubNav />
-      <main className="main">{tab === 'overview' ? <OverviewPage /> : <LevelPage key={tab} level={tab} />}</main>
+      <main className={cx('main', panelOpen && 'with-panel')}>{tab === 'overview' ? <OverviewPage /> : <LevelPage key={tab} level={tab} />}</main>
+      {panelOpen && <ProjectPanel />}
       <FloatingBulkBar />
       <DetailDrawer />
       <SettingsDialog />

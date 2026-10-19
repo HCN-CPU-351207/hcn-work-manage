@@ -139,6 +139,10 @@ export interface ViewFilter {
   /** chọn nhiều; NONE_OPT = chưa có */
   cats?: string[];
   places?: string[];
+  /** lọc theo cột kiểu Excel: khóa cột → các giá trị được giữ ('' = ô trống) */
+  cols?: Record<string, string[]>;
+  /** sắp xếp theo cột */
+  sort?: { key: string; dir: 1 | -1 };
   from?: string;
   to?: string;
   quick?: Quick | null;

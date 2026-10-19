@@ -89,6 +89,14 @@ export function FilterBar({ level, count, total }: { level: Level; count: number
           </span>
         )}
         {query && <span className="quick-chip dim">{`“${query}”`}</span>}
+        {(Object.keys(f.cols ?? {}).length > 0 || f.sort) && (
+          <span className="quick-chip">
+            {f.sort && !Object.keys(f.cols ?? {}).length ? t('colf.sorted') : t('colf.chip', { n: Object.keys(f.cols ?? {}).length })}
+            <button aria-label={t('common.clear')} onClick={() => setFilter(level, { cols: undefined, sort: undefined })}>
+              <IX size={12} />
+            </button>
+          </span>
+        )}
         {!empty && (
           <button className="btn btn-sm btn-ghost" onClick={() => clear(level)}>
             {t('filter.clear')}

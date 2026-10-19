@@ -147,5 +147,6 @@ function quickMatches(r: RowFacts, quick: Quick | null, ctx: FilterCtx): boolean
 }
 
 export const isFilterEmpty = (f: ViewFilter | undefined): boolean =>
-  !f || (!f.q && !f.status && !f.personId && !f.from && !f.to && !f.quick && !f.cats?.length && !f.places?.length);
+  !f ||
+  (!f.q && !f.status && !f.personId && !f.from && !f.to && !f.quick && !f.cats?.length && !f.places?.length && !Object.keys(f.cols ?? {}).length && !f.sort);
 

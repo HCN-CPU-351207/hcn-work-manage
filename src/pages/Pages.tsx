@@ -7,6 +7,8 @@ import { useApp } from '../store/app.ts';
 import { useDerived, useIsMobile, usePeopleMap } from '../lib/hooks.ts';
 import { buildRows, filterRows } from '../lib/rows.ts';
 import { useOptName } from '../lib/opts.ts';
+import { useColValue } from '../lib/colValues.ts';
+import { applyColFilters, sortRows } from '../core/colFilter.ts';
 import { DayChart, MonthChart, WeekChart } from '../components/Gantt/Charts.tsx';
 import { FilterBar } from '../components/Grid/FilterBar.tsx';
 import { SmartGrid } from '../components/Grid/SmartGrid.tsx';
@@ -53,7 +55,10 @@ export function LevelPage({ level }: { level: Level }) {
 
   const optName = useOptName();
   const all = useMemo(() => buildRows(level, data, derived, people, optName), [level, data, derived, people, optName]);
-  const rows = useMemo(() => filterRows(all, filter, query, ctx), [all, filter, query, ctx]);
+  const val = useColValue();
+  /** pool = sau bộ lọc chung; rows = thêm lọc + sắp xếp theo cột */
+  const pool = useMemo(() => filterRows(all, filter, query, ctx), [all, filter, query, ctx]);
+  const rows = useMemo(() => sortRows(applyColFilters(pool, filter.cols, val), filter.sort, val), [pool, filter.cols, filter.sort, val]);
   // biểu đồ Tuần/Tháng cần CV Ngày để mở Timeline khi chia đôi
   const ngayRows = useMemo(
     () => (level === 'ngay' ? rows : filterRows(buildRows('ngay', data, derived, people, optName), {}, query, ctxN)),
@@ -85,7 +90,7 @@ export function LevelPage({ level }: { level: Level }) {
       ) : mobile ? (
         <TaskCards level={level} rows={rows} today={today} emptyText={empty} />
       ) : (
-        <SmartGrid level={level} rows={rows} today={today} emptyText={empty} />
+        <SmartGrid level={level} rows={rows} pool={pool} today={today} emptyText={empty} />
       )}
     </div>
   );

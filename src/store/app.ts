@@ -86,6 +86,8 @@ export interface AppState {
   splitDay: string | null;
   selected: Record<Level, string[]>;
   drawer: DrawerState | null;
+  /** bảng Tổng quan dự án đang mở (CV Tháng / CV Tuần) */
+  panel: { level: 'thang' | 'tuan'; id: string } | null;
   quickOpen: boolean;
   settingsOpen: SettingsSection | null;
   highlight: { level: Level; id: string; until: number } | null;
@@ -132,6 +134,7 @@ export interface AppState {
   toggleSelect(level: Level, id: string): void;
   setSelection(level: Level, ids: string[]): void;
   openDrawer(d: DrawerState | null): void;
+  openPanel(p: { level: 'thang' | 'tuan'; id: string } | null): void;
   setQuickOpen(v: boolean): void;
   openSettings(s: SettingsSection | null): void;
   navigateTo(level: Level, id: string, openDrawer?: boolean): void;
@@ -220,6 +223,7 @@ export const useApp = create<AppState>()((set, get) => {
     splitDay: null,
     selected: EMPTY_SEL,
     drawer: null,
+    panel: null,
     quickOpen: false,
     settingsOpen: null,
     highlight: null,
@@ -360,7 +364,8 @@ export const useApp = create<AppState>()((set, get) => {
     },
 
     setTab(tab) {
-      set({ tab, tip: null });
+      const pn = get().panel;
+      set({ tab, tip: null, panel: pn && pn.level === tab ? pn : null });
     },
     setQuery(q) {
       set({ query: q });
@@ -396,6 +401,9 @@ export const useApp = create<AppState>()((set, get) => {
     openDrawer(d) {
       set({ drawer: d, quickOpen: false, tip: d ? null : get().tip });
     },
+    openPanel(p) {
+      set({ panel: p, tip: null });
+    },
     setQuickOpen(v) {
       set({ quickOpen: v });
     },
@@ -412,6 +420,7 @@ export const useApp = create<AppState>()((set, get) => {
         highlight: { level, id, until: Date.now() + 2000 },
         scrollNonce: get().scrollNonce + 1,
         drawer: openDrawer ? { level, id } : get().drawer,
+        panel: get().panel && get().panel!.level === level ? get().panel : null,
         tip: null,
         quickOpen: false
       });

@@ -36,6 +36,12 @@ PC làm trạm; điện thoại tự đồng bộ khi **app PC đang mở** và 
 Cách gộp: so từng việc, **bản sửa sau cùng thắng**; việc đã xóa không sống lại; hai máy cùng tạo một mã (vd. M008) thì bản của điện thoại được đánh mã mới; việc con của việc bị xóa ở máy kia cũng bị xóa theo.
 Vì so theo giờ sửa, hãy để đồng hồ PC và điện thoại ở chế độ tự động. Nhiều điện thoại có thể ghép với cùng một PC; gỡ điện thoại trong danh sách trên PC là nó không đồng bộ được nữa.
 
+## Tổng quan dự án và lọc theo cột
+
+- **Bấm 1 lần** vào một việc ở **CV Tháng** hoặc **CV Tuần** để mở bảng *Tổng quan dự án* bên phải (bấm đúp vẫn mở khung sửa; Esc để đóng). Trên điện thoại: chạm vào thẻ việc.
+- Bảng gồm: 3 vòng chỉ số (tiến độ, thời gian đã trôi, ngày còn lại) kèm kết luận nhanh/chậm; đường tiến độ thực tế so với kế hoạch; cột giờ làm theo tuần (CV Tháng) hoặc theo ngày (CV Tuần); phân bổ thời gian theo Phân loại / Vị trí / người; danh sách việc con; độ chính xác kế hoạch; việc sắp tới và đang trễ. Bấm vào việc con để nhảy tới việc đó.
+- **Lọc theo cột kiểu Excel:** rê chuột lên tiêu đề cột → nút ▾ → sắp xếp tăng/giảm, tìm giá trị, tích chọn giá trị (kèm số lượng), OK. Cột đang lọc đổi màu; nút *Lọc N cột* trên thanh lọc để xóa nhanh. Bộ lọc cột được lưu cùng **Lưu bộ lọc**.
+
 ## Thông báo trễ hạn
 
 Bật trong **Cài đặt > Thông báo**:

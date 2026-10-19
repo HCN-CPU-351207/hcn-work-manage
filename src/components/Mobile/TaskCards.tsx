@@ -130,7 +130,12 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={onUp}
-        onClick={() => !open && !dragging && Math.abs(dx) < 4 && openDrawer({ level: row.level, id: row.id })}
+        onClick={() => {
+          if (open || dragging || Math.abs(dx) >= 4) return;
+          // CV Tháng / Tuần: mở Tổng quan dự án; CV Ngày: mở khung sửa
+          if (row.level === 'ngay') openDrawer({ level: row.level, id: row.id });
+          else useApp.getState().openPanel({ level: row.level, id: row.id });
+        }}
       >
         <div className="tc-top">
           <input type="checkbox" checked={selected} aria-label={t('grid.selectRow', { ma: row.ma })} onChange={() => toggle(row.level, row.id)} onClick={(e) => e.stopPropagation()} />
