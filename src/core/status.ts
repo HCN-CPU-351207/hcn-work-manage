@@ -160,6 +160,8 @@ export interface BellItem {
   dl: string | null;
   kind: 'overdue' | 'soon';
 }
+/** khóa "đã xem": đổi hạn hoặc chuyển từ sắp đến hạn sang quá hạn thì hiện lại */
+export const bellKey = (i: BellItem): string => `${i.level}:${i.id}:${i.kind}:${i.dl ?? ''}`;
 /** Quá hạn + Sắp đến hạn trên CV Tháng và CV Tuần (mục 6.8) */
 export function bellItems(data: Data, d: Derived, today: string, days: number): BellItem[] {
   const out: BellItem[] = [];

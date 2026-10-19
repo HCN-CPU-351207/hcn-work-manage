@@ -101,7 +101,11 @@
     "empty": "Nada atrasado ou a vencer",
     "overdue": "Atrasadas ({{n}})",
     "soon": "A vencer em {{d}} dias ({{n}})",
-    "due": "Prazo {{date}}"
+    "due": "Prazo {{date}}",
+    "markAll": "Marcar tudo como lido",
+    "allSeen": "Viu todas as notificações",
+    "showSeen": "Mostrar lidos ({{n}})",
+    "hideSeen": "Ocultar lidos"
   },
   "views": {
     "add": "Guardar filtro",

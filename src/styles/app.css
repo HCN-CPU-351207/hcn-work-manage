@@ -531,6 +531,36 @@ textarea {
 .bell-head {
   font-weight: 700;
   padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 2px 4px;
+  color: var(--accent, #34d399);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.link-btn:hover {
+  text-decoration: underline;
+}
+.bell-foot {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 8px;
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+}
+.drop-item.seen {
+  opacity: 0.55;
 }
 
 /* ---------- Sub-Nav (8.3) ---------- */

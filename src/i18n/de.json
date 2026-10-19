@@ -101,7 +101,11 @@
     "empty": "Nichts überfällig oder bald fällig",
     "overdue": "Überfällig ({{n}})",
     "soon": "Fällig in {{d}} Tagen ({{n}})",
-    "due": "Fällig {{date}}"
+    "due": "Fällig {{date}}",
+    "markAll": "Alle als gelesen markieren",
+    "allSeen": "Alles gelesen",
+    "showSeen": "Gelesene anzeigen ({{n}})",
+    "hideSeen": "Gelesene ausblenden"
   },
   "views": {
     "add": "Filter speichern",

@@ -101,7 +101,11 @@
     "empty": "Rien en retard ni bientôt dû",
     "overdue": "En retard ({{n}})",
     "soon": "Dues sous {{d}} jours ({{n}})",
-    "due": "Échéance {{date}}"
+    "due": "Échéance {{date}}",
+    "markAll": "Tout marquer comme lu",
+    "allSeen": "Toutes les notifications ont été vues",
+    "showSeen": "Afficher les éléments lus ({{n}})",
+    "hideSeen": "Masquer les éléments lus"
   },
   "views": {
     "add": "Enregistrer le filtre",

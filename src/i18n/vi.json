@@ -101,7 +101,11 @@
     "empty": "Không có việc quá hạn hoặc sắp đến hạn",
     "overdue": "Quá hạn ({{n}})",
     "soon": "Sắp đến hạn trong {{d}} ngày ({{n}})",
-    "due": "Hạn {{date}}"
+    "due": "Hạn {{date}}",
+    "markAll": "Đánh dấu đã xem hết",
+    "allSeen": "Đã xem hết thông báo",
+    "showSeen": "Hiện cả mục đã xem ({{n}})",
+    "hideSeen": "Ẩn mục đã xem"
   },
   "views": {
     "add": "Lưu bộ lọc",

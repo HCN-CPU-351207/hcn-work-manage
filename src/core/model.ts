@@ -139,6 +139,8 @@ export interface Settings {
   /** PC: đóng cửa sổ thì chạy nền ở khay hệ thống; tự mở cùng Windows */
   runInBackground: boolean;
   launchAtLogin: boolean;
+  /** mục chuông đã xem trên máy này: khóa `${level}:${id}:${kind}:${dl}` → ngày xem */
+  bellSeen?: Record<string, string>;
 }
 
 export interface BackupFile {

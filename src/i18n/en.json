@@ -101,7 +101,11 @@
     "empty": "Nothing overdue or due soon",
     "overdue": "Overdue ({{n}})",
     "soon": "Due within {{d}} days ({{n}})",
-    "due": "Due {{date}}"
+    "due": "Due {{date}}",
+    "markAll": "Mark all as read",
+    "allSeen": "You're all caught up",
+    "showSeen": "Show read items ({{n}})",
+    "hideSeen": "Hide read items"
   },
   "views": {
     "add": "Save filter",

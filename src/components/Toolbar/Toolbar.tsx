@@ -1,7 +1,7 @@
 // Global Top Toolbar kính mờ (Module 3, mục 1)
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { bellItems } from '../../core/status.ts';
+import { bellItems, bellKey } from '../../core/status.ts';
 import { useApp } from '../../store/app.ts';
 import { useDerived } from '../../lib/hooks.ts';
 import { fmtDate } from '../../lib/fmt.ts';
@@ -62,7 +62,21 @@ function NotifyBell() {
   const days = useApp((s) => s.settings.notifyDaysBefore);
   const navigateTo = useApp((s) => s.navigateTo);
   const lang = useApp((s) => s.settings.language);
-  const items = useMemo(() => bellItems(data, derived, today, days), [data, derived, today, days]);
+  const all = useMemo(() => bellItems(data, derived, today, days), [data, derived, today, days]);
+  const seen = useApp((s) => s.settings.bellSeen);
+  const setSettings = useApp((s) => s.setSettings);
+  const [showSeen, setShowSeen] = useState(false);
+  const unseen = useMemo(() => all.filter((i) => !seen?.[bellKey(i)]), [all, seen]);
+  const items = showSeen ? all : unseen;
+  const seenCount = all.length - unseen.length;
+  /** đánh dấu đã xem; chỉ giữ khóa của các mục còn trong danh sách để không phình dữ liệu */
+  const markSeen = (list: typeof all) => {
+    const live = new Set(all.map(bellKey));
+    const next: Record<string, string> = {};
+    for (const [k, v] of Object.entries(seen ?? {})) if (live.has(k)) next[k] = v;
+    for (const i of list) next[bellKey(i)] = today;
+    setSettings({ bellSeen: next });
+  };
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -83,12 +97,19 @@ function NotifyBell() {
     <div className="bell-wrap" ref={ref}>
       <button className="icon-btn bell" aria-label={t('bell.title')} aria-expanded={open} title={t('bell.title')} onClick={() => setOpen(!open)}>
         <IBell size={18} />
-        {items.length > 0 && <span className="bell-dot">{items.length > 99 ? '99+' : items.length}</span>}
+        {unseen.length > 0 && <span className="bell-dot">{unseen.length > 99 ? '99+' : unseen.length}</span>}
       </button>
       {open && (
         <div className="bell-drop" role="menu">
-          <div className="bell-head">{t('bell.title')}</div>
-          {items.length === 0 && <div className="drop-empty">{t('bell.empty')}</div>}
+          <div className="bell-head">
+            <span>{t('bell.title')}</span>
+            {unseen.length > 0 && (
+              <button className="link-btn" onClick={() => markSeen(all)}>
+                {t('bell.markAll')}
+              </button>
+            )}
+          </div>
+          {items.length === 0 && <div className="drop-empty">{all.length ? t('bell.allSeen') : t('bell.empty')}</div>}
           {[
             { key: 'overdue', list: over },
             { key: 'soon', list: soon }
@@ -100,9 +121,10 @@ function NotifyBell() {
                   <button
                     key={i.id}
                     role="menuitem"
-                    className="drop-item"
+                    className={cx('drop-item', !!seen?.[bellKey(i)] && 'seen')}
                     onClick={() => {
                       setOpen(false);
+                      markSeen([i]);
                       navigateTo(i.level, i.id);
                     }}
                   >
@@ -113,6 +135,11 @@ function NotifyBell() {
                 ))}
               </div>
             ) : null
+          )}
+          {seenCount > 0 && (
+            <button className="bell-foot link-btn" onClick={() => setShowSeen(!showSeen)}>
+              {showSeen ? t('bell.hideSeen') : t('bell.showSeen', { n: seenCount })}
+            </button>
           )}
         </div>
       )}
