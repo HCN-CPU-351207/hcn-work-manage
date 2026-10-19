@@ -21,7 +21,11 @@ jobs:
       - run: npm run typecheck
         continue-on-error: true
       # Tạo file cài đặt trong thư mục release/
-      - run: npm run dist
+      - name: npm run dist
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run dist 2>&1 | tee dist.log || { tail -40 dist.log | while IFS= read -r l; do echo "::error::$l"; done; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: HCN-Setup
