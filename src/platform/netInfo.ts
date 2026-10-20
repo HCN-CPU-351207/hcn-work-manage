@@ -5,8 +5,9 @@ import type { LocalNet, TimedInit } from '../lib/syncClient.ts';
 
 interface HcnNetPlugin {
   localAddresses(): Promise<{ list: LocalNet[] }>;
+  openExternal(o: { url: string }): Promise<void>;
 }
-const HcnNet = registerPlugin<HcnNetPlugin>('HcnNet');
+export const HcnNet = registerPlugin<HcnNetPlugin>('HcnNet');
 
 /** null: không đọc được (chạy trên web hoặc bản app cũ chưa có plugin) */
 export async function localNets(): Promise<LocalNet[] | null> {

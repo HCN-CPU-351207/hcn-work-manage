@@ -11,7 +11,7 @@ import type { SyncGuard, SyncMeta, SyncMode, SyncStats } from '../core/sync.ts';
 export const DEFAULT_PORT = 47821;
 
 export class SyncHttpError extends Error {
-  code: 'code' | 'unpaired' | 'too-many' | 'network' | 'timeout' | 'schema' | 'server' | 'notFound';
+  code: 'code' | 'unpaired' | 'too-many' | 'network' | 'timeout' | 'schema' | 'server' | 'notFound' | 'account';
   constructor(code: SyncHttpError['code'], message?: string) {
     super(message ?? code);
     this.code = code;
@@ -64,6 +64,7 @@ async function errorOf(res: Response): Promise<SyncHttpError> {
   if (res.status === 403 && body.error === 'code') return new SyncHttpError('code');
   if (res.status === 401) return new SyncHttpError('unpaired');
   if (res.status === 429) return new SyncHttpError('too-many');
+  if (res.status === 409 && body.error === 'account') return new SyncHttpError('account', (body as { email?: string }).email);
   if (res.status === 409) return new SyncHttpError('schema');
   return new SyncHttpError('server', `HTTP ${res.status}`);
 }
@@ -256,6 +257,8 @@ export interface SyncResult {
 export interface SyncOpts {
   mode?: SyncMode;
   guard?: SyncGuard;
+  /** tài khoản Google điện thoại đang liên kết (PC từ chối nếu khác tài khoản của PC) */
+  cloudEmail?: string | null;
 }
 
 export async function syncWithHub(fetchFn: FetchFn, addr: string, token: string, data: Data, meta: SyncMeta, opts: SyncOpts = {}): Promise<SyncResult> {
@@ -265,7 +268,7 @@ export async function syncWithHub(fetchFn: FetchFn, addr: string, token: string,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ schemaVersion: 1, data, meta, mode: opts.mode ?? 'merge', guard: opts.guard ?? 'normal' })
+      body: JSON.stringify({ schemaVersion: 1, data, meta, mode: opts.mode ?? 'merge', guard: opts.guard ?? 'normal', cloudEmail: opts.cloudEmail ?? null })
     },
     20000
   );

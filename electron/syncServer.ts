@@ -40,6 +40,8 @@ export interface SyncServerDeps {
     opts: { mode: SyncMode; guard: SyncGuard }
   ): Promise<{ data: Data; meta: SyncMeta; changes: number } | { needsChoice: SyncStats }>;
   onPaired?(device: SyncDevice): void;
+  /** tài khoản Google PC đang liên kết với Drive */
+  cloudEmail?: () => string | null;
   log?: { info(m: string): void; warn(m: string): void };
 }
 
@@ -183,7 +185,12 @@ export function createSyncServer(deps: SyncServerDeps) {
     if (req.method === 'POST' && url === '/hcn/sync') {
       const device = auth(req);
       if (!device) return send(res, 401, { error: 'unpaired' });
-      const body = (await readJson(req)) as { data?: unknown; meta?: unknown; schemaVersion?: number; mode?: string; guard?: string };
+      const body = (await readJson(req)) as { data?: unknown; meta?: unknown; schemaVersion?: number; mode?: string; guard?: string; cloudEmail?: string | null };
+      // cả hai máy đều liên kết Google mà khác tài khoản → không trộn dữ liệu của hai tài khoản
+      const mine = deps.cloudEmail?.() ?? null;
+      if (mine && body.cloudEmail && mine.trim().toLowerCase() !== String(body.cloudEmail).trim().toLowerCase()) {
+        return send(res, 409, { error: 'account', email: mine });
+      }
       if ((body.schemaVersion ?? 1) !== 1) return send(res, 409, { error: 'schema' });
       if (!body.data || typeof body.data !== 'object' || !isMeta(body.meta)) return send(res, 400, { error: 'bad-request' });
       const data = normalizeData(body.data as Record<string, unknown>);

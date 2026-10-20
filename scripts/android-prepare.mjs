@@ -57,6 +57,26 @@ for (const f of ['HcnNetPlugin.java', 'MainActivity.java']) {
 }
 console.log(`Đã thêm plugin HcnNet vào ${pkgName}`);
 
+// 1c) Nhận kết quả đăng nhập Google: com.hcn.workmanage:/oauth2redirect mở lại app (MainActivity singleTask)
+manifest = fs.readFileSync(manifestPath, 'utf8');
+if (!manifest.includes('android:scheme="com.hcn.workmanage"')) {
+  const filter = `
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.hcn.workmanage" />
+            </intent-filter>
+        </activity>`;
+  const i = manifest.indexOf('</activity>');
+  if (i < 0) {
+    console.error('Không thấy </activity> trong AndroidManifest');
+    process.exit(1);
+  }
+  manifest = manifest.slice(0, i) + filter.trimStart() + manifest.slice(i + '</activity>'.length);
+  fs.writeFileSync(manifestPath, manifest);
+}
+
 // 2) build.gradle: phiên bản + ký
 const gradlePath = path.join(root, 'android/app/build.gradle');
 if (!fs.existsSync(gradlePath)) {

@@ -27,6 +27,8 @@ const api: HcnApi = {
   setAutoDownload: (v) => ipcRenderer.invoke('hcn:setAutoDownload', v),
   syncInfo: () => ipcRenderer.invoke('hcn:syncInfo'),
   syncAction: (a) => ipcRenderer.invoke('hcn:syncAction', a),
+  cloudInfo: () => ipcRenderer.invoke('hcn:cloudInfo'),
+  cloudAction: (a) => ipcRenderer.invoke('hcn:cloudAction', a),
   onExternalData: (cb) => {
     const h = (_e: unknown, p: { data: Data; rev: number }) => cb(p.data, p.rev);
     ipcRenderer.on('hcn:external', h);

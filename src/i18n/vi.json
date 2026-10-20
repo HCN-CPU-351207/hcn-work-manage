@@ -464,7 +464,8 @@
       "server": "PC báo lỗi khi đồng bộ. Thử lại sau.",
       "addr": "Nhập địa chỉ PC.",
       "notFound": "Không tìm thấy PC nào. Kiểm tra PC đang mở HCN và đã bật đồng bộ, hai máy nối cùng mạng, rồi bấm Kiểm tra kết nối.",
-      "firewall": "Chưa mở được tường lửa (có thể đã bấm Không ở hộp thoại quyền quản trị). Thử lại, hoặc nhờ người có quyền quản trị máy."
+      "firewall": "Chưa mở được tường lửa (có thể đã bấm Không ở hộp thoại quyền quản trị). Thử lại, hoặc nhờ người có quyền quản trị máy.",
+      "account": "PC và điện thoại đang liên kết hai tài khoản Google khác nhau. Hai máy phải dùng chung một tài khoản Google mới đồng bộ được."
     },
     "kind": {
       "wifi": "Wi-Fi",
@@ -741,6 +742,57 @@
     "done": "Đã đồng bộ ({{n}} thay đổi)",
     "paused": "Đồng bộ đang tạm dừng: cần bạn chọn cách đồng bộ.",
     "open": "Chọn ngay",
-    "pick": "Chọn chiều đồng bộ"
+    "pick": "Chọn chiều đồng bộ",
+    "drive": "Drive (các máy khác)",
+    "thisDevice": "Máy này",
+    "account": "Cùng tài khoản: {{email}}",
+    "c_first": "Máy này và Google Drive đều có dữ liệu và đang khác nhau. Chọn cách đồng bộ:",
+    "c_riskPc": "Cẩn thận: nếu gộp tự động, {{n}} việc trên Drive (các máy khác) sẽ bị xóa vì máy này đã xóa chúng. Đồng bộ đã tạm dừng để bạn chọn:",
+    "c_riskPhone": "Cẩn thận: nếu gộp tự động, {{n}} việc trên máy này sẽ bị xóa vì máy khác đã xóa chúng. Đồng bộ đã tạm dừng để bạn chọn:",
+    "c_pull": "Drive → Máy này",
+    "c_pullDesc": "Máy này nhận đúng dữ liệu đang có trên Drive ({{n}} việc).",
+    "c_pullRes": "Máy này: mất {{lost}} việc chỉ có trên máy này, {{rep}} việc bị thay bằng bản trên Drive",
+    "c_push": "Máy này → Drive",
+    "c_pushDesc": "Drive và các máy khác nhận đúng dữ liệu của máy này ({{n}} việc).",
+    "c_pushRes": "Drive: mất {{lost}} việc chỉ có trên Drive, {{rep}} việc bị thay bằng bản của máy này",
+    "c_backupNote": "Trước khi ghi đè hoặc xóa, app luôn sao lưu: dữ liệu máy này (Cài đặt > Dữ liệu > Khôi phục) và dữ liệu Drive (Bản sao lưu trên Drive)."
+  },
+  "cloud": {
+    "title": "Online – Google Drive",
+    "hint": "Đồng bộ qua Internet bằng thư mục ẩn của app trên Google Drive. Không cần cùng mạng, không cần bật PC. Mọi máy phải đăng nhập cùng một tài khoản Google.",
+    "notConfigured": "Bản này chưa có mã dự án Google nên chưa dùng được Drive. Các cách đồng bộ Wi-Fi / cáp vẫn chạy bình thường.",
+    "signIn": "Đăng nhập Google",
+    "signingIn": "Đang chờ đăng nhập…",
+    "signInWait": "Trình duyệt đã mở trang đăng nhập Google. Đăng nhập xong, quay lại HCN.",
+    "signInNote": "App chỉ xin quyền đọc email và thư mục riêng của HCN trên Drive, không thấy các file khác của bạn. Nếu Google báo \"chưa xác minh\", bấm Nâng cao > Tiếp tục.",
+    "account": "Tài khoản",
+    "vault": "Kho dữ liệu của",
+    "devices": "Máy khác dùng chung",
+    "devicesN": "{{n}} máy",
+    "wrongOwner": "Máy này đã liên kết {{owner}} nhưng đang đăng nhập {{email}}. Đồng bộ và sao lưu Drive đã bị chặn. Đăng nhập lại đúng tài khoản, hoặc Hủy liên kết để chuyển sang tài khoản mới.",
+    "signInAgain": "Đăng nhập lại",
+    "skew": "Giờ trên máy này lệch giờ Google {{n}} phút — app đang dùng giờ Google để ghi giờ sửa. Nên bật đặt giờ tự động.",
+    "auto": "Tự đồng bộ (2 phút/lần và sau khi sửa)",
+    "synced": "Đã đồng bộ với Google Drive",
+    "backups": "Bản sao lưu trên Drive",
+    "hideBackups": "Ẩn bản sao lưu",
+    "noBackups": "Chưa có bản sao lưu nào.",
+    "backupDay": "Sao lưu ngày",
+    "backupPre": "Trước khi ghi đè",
+    "restore": "Khôi phục",
+    "backupsHint": "Giữ 14 bản sao lưu ngày và 10 bản trước khi ghi đè. Khôi phục sẽ thay dữ liệu trên máy này (có sao lưu trước), rồi đồng bộ cho các máy khác.",
+    "unlink": "Hủy liên kết",
+    "unlinkMsg": "Máy này ngừng đồng bộ với Google Drive của {{email}} và đăng xuất Google. Dữ liệu trên máy và trên Drive vẫn giữ nguyên.",
+    "lanTitle": "Trong mạng – Wi-Fi / cáp USB / Bluetooth",
+    "err": {
+      "relogin": "Cần đăng nhập lại Google (đăng nhập đã hết hạn hoặc bị gỡ quyền). Dữ liệu trên máy vẫn còn và sẽ đồng bộ bù sau khi đăng nhập.",
+      "network": "Không có mạng hoặc không tới được Google. Thay đổi được giữ lại và sẽ đồng bộ khi có mạng.",
+      "full": "Google Drive đã đầy. Giải phóng dung lượng rồi thử lại — dữ liệu trên máy vẫn còn.",
+      "rate": "Google đang giới hạn tạm thời. App sẽ tự thử lại.",
+      "server": "Google báo lỗi. App sẽ tự thử lại.",
+      "config": "Cấu hình dự án Google chưa đúng (mã app hoặc Drive API chưa bật). Kiểm tra lại dự án trên Google Cloud.",
+      "cancel": "Chưa đăng nhập (đã hủy hoặc hết thời gian chờ).",
+      "wrongAccount": "Đang đăng nhập {{email}}, khác tài khoản đã liên kết {{owner}}."
+    }
   }
 }

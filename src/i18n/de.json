@@ -464,7 +464,8 @@
       "server": "Der PC meldet einen Fehler. Später erneut versuchen.",
       "addr": "PC-Adresse eingeben.",
       "notFound": "Kein PC gefunden. Prüfen Sie, ob HCN am PC geöffnet und die Synchronisierung eingeschaltet ist und beide Geräte im selben Netzwerk sind; dann auf Verbindung prüfen tippen.",
-      "firewall": "Firewall konnte nicht geöffnet werden (vielleicht wurde in der Administratorabfrage Nein gewählt). Erneut versuchen oder jemanden mit Administratorrechten bitten."
+      "firewall": "Firewall konnte nicht geöffnet werden (vielleicht wurde in der Administratorabfrage Nein gewählt). Erneut versuchen oder jemanden mit Administratorrechten bitten.",
+      "account": "PC und Telefon sind mit verschiedenen Google-Konten verknüpft. Beide müssen dasselbe Google-Konto verwenden, um zu synchronisieren."
     },
     "kind": {
       "wifi": "WLAN",
@@ -741,6 +742,57 @@
     "done": "Synchronisiert ({{n}} Änderungen)",
     "paused": "Synchronisierung pausiert: bitte Art der Synchronisierung wählen.",
     "open": "Jetzt wählen",
-    "pick": "Richtung wählen"
+    "pick": "Richtung wählen",
+    "drive": "Drive (andere Geräte)",
+    "thisDevice": "Dieses Gerät",
+    "account": "Gleiches Konto: {{email}}",
+    "c_first": "Dieses Gerät und Google Drive haben beide Daten, und sie unterscheiden sich. Wählen Sie, wie synchronisiert wird:",
+    "c_riskPc": "Achtung: Automatisches Zusammenführen würde {{n}} Aufgaben in Drive (andere Geräte) löschen, weil dieses Gerät sie gelöscht hat. Die Synchronisierung ist pausiert, damit Sie wählen können:",
+    "c_riskPhone": "Achtung: Automatisches Zusammenführen würde {{n}} Aufgaben auf diesem Gerät löschen, weil ein anderes Gerät sie gelöscht hat. Die Synchronisierung ist pausiert, damit Sie wählen können:",
+    "c_pull": "Drive → Dieses Gerät",
+    "c_pullDesc": "Dieses Gerät erhält genau die Daten aus Drive ({{n}} Aufgaben).",
+    "c_pullRes": "Dieses Gerät: verliert {{lost}} Aufgaben, die nur hier existieren, {{rep}} werden durch die Drive-Version ersetzt",
+    "c_push": "Dieses Gerät → Drive",
+    "c_pushDesc": "Drive und die anderen Geräte erhalten genau die Daten dieses Geräts ({{n}} Aufgaben).",
+    "c_pushRes": "Drive: verliert {{lost}} Aufgaben, die nur in Drive existieren, {{rep}} werden durch die Version dieses Geräts ersetzt",
+    "c_backupNote": "Vor dem Überschreiben oder Löschen sichert die App immer: die Daten dieses Geräts (Einstellungen > Daten > Wiederherstellen) und die Drive-Daten (Sicherungen in Drive)."
+  },
+  "cloud": {
+    "title": "Online – Google Drive",
+    "hint": "Synchronisiert über das Internet mit dem versteckten App-Ordner in Google Drive. Kein gemeinsames Netzwerk nötig, der PC muss nicht laufen. Alle Geräte müssen dasselbe Google-Konto verwenden.",
+    "notConfigured": "Diese Version hat noch keine Schlüssel für das Google-Projekt, daher ist Drive nicht verfügbar. WLAN- / Kabel-Synchronisierung funktioniert weiter.",
+    "signIn": "Mit Google anmelden",
+    "signingIn": "Warte auf Anmeldung…",
+    "signInWait": "Der Browser hat die Google-Anmeldeseite geöffnet. Anmelden und dann zu HCN zurückkehren.",
+    "signInNote": "Die App fragt nur nach Ihrer E-Mail und dem eigenen HCN-Ordner in Drive; andere Dateien sieht sie nicht. Meldet Google „nicht bestätigt“, wählen Sie Erweitert > Weiter.",
+    "account": "Konto",
+    "vault": "Datentresor von",
+    "devices": "Weitere geteilte Geräte",
+    "devicesN": "{{n}} Gerät(e)",
+    "wrongOwner": "Dieses Gerät ist mit {{owner}} verknüpft, aber als {{email}} angemeldet. Drive-Synchronisierung und -Sicherungen sind gesperrt. Mit dem richtigen Konto anmelden oder Verknüpfung lösen, um zum neuen Konto zu wechseln.",
+    "signInAgain": "Erneut anmelden",
+    "skew": "Die Uhr dieses Geräts weicht {{n}} Minuten von der Google-Zeit ab — die App nutzt Google-Zeit für Änderungen. Automatische Zeit einschalten.",
+    "auto": "Automatisch synchronisieren (alle 2 Minuten und nach Änderungen)",
+    "synced": "Mit Google Drive synchronisiert",
+    "backups": "Sicherungen in Drive",
+    "hideBackups": "Sicherungen ausblenden",
+    "noBackups": "Noch keine Sicherungen.",
+    "backupDay": "Tägliche Sicherung",
+    "backupPre": "Vor dem Überschreiben",
+    "restore": "Wiederherstellen",
+    "backupsHint": "Behält 14 tägliche Sicherungen und 10 Sicherungen vor dem Überschreiben. Wiederherstellen ersetzt die Daten auf diesem Gerät (vorher gesichert) und synchronisiert dann mit den anderen Geräten.",
+    "unlink": "Verknüpfung lösen",
+    "unlinkMsg": "Dieses Gerät hört auf, mit dem Google Drive von {{email}} zu synchronisieren, und meldet sich bei Google ab. Daten auf dem Gerät und in Drive bleiben erhalten.",
+    "lanTitle": "Im Netzwerk – WLAN / USB-Kabel / Bluetooth",
+    "err": {
+      "relogin": "Bitte erneut bei Google anmelden (Anmeldung abgelaufen oder Zugriff entfernt). Daten auf dem Gerät bleiben erhalten und werden nach der Anmeldung synchronisiert.",
+      "network": "Kein Netzwerk oder Google nicht erreichbar. Änderungen bleiben erhalten und werden online synchronisiert.",
+      "full": "Google Drive ist voll. Speicher freigeben und erneut versuchen — Daten auf dem Gerät sind sicher.",
+      "rate": "Google begrenzt Anfragen vorübergehend. Die App versucht es erneut.",
+      "server": "Google meldet einen Fehler. Die App versucht es erneut.",
+      "config": "Das Google-Projekt ist nicht richtig eingerichtet (App-Schlüssel oder Drive API nicht aktiviert). Projekt in Google Cloud prüfen.",
+      "cancel": "Nicht angemeldet (abgebrochen oder Zeit abgelaufen).",
+      "wrongAccount": "Angemeldet als {{email}}, abweichend vom verknüpften Konto {{owner}}."
+    }
   }
 }

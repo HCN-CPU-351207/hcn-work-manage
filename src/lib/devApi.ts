@@ -5,6 +5,7 @@ import { emptySyncInfo } from '../core/api.ts';
 import { defaultSettings, emptyData } from '../core/model.ts';
 import type { Data, Settings } from '../core/model.ts';
 import { createCapacitorApi } from '../platform/capacitor.ts';
+import { emptyCloudInfo } from './cloudDriver.ts';
 
 export function createDevApi(seed?: Partial<LoadResult>): HcnApi {
   let data: Data = seed?.data ?? emptyData();
@@ -61,6 +62,12 @@ export function createDevApi(seed?: Partial<LoadResult>): HcnApi {
     },
     async syncAction() {
       return emptySyncInfo('none');
+    },
+    async cloudInfo() {
+      return emptyCloudInfo(false);
+    },
+    async cloudAction() {
+      return { ...emptyCloudInfo(false), error: 'config' };
     },
     onExternalData: () => () => {},
     onBackButton: () => () => {}

@@ -40,6 +40,30 @@ iPhone / iPad (cáp Lightning) chưa được hỗ trợ: app chỉ có bản An
 Cách gộp: so từng việc, **bản sửa sau cùng thắng**; việc đã xóa không sống lại; hai máy cùng tạo một mã (vd. M008) thì bản của điện thoại được đánh mã mới; việc con của việc bị xóa ở máy kia cũng bị xóa theo.
 Vì so theo giờ sửa, hãy để đồng hồ PC và điện thoại ở chế độ tự động. Nhiều điện thoại có thể ghép với cùng một PC; gỡ điện thoại trong danh sách trên PC là nó không đồng bộ được nữa.
 
+## Đồng bộ online qua Google Drive
+
+Chạy song song với đồng bộ Wi-Fi / cáp. Mỗi máy đăng nhập **cùng một tài khoản Google**; dữ liệu nằm trong thư mục ẩn của app trên Drive của chính tài khoản đó (app không thấy file khác).
+
+- Trên Drive: `hcn-vault.json` (kho + email chủ), `hcn-dev-<máy>.json` (mỗi máy chỉ ghi file của mình), `hcn-backup-day-*` (14 ngày), `hcn-backup-pre-*` (10 bản trước khi ghi đè).
+- Máy đã liên kết tài khoản A mà đăng nhập tài khoản B → chặn hẳn; phải **Hủy liên kết** mới đổi được. Đồng bộ Wi-Fi giữa hai máy liên kết hai tài khoản khác nhau cũng bị chặn.
+- Gộp như đồng bộ Wi-Fi; sắp xóa nhiều / lần đầu khác nhau → hỏi: Tự động theo giờ sửa · Drive → Máy này · Máy này → Drive.
+- Giờ máy lệch giờ Google > 2 phút → dùng giờ Google để ghi giờ sửa.
+- Tự đồng bộ 2 phút/lần, 15 giây sau khi sửa, và khi mở lại app.
+
+### Tạo dự án Google (một lần, bằng tài khoản Google sẽ dùng chung)
+
+1. console.cloud.google.com → tạo dự án **HCN Work Manage**.
+2. **APIs & Services > Library** → **Google Drive API** → Enable.
+3. **Google Auth Platform > Get started**: tên app, email hỗ trợ, Audience **External**.
+4. **Data access**: thêm `.../auth/drive.appdata`, `openid`, `.../auth/userinfo.email`.
+5. **Clients > Create client**:
+   - **Desktop app** "HCN PC" → lấy Client ID + Client secret.
+   - **Android** "HCN Android": package `com.hcn.workmanage`, SHA-1 `0A:26:DF:40:47:16:B8:33:25:49:00:08:5E:44:6B:8D:1C:48:A3:C0` → mở **Advanced settings** → bật **Enable custom URI scheme** → lấy Client ID.
+6. **Audience** → **Publish app** (Production) để đăng nhập không hết hạn sau 7 ngày.
+7. Điền các mã vào `src/config/google.ts` rồi build.
+
+Đổi khóa ký APK thì phải thêm SHA-1 mới vào client Android.
+
 ## Tổng quan dự án và lọc theo cột
 
 - **Bấm 1 lần** vào một việc ở **CV Tháng** hoặc **CV Tuần** để mở bảng *Tổng quan dự án* bên phải (bấm đúp vẫn mở khung sửa; Esc để đóng). Trên điện thoại: chạm vào thẻ việc.
@@ -107,7 +131,7 @@ Khóa ký APK nằm ở `android-signing/hcn-release.jks` (mật khẩu `hcn-wor
 ```
 npm install
 npm run dev      # mở cửa sổ Electron, tự nạp lại khi sửa giao diện
-npm test         # 225 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
+npm test         # 262 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
 npm run typecheck
 ```
 

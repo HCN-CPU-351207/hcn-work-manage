@@ -10,6 +10,7 @@ import { api } from '../../lib/devApi.ts';
 import { cx } from '../../lib/labels.ts';
 import { ICheck, ITrash, IWarn, IX } from '../Common/Icons.tsx';
 import { openSyncChoice } from './SyncChoiceDialog.tsx';
+import { CloudSection } from './CloudSection.tsx';
 
 const ERR_KEY: Record<string, string> = {
   code: 'wifi.err.code',
@@ -21,7 +22,8 @@ const ERR_KEY: Record<string, string> = {
   server: 'wifi.err.server',
   addr: 'wifi.err.addr',
   notFound: 'wifi.err.notFound',
-  firewall: 'wifi.err.firewall'
+  firewall: 'wifi.err.firewall',
+  account: 'wifi.err.account'
 };
 
 function useSyncInfo() {
@@ -68,7 +70,15 @@ export function SyncSection() {
   };
   if (!info) return null;
   if (info.role === 'none') return <Block hint={t('wifi.unavailable')} />;
-  return info.role === 'hub' ? <HubView info={info} busy={busy} err={err} run={run} /> : <ClientView info={info} busy={busy} err={err} run={run} />;
+  return (
+    <>
+      <CloudSection />
+      <div className="set-block sync-lan-head">
+        <h4>{t('cloud.lanTitle')}</h4>
+      </div>
+      {info.role === 'hub' ? <HubView info={info} busy={busy} err={err} run={run} /> : <ClientView info={info} busy={busy} err={err} run={run} />}
+    </>
+  );
 }
 
 type ViewProps = { info: SyncInfo; busy: SyncAction['type'] | null; err: string | null; run: (a: SyncAction) => Promise<SyncActionResult> };

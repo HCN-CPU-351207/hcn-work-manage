@@ -464,7 +464,8 @@
       "server": "Le PC a signalé une erreur. Réessayez plus tard.",
       "addr": "Saisissez l'adresse du PC.",
       "notFound": "Aucun PC trouvé. Vérifiez que HCN est ouvert sur le PC avec la synchro activée et que les deux appareils sont sur le même réseau, puis touchez Vérifier la connexion.",
-      "firewall": "Impossible d'ouvrir le pare-feu (Non a peut-être été choisi dans la demande administrateur). Réessayez, ou demandez à une personne ayant les droits administrateur."
+      "firewall": "Impossible d'ouvrir le pare-feu (Non a peut-être été choisi dans la demande administrateur). Réessayez, ou demandez à une personne ayant les droits administrateur.",
+      "account": "Le PC et le téléphone sont liés à des comptes Google différents. Les deux doivent utiliser le même compte Google pour synchroniser."
     },
     "kind": {
       "wifi": "Wi-Fi",
@@ -741,6 +742,57 @@
     "done": "Synchronisé ({{n}} modifications)",
     "paused": "Synchro en pause : choisissez comment synchroniser.",
     "open": "Choisir",
-    "pick": "Choisir le sens de synchro"
+    "pick": "Choisir le sens de synchro",
+    "drive": "Drive (autres appareils)",
+    "thisDevice": "Cet appareil",
+    "account": "Même compte : {{email}}",
+    "c_first": "Cet appareil et Google Drive ont tous deux des données, et elles diffèrent. Choisissez comment synchroniser :",
+    "c_riskPc": "Attention : une fusion automatique supprimerait {{n}} tâches dans Drive (autres appareils) car cet appareil les a supprimées. La synchro est en pause pour que vous choisissiez :",
+    "c_riskPhone": "Attention : une fusion automatique supprimerait {{n}} tâches sur cet appareil car un autre appareil les a supprimées. La synchro est en pause pour que vous choisissiez :",
+    "c_pull": "Drive → Cet appareil",
+    "c_pullDesc": "Cet appareil reçoit exactement les données de Drive ({{n}} tâches).",
+    "c_pullRes": "Cet appareil : perd {{lost}} tâches présentes seulement ici, {{rep}} remplacées par la version Drive",
+    "c_push": "Cet appareil → Drive",
+    "c_pushDesc": "Drive et les autres appareils reçoivent exactement les données de cet appareil ({{n}} tâches).",
+    "c_pushRes": "Drive : perd {{lost}} tâches présentes seulement dans Drive, {{rep}} remplacées par la version de cet appareil",
+    "c_backupNote": "Avant de remplacer ou supprimer, l'app sauvegarde toujours : les données de cet appareil (Paramètres > Données > Restaurer) et celles de Drive (Sauvegardes dans Drive)."
+  },
+  "cloud": {
+    "title": "En ligne – Google Drive",
+    "hint": "Synchronise via Internet grâce au dossier caché de l'app dans Google Drive. Pas besoin du même réseau ni d'un PC allumé. Tous les appareils doivent se connecter au même compte Google.",
+    "notConfigured": "Cette version n'a pas encore les clés du projet Google : Drive n'est pas disponible. La synchro Wi-Fi / câble fonctionne normalement.",
+    "signIn": "Se connecter avec Google",
+    "signingIn": "En attente de connexion…",
+    "signInWait": "Le navigateur a ouvert la page de connexion Google. Connectez-vous puis revenez à HCN.",
+    "signInNote": "L'app ne demande que votre e-mail et le dossier propre à HCN dans Drive ; elle ne voit pas vos autres fichiers. Si Google indique « non validée », choisissez Paramètres avancés > Continuer.",
+    "account": "Compte",
+    "vault": "Coffre de données de",
+    "devices": "Autres appareils partagés",
+    "devicesN": "{{n}} appareil(s)",
+    "wrongOwner": "Cet appareil est lié à {{owner}} mais connecté en tant que {{email}}. La synchro et les sauvegardes Drive sont bloquées. Reconnectez-vous avec le bon compte, ou Délier pour passer au nouveau compte.",
+    "signInAgain": "Se reconnecter",
+    "skew": "L'horloge de cet appareil diffère de {{n}} minutes de l'heure Google — l'app utilise l'heure Google pour les modifications. Activez l'heure automatique.",
+    "auto": "Synchro automatique (toutes les 2 minutes et après modification)",
+    "synced": "Synchronisé avec Google Drive",
+    "backups": "Sauvegardes dans Drive",
+    "hideBackups": "Masquer les sauvegardes",
+    "noBackups": "Aucune sauvegarde pour l'instant.",
+    "backupDay": "Sauvegarde du jour",
+    "backupPre": "Avant remplacement",
+    "restore": "Restaurer",
+    "backupsHint": "Conserve 14 sauvegardes quotidiennes et 10 sauvegardes avant remplacement. Restaurer remplace les données de cet appareil (sauvegardées d'abord), puis synchronise les autres appareils.",
+    "unlink": "Délier",
+    "unlinkMsg": "Cet appareil arrête la synchro avec le Google Drive de {{email}} et se déconnecte de Google. Les données de l'appareil et de Drive restent inchangées.",
+    "lanTitle": "Sur le réseau – Wi-Fi / câble USB / Bluetooth",
+    "err": {
+      "relogin": "Reconnectez-vous à Google (connexion expirée ou accès retiré). Les données de l'appareil sont conservées et se synchroniseront après connexion.",
+      "network": "Pas de réseau ou Google injoignable. Les modifications sont conservées et se synchroniseront en ligne.",
+      "full": "Google Drive est plein. Libérez de l'espace et réessayez — les données de l'appareil ne risquent rien.",
+      "rate": "Google limite temporairement les requêtes. L'app réessaiera.",
+      "server": "Google a renvoyé une erreur. L'app réessaiera.",
+      "config": "Le projet Google est mal configuré (clés de l'app ou Drive API non activée). Vérifiez le projet dans Google Cloud.",
+      "cancel": "Non connecté (annulé ou délai dépassé).",
+      "wrongAccount": "Connecté en tant que {{email}}, différent du compte lié {{owner}}."
+    }
   }
 }

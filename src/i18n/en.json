@@ -464,7 +464,8 @@
       "server": "The PC reported an error. Try again later.",
       "addr": "Enter the PC address.",
       "notFound": "No PC found. Make sure HCN is open on the PC with sync on and both devices are on the same network, then tap Check connection.",
-      "firewall": "Could not open the firewall (No may have been chosen in the administrator prompt). Try again, or ask someone with administrator rights."
+      "firewall": "Could not open the firewall (No may have been chosen in the administrator prompt). Try again, or ask someone with administrator rights.",
+      "account": "The PC and the phone are linked to different Google accounts. Both must use the same Google account to sync."
     },
     "kind": {
       "wifi": "Wi-Fi",
@@ -741,6 +742,57 @@
     "done": "Synced ({{n}} changes)",
     "paused": "Sync is paused: please choose how to sync.",
     "open": "Choose now",
-    "pick": "Choose sync direction"
+    "pick": "Choose sync direction",
+    "drive": "Drive (other devices)",
+    "thisDevice": "This device",
+    "account": "Same account: {{email}}",
+    "c_first": "Both this device and Google Drive have data, and it differs. Choose how to sync:",
+    "c_riskPc": "Careful: an automatic merge would delete {{n}} tasks in Drive (other devices) because this device deleted them. Sync is paused so you can choose:",
+    "c_riskPhone": "Careful: an automatic merge would delete {{n}} tasks on this device because another device deleted them. Sync is paused so you can choose:",
+    "c_pull": "Drive → This device",
+    "c_pullDesc": "This device gets exactly the data in Drive ({{n}} tasks).",
+    "c_pullRes": "This device: loses {{lost}} tasks only on this device, {{rep}} replaced by the Drive version",
+    "c_push": "This device → Drive",
+    "c_pushDesc": "Drive and the other devices get exactly this device's data ({{n}} tasks).",
+    "c_pushRes": "Drive: loses {{lost}} tasks only in Drive, {{rep}} replaced by this device's version",
+    "c_backupNote": "Before overwriting or deleting, the app always backs up: this device's data (Settings > Data > Restore) and the Drive data (Backups in Drive)."
+  },
+  "cloud": {
+    "title": "Online – Google Drive",
+    "hint": "Syncs over the Internet using the app's hidden folder in Google Drive. No shared network needed and the PC does not have to be on. Every device must sign in with the same Google account.",
+    "notConfigured": "This build has no Google project keys yet, so Drive is not available. Wi-Fi / cable sync still works as usual.",
+    "signIn": "Sign in with Google",
+    "signingIn": "Waiting for sign-in…",
+    "signInWait": "Your browser opened the Google sign-in page. Sign in, then come back to HCN.",
+    "signInNote": "The app only asks to read your email and HCN's own folder in Drive; it cannot see your other files. If Google says \"unverified\", choose Advanced > Continue.",
+    "account": "Account",
+    "vault": "Data vault of",
+    "devices": "Other devices sharing",
+    "devicesN": "{{n}} device(s)",
+    "wrongOwner": "This device is linked to {{owner}} but is signed in as {{email}}. Drive sync and backups are blocked. Sign in with the right account, or Unlink to switch to the new account.",
+    "signInAgain": "Sign in again",
+    "skew": "This device's clock is {{n}} minutes off Google time — the app uses Google time for edit times. Turn on automatic time.",
+    "auto": "Auto sync (every 2 minutes and after edits)",
+    "synced": "Synced with Google Drive",
+    "backups": "Backups in Drive",
+    "hideBackups": "Hide backups",
+    "noBackups": "No backups yet.",
+    "backupDay": "Daily backup",
+    "backupPre": "Before overwrite",
+    "restore": "Restore",
+    "backupsHint": "Keeps 14 daily backups and 10 before-overwrite backups. Restoring replaces the data on this device (backed up first), then syncs to the other devices.",
+    "unlink": "Unlink",
+    "unlinkMsg": "This device stops syncing with the Google Drive of {{email}} and signs out of Google. Data on this device and in Drive stays as it is.",
+    "lanTitle": "On the network – Wi-Fi / USB cable / Bluetooth",
+    "err": {
+      "relogin": "Please sign in to Google again (sign-in expired or access was removed). Data on this device is kept and will sync after you sign in.",
+      "network": "No network, or Google cannot be reached. Changes are kept and will sync when online.",
+      "full": "Google Drive is full. Free up space and try again — data on this device is safe.",
+      "rate": "Google is limiting requests for a moment. The app will retry.",
+      "server": "Google reported an error. The app will retry.",
+      "config": "The Google project is not set up correctly (app keys, or Drive API not enabled). Check the project in Google Cloud.",
+      "cancel": "Not signed in (cancelled or timed out).",
+      "wrongAccount": "Signed in as {{email}}, which differs from the linked account {{owner}}."
+    }
   }
 }

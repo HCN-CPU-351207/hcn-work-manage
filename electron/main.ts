@@ -1,5 +1,5 @@
 // Tiến trình chính: cửa sổ, single-instance, menu, IPC, updater
-import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, shell, Tray } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeImage, safeStorage, shell, Tray } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Data, Settings } from '../src/core/model.ts';
@@ -13,6 +13,9 @@ import { createStorage } from './storage.ts';
 import { createUpdater } from './updater.ts';
 import { createHubController } from './hub.ts';
 import { createWinNet } from './winNet.ts';
+import { createPcCloud } from './cloudPc.ts';
+import { clockNow } from '../src/core/clock.ts';
+import type { CloudAction } from '../src/lib/cloudDriver.ts';
 import type { HubController, HubFile } from './hub.ts';
 
 // Đặt tường minh thư mục dữ liệu, không phụ thuộc tên package hay productName (mục 3.3)
@@ -42,6 +45,7 @@ let notice: LoadNotice = { kind: 'ok' };
 let updater: ReturnType<typeof createUpdater> | null = null;
 let forceClose = false;
 let hubCtl: HubController;
+let cloud: ReturnType<typeof createPcCloud> | null = null;
 let tray: Tray | null = null;
 let quitting = false;
 let bgHintShown = false;
@@ -149,8 +153,14 @@ function boot(): void {
     },
     version: app.getVersion(),
     log,
-    onExternal: (data, rev) => send('hcn:external', { data, rev }),
+    onExternal: (data, rev) => {
+      send('hcn:external', { data, rev });
+      // dữ liệu đổi do đồng bộ Wi-Fi / Drive → đẩy tiếp lên Drive
+      cloud?.localChanged();
+    },
     requestFlush,
+    now: clockNow,
+    cloudEmail: () => cloud?.info().vaultEmail ?? null,
     ...(winNet ? { netInfo: () => winNet!.get(), fixFirewall: (ports: [number, number]) => winNet!.fix(ports) } : {}),
     backup: (d, reason) => {
       const file = storage.preSyncBackup(d, reason);
@@ -159,6 +169,25 @@ function boot(): void {
     keepsRunning: keepInTray,
     onEnabledChange: () => applyBackgroundSettings()
   });
+
+  // Đồng bộ online qua Google Drive (chạy song song với đồng bộ Wi-Fi / cáp)
+  cloud = createPcCloud({
+    dataDir,
+    secrets: safeStorage,
+    openExternal: (url) => shell.openExternal(url),
+    snapshot: () => hubCtl.snapshot(),
+    apply: (d, m, mode) => hubCtl.applyCloud(d, m, mode),
+    backupLocal: (d, reason) => {
+      const file = storage.preSyncBackup(d, reason);
+      log.info(`Đã sao lưu trước khi đồng bộ Drive: ${file}`);
+    },
+    requestFlush,
+    log
+  });
+  void cloud
+    .init()
+    .then(() => cloud!.start())
+    .catch((e) => log.error('Không khởi động được đồng bộ Drive', e));
 
   buildMenu();
   registerIpc();
@@ -196,6 +225,7 @@ function boot(): void {
     quitting = true;
     updater?.stop();
     void hubCtl?.stop();
+    cloud?.stop();
   });
 }
 
@@ -340,7 +370,9 @@ function registerIpc(): void {
 
   ipcMain.handle('hcn:saveData', async (_e, data: Data, baseRev?: number): Promise<SaveResult> => {
     try {
-      return await hubCtl.save(data, baseRev);
+      const r = await hubCtl.save(data, baseRev);
+      cloud?.localChanged();
+      return r;
     } catch (e) {
       log.error('Lỗi ghi data.json', e);
       return fail(e);
@@ -394,6 +426,7 @@ function registerIpc(): void {
     try {
       storage.preRestoreBackup(current); // luôn sao lưu dữ liệu hiện tại trước khi thay thế
       const rev = await hubCtl.replace(data);
+      cloud?.localChanged(3000);
       log.info('Đã khôi phục dữ liệu từ file');
       return { ok: true, rev };
     } catch (e) {
@@ -435,6 +468,11 @@ function registerIpc(): void {
   });
   ipcMain.handle('hcn:syncInfo', () => hubCtl.info());
   ipcMain.handle('hcn:syncAction', (_e, a: SyncAction) => hubCtl.action(a));
+  ipcMain.handle('hcn:cloudInfo', async () => {
+    await cloud?.init();
+    return cloud!.info();
+  });
+  ipcMain.handle('hcn:cloudAction', (_e, a: CloudAction) => cloud!.action(a));
   ipcMain.handle('hcn:checkUpdates', () => updater?.check(true));
   ipcMain.handle('hcn:installUpdate', () => updater?.install());
   ipcMain.handle('hcn:setAutoDownload', (_e, v: boolean) => updater?.setAutoDownload(!!v));

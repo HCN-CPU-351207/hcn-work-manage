@@ -464,7 +464,8 @@
       "server": "O PC reportou um erro. Tente mais tarde.",
       "addr": "Introduza o endereço do PC.",
       "notFound": "Nenhum PC encontrado. Confirme que o HCN está aberto no PC com a sincronização ativa e que ambos estão na mesma rede; depois toque em Verificar ligação.",
-      "firewall": "Não foi possível abrir a firewall (talvez tenha escolhido Não no pedido de administrador). Tente de novo ou peça a alguém com direitos de administrador."
+      "firewall": "Não foi possível abrir a firewall (talvez tenha escolhido Não no pedido de administrador). Tente de novo ou peça a alguém com direitos de administrador.",
+      "account": "O PC e o telemóvel estão ligados a contas Google diferentes. Ambos têm de usar a mesma conta Google para sincronizar."
     },
     "kind": {
       "wifi": "Wi-Fi",
@@ -741,6 +742,57 @@
     "done": "Sincronizado ({{n}} alterações)",
     "paused": "Sincronização em pausa: escolha como sincronizar.",
     "open": "Escolher agora",
-    "pick": "Escolher direção da sincronização"
+    "pick": "Escolher direção da sincronização",
+    "drive": "Drive (outros aparelhos)",
+    "thisDevice": "Este aparelho",
+    "account": "Mesma conta: {{email}}",
+    "c_first": "Este aparelho e o Google Drive têm dados e são diferentes. Escolha como sincronizar:",
+    "c_riskPc": "Atenção: uma junção automática apagaria {{n}} tarefas no Drive (outros aparelhos) porque este aparelho as apagou. A sincronização está em pausa para escolher:",
+    "c_riskPhone": "Atenção: uma junção automática apagaria {{n}} tarefas neste aparelho porque outro aparelho as apagou. A sincronização está em pausa para escolher:",
+    "c_pull": "Drive → Este aparelho",
+    "c_pullDesc": "Este aparelho fica exatamente com os dados do Drive ({{n}} tarefas).",
+    "c_pullRes": "Este aparelho: perde {{lost}} tarefas que só existem aqui, {{rep}} substituídas pela versão do Drive",
+    "c_push": "Este aparelho → Drive",
+    "c_pushDesc": "O Drive e os outros aparelhos ficam exatamente com os dados deste aparelho ({{n}} tarefas).",
+    "c_pushRes": "Drive: perde {{lost}} tarefas que só existem no Drive, {{rep}} substituídas pela versão deste aparelho",
+    "c_backupNote": "Antes de substituir ou apagar, a app faz sempre cópia: dos dados deste aparelho (Definições > Dados > Restaurar) e dos dados do Drive (Cópias de segurança no Drive)."
+  },
+  "cloud": {
+    "title": "Online – Google Drive",
+    "hint": "Sincroniza pela Internet usando a pasta oculta da app no Google Drive. Não é preciso estar na mesma rede nem ter o PC ligado. Todos os aparelhos têm de usar a mesma conta Google.",
+    "notConfigured": "Esta versão ainda não tem as chaves do projeto Google, por isso o Drive não está disponível. A sincronização por Wi-Fi / cabo continua a funcionar.",
+    "signIn": "Iniciar sessão com Google",
+    "signingIn": "A aguardar o início de sessão…",
+    "signInWait": "O navegador abriu a página de início de sessão Google. Inicie sessão e volte ao HCN.",
+    "signInNote": "A app só pede para ler o seu email e a pasta própria do HCN no Drive; não vê os seus outros ficheiros. Se a Google indicar \"não verificada\", escolha Avançadas > Continuar.",
+    "account": "Conta",
+    "vault": "Cofre de dados de",
+    "devices": "Outros aparelhos a partilhar",
+    "devicesN": "{{n}} aparelho(s)",
+    "wrongOwner": "Este aparelho está ligado a {{owner}}, mas tem sessão iniciada como {{email}}. A sincronização e as cópias no Drive estão bloqueadas. Inicie sessão com a conta certa ou Desligue para mudar para a nova conta.",
+    "signInAgain": "Iniciar sessão de novo",
+    "skew": "O relógio deste aparelho difere {{n}} minutos da hora Google — a app usa a hora Google para as edições. Ative a hora automática.",
+    "auto": "Sincronização automática (a cada 2 minutos e após edições)",
+    "synced": "Sincronizado com o Google Drive",
+    "backups": "Cópias de segurança no Drive",
+    "hideBackups": "Ocultar cópias",
+    "noBackups": "Ainda não há cópias.",
+    "backupDay": "Cópia diária",
+    "backupPre": "Antes de substituir",
+    "restore": "Restaurar",
+    "backupsHint": "Guarda 14 cópias diárias e 10 cópias antes de substituir. Restaurar substitui os dados deste aparelho (com cópia prévia) e sincroniza com os outros aparelhos.",
+    "unlink": "Desligar",
+    "unlinkMsg": "Este aparelho deixa de sincronizar com o Google Drive de {{email}} e termina a sessão Google. Os dados no aparelho e no Drive ficam como estão.",
+    "lanTitle": "Na rede – Wi-Fi / cabo USB / Bluetooth",
+    "err": {
+      "relogin": "Inicie sessão na Google de novo (sessão expirada ou acesso removido). Os dados do aparelho mantêm-se e sincronizam depois de iniciar sessão.",
+      "network": "Sem rede ou sem acesso à Google. As alterações ficam guardadas e sincronizam quando houver ligação.",
+      "full": "O Google Drive está cheio. Liberte espaço e tente de novo — os dados do aparelho estão seguros.",
+      "rate": "A Google está a limitar pedidos por momentos. A app tenta de novo.",
+      "server": "A Google devolveu um erro. A app tenta de novo.",
+      "config": "O projeto Google não está bem configurado (chaves da app ou Drive API desativada). Verifique o projeto no Google Cloud.",
+      "cancel": "Sessão não iniciada (cancelado ou tempo esgotado).",
+      "wrongAccount": "Sessão iniciada como {{email}}, diferente da conta ligada {{owner}}."
+    }
   }
 }

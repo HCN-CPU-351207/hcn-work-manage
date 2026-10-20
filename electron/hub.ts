@@ -36,6 +36,8 @@ export interface HubDeps {
   backup?: (data: Data, reason: string) => void;
   /** đóng cửa sổ thì app vẫn chạy ở khay */
   keepsRunning?: () => boolean;
+  /** tài khoản Google mà PC đang liên kết (đồng bộ Drive) — điện thoại liên kết tài khoản khác thì không cho đồng bộ */
+  cloudEmail?: () => string | null;
   /** bật / tắt trạm → cập nhật khay hệ thống */
   onEnabledChange?: (enabled: boolean) => void;
 }
@@ -78,6 +80,7 @@ export function createHubController(initialData: Data, deps: HubDeps) {
     version: deps.version,
     hubName: deps.hubName,
     hubId: file.hub.id,
+    cloudEmail: deps.cloudEmail,
     log: deps.log,
     getDevices: () => file.hub.devices,
     setDevices: (list) => {
@@ -187,6 +190,27 @@ export function createHubController(initialData: Data, deps: HubDeps) {
         deps.saveData(r.data);
         persistMeta();
         return { ok: true, rev: r.rev, data: r.patched ? r.data : undefined };
+      });
+    },
+    /** Drive: dữ liệu + dấu đồng bộ hiện tại */
+    snapshot(): Promise<{ data: Data; meta: SyncMeta }> {
+      return serial(() => ({ data: hub.state.data, meta: hub.state.meta }));
+    },
+    /** Drive: áp kết quả (pull = thay toàn bộ; còn lại = gộp với thay đổi phát sinh trong lúc chờ) */
+    applyCloud(data: Data, meta: SyncMeta, mode: 'merge' | 'pull' | 'push'): Promise<void> {
+      return serial(() => {
+        if (mode === 'pull') {
+          const rev = hub.reset(data, meta);
+          deps.saveData(data);
+          deps.onExternal(data, rev);
+        } else {
+          const r = hub.adoptFromHub(data, meta, now());
+          if (r.changed) {
+            deps.saveData(r.data);
+            deps.onExternal(r.data, r.rev);
+          }
+        }
+        persistMeta();
       });
     },
     replace(next: Data): Promise<number> {

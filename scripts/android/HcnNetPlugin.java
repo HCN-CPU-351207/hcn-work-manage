@@ -1,5 +1,7 @@
 package __PACKAGE__;
 
+import android.content.Intent;
+import android.net.Uri;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -21,6 +23,24 @@ import java.util.Enumeration;
  */
 @CapacitorPlugin(name = "HcnNet")
 public class HcnNetPlugin extends Plugin {
+
+    /** Mở trang đăng nhập Google bằng trình duyệt của máy (Google không cho đăng nhập trong WebView) */
+    @PluginMethod
+    public void openExternal(PluginCall call) {
+        String url = call.getString("url");
+        if (url == null || url.isEmpty()) {
+            call.reject("url");
+            return;
+        }
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("open: " + e.getMessage());
+        }
+    }
 
     @PluginMethod
     public void localAddresses(PluginCall call) {

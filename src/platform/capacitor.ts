@@ -17,6 +17,14 @@ import type { SyncGuard, SyncMeta, SyncMode, SyncStats } from '../core/sync.ts';
 import { diagnose, discoverHubs, localPrefixes, pairAuto, routeKind, SyncHttpError, syncSmart } from '../lib/syncClient.ts';
 import type { LocalNet } from '../lib/syncClient.ts';
 import { localNets, syncFetch } from './netInfo.ts';
+import { androidLogin, postFormAndroid } from './cloudAndroid.ts';
+import { GOOGLE_CONFIG } from '../config/google.ts';
+import { createCloudDriver } from '../lib/cloudDriver.ts';
+import type { CloudDriver } from '../lib/cloudDriver.ts';
+import { createDriveStore } from '../lib/drive.ts';
+import { createGoogleAuth, randomString } from '../lib/googleAuth.ts';
+import type { StoredGoogle } from '../lib/googleAuth.ts';
+import { clockNow } from '../core/clock.ts';
 import { fillWorkbook } from '../lib/xlsxBuild.ts';
 
 const DIR = Directory.Data;
@@ -210,6 +218,61 @@ export function createCapacitorApi(): HcnApi {
     const f: SyncFile = { v: 1, meta: hub!.state.meta, client };
     return queue(() => writeAtomic('sync.json', JSON.stringify(f)));
   };
+  // ---------- Đồng bộ online qua Google Drive (song song với Wi-Fi / cáp) ----------
+  const googleOn = !!GOOGLE_CONFIG.androidClientId;
+  const auth = googleOn
+    ? createGoogleAuth({
+        clientId: GOOGLE_CONFIG.androidClientId,
+        postForm: postFormAndroid,
+        interactive: androidLogin(),
+        async load(): Promise<StoredGoogle | null> {
+          const t = await readText('google.json');
+          return t ? (JSON.parse(t) as StoredGoogle) : null;
+        },
+        async save(v) {
+          if (v) await writeAtomic('google.json', JSON.stringify(v));
+          else await Filesystem.deleteFile({ path: `${ROOT}/google.json`, directory: DIR }).catch(() => undefined);
+        }
+      })
+    : null;
+  const cloud: CloudDriver = createCloudDriver({
+    configured: googleOn,
+    auth,
+    makeStore: () => createDriveStore({ fetchFn: (u, i) => fetch(u, i), accessToken: (f) => auth!.accessToken(f) }),
+    loadState: async () => JSON.parse((await readText('cloud.json')) ?? 'null'),
+    saveState: async (st) => {
+      await queue(() => writeAtomic('cloud.json', JSON.stringify(st)));
+    },
+    getLocal: async () => {
+      await flushCb?.();
+      await writes;
+      return { data: hub!.state.data, meta: hub!.state.meta };
+    },
+    applyResult: async (d, m, mode) => {
+      let changed = true;
+      let rev: number;
+      if (mode === 'pull') rev = hub!.reset(d, m);
+      else {
+        const a = hub!.adoptFromHub(d, m, clockNow());
+        changed = a.changed;
+        rev = a.rev;
+        if (a.needsResync) cloud.localChanged(3000);
+      }
+      if (changed) {
+        void persistData();
+        for (const cb of externalCbs) cb(hub!.state.data, rev);
+        scheduleSync(2000); // báo tiếp cho PC qua Wi-Fi nếu đang nối
+      }
+      void persistSync();
+    },
+    backupLocal: async (d) => {
+      await writeAtomic(`backups/hcn-pre-sync-${stamp()}-cloud.json`, JSON.stringify(toBackup(d, new Date().toISOString())));
+    },
+    deviceName: 'Android',
+    platform: 'android',
+    newId: () => randomString(9).replace(/[^\w-]/g, 'x')
+  });
+
 
   async function autoBackup(data: Data): Promise<void> {
     const today = stamp().slice(0, 8);
@@ -275,7 +338,7 @@ export function createCapacitorApi(): HcnApi {
         data,
         meta,
         scan,
-        opts: { mode: mode ?? 'merge', guard }
+        opts: { mode: mode ?? 'merge', guard, cloudEmail: cloud.info().vaultEmail }
       });
       const hosts = [...new Set([addr, ...(r.addresses ?? []), ...(client.hosts ?? [])])].slice(0, 12);
       if (r.needsChoice) {
@@ -291,12 +354,13 @@ export function createCapacitorApi(): HcnApi {
         await writeAtomic(`backups/hcn-pre-sync-${stamp()}.json`, JSON.stringify(toBackup(hub.state.data, new Date().toISOString()))).catch(() => undefined);
         const rev = hub.reset(r.data, r.meta);
         a = { changed: true, needsResync: false, data: r.data, rev };
-      } else a = hub.adoptFromHub(r.data, r.meta, Date.now());
+      } else a = hub.adoptFromHub(r.data, r.meta, clockNow());
       choice = null;
       client = { ...client, addr, hosts, hubId, firstDone: true, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
       if (a.changed) {
         void persistData();
         for (const cb of externalCbs) cb(a.data, a.rev);
+        cloud.localChanged();
       }
       void persistSync();
       if (a.needsResync) scheduleSync(1500);
@@ -334,6 +398,7 @@ export function createCapacitorApi(): HcnApi {
     }, 30_000);
     void App.addListener('appStateChange', ({ isActive }) => {
       if (isActive) {
+        cloud.resume();
         scheduleSync(300);
         maybeCheckUpdate();
       }
@@ -394,6 +459,7 @@ export function createCapacitorApi(): HcnApi {
       hub = createDataHub({ data, meta });
       void autoBackup(data).catch(() => undefined);
       startScheduler();
+      void cloud.init().then(() => cloud.start());
       return {
         data,
         settings,
@@ -405,10 +471,11 @@ export function createCapacitorApi(): HcnApi {
 
     async saveData(data, baseRev) {
       try {
-        const r = hub!.save(data, baseRev, Date.now());
+        const r = hub!.save(data, baseRev, clockNow());
         await persistData();
         await persistSync();
         scheduleSync(3000);
+        cloud.localChanged();
         return { ok: true, rev: r.rev, data: r.patched ? r.data : undefined };
       } catch (e) {
         return { ok: false, error: (e as Error).message };
@@ -437,10 +504,11 @@ export function createCapacitorApi(): HcnApi {
     async restore(data) {
       try {
         await writeAtomic(`backups/hcn-pre-restore-${stamp()}.json`, JSON.stringify(toBackup(hub!.state.data, new Date().toISOString())));
-        const rev = hub!.replace(data, Date.now());
+        const rev = hub!.replace(data, clockNow());
         await persistData();
         await persistSync();
         scheduleSync(1000);
+        cloud.localChanged(3000);
         return { ok: true, rev };
       } catch (e) {
         return { ok: false, error: (e as Error).message };
@@ -522,6 +590,11 @@ export function createCapacitorApi(): HcnApi {
     async syncInfo() {
       return info();
     },
+    async cloudInfo() {
+      await cloud.init();
+      return cloud.info();
+    },
+    cloudAction: (a) => cloud.action(a),
     async syncAction(a): Promise<SyncActionResult> {
       if (a.type === 'pair') {
         try {

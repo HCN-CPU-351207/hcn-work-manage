@@ -3961,3 +3961,28 @@ th.col-actions {
   flex: 1;
   min-width: 160px;
 }
+/* Google Drive */
+.cloud-block {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line-strong);
+  background: var(--input-bg);
+}
+.sync-lan-head {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.choice-banner.bad {
+  background: var(--danger-soft);
+  color: var(--bad);
+}
+.err-text {
+  color: var(--bad);
+  font-weight: 600;
+}
+.cloud-backups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

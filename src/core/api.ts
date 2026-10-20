@@ -2,6 +2,7 @@
 import type { Data, Level, Settings } from './model.ts';
 import type { DiagReport, LocalKind } from '../lib/syncClient.ts';
 import type { SyncMode, SyncStats } from './sync.ts';
+import type { CloudAction, CloudActionResult, CloudInfo } from '../lib/cloudDriver.ts';
 
 export type LoadNotice =
   | { kind: 'fresh' }
@@ -162,6 +163,9 @@ export interface HcnApi {
   onFlush(cb: () => Promise<void> | void): () => void;
   syncInfo(): Promise<SyncInfo>;
   syncAction(a: SyncAction): Promise<SyncActionResult>;
+  /** Đồng bộ online qua Google Drive */
+  cloudInfo(): Promise<CloudInfo>;
+  cloudAction(a: CloudAction): Promise<CloudActionResult>;
   /** dữ liệu đổi từ bên ngoài (đồng bộ) */
   onExternalData(cb: (data: Data, rev: number) => void): () => void;
   /** nút Back của Android: trả true nếu đã xử lý (đóng một lớp); false để thu nhỏ app */

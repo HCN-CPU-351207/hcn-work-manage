@@ -3,7 +3,7 @@ import i18n from '../i18n/index.ts';
 import { completeTree, endNgay, endRange, resetNgay, resetRange, startNgay, startRange } from '../core/actions.ts';
 import { nowIso, todayStr } from '../core/dates.ts';
 import { MigrationError, parseImport } from '../core/migrate.ts';
-import type { Level, Quick, Status } from '../core/model.ts';
+import type { Data, Level, Quick, Status } from '../core/model.ts';
 import { cancelItems, cascadeCounts, hasKids, restoreItems } from '../core/ops.ts';
 import type { CommandId } from '../core/search.ts';
 import { derive } from '../core/status.ts';
@@ -52,21 +52,25 @@ export async function restoreFlow(): Promise<void> {
     S().toast(code === 'FUTURE_SCHEMA' ? t('restore.future') : t('restore.invalid'), 'error');
     return;
   }
-  const { summary } = parsed;
+  confirmRestoreData(parsed.data);
+}
+
+/** Xem trước số việc rồi khôi phục (từ file hoặc từ bản sao lưu trên Google Drive) */
+export function confirmRestoreData(data: Data): void {
   S().askConfirm({
     title: t('restore.title'),
-    message: t('restore.preview', { m: summary.thang, w: summary.tuan, d: summary.ngay, p: summary.people }),
+    message: t('restore.preview', { m: data.thang.length, w: data.tuan.length, d: data.ngay.length, p: data.people.length }),
     confirmLabel: t('restore.confirm'),
     onConfirm: async () => {
       await S().flush();
-      const r = await api().restore(parsed.data);
+      const r = await api().restore(data);
       if (!r.ok) {
         S().toast(t('restore.fail', { msg: r.error ?? '' }), 'error');
         return;
       }
       const st = S();
-      st.replaceData(parsed.data, r.rev);
-      if (st.settings.currentPersonId && !parsed.data.people.some((p) => p.id === st.settings.currentPersonId)) {
+      st.replaceData(data, r.rev);
+      if (st.settings.currentPersonId && !data.people.some((p) => p.id === st.settings.currentPersonId)) {
         st.setSettings({ currentPersonId: null });
       }
       st.toast(t('restore.done'), 'ok');
