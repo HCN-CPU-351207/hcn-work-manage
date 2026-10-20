@@ -44,7 +44,7 @@ describe('projectStats – CV Tháng', () => {
     }
   });
   it('đếm việc con theo trạng thái (tuần quá hạn tính riêng)', () => {
-    expect(s.counts).toEqual({ todo: 1, doing: 1, overdue: 1, done: 1 });
+    expect(s.counts).toEqual({ todo: 1, doing: 1, overdue: 1, done: 1, cancel: 0 });
   });
   it('đường cộng dồn: kế hoạch theo ngày xếp lịch, thực tế theo ngày xong, tương lai để trống', () => {
     const at = (day: string) => s.burn.find((p) => p.day === day)!;

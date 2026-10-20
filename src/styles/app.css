@@ -3498,3 +3498,100 @@ th.col-actions {
   cursor: default;
   text-decoration: none;
 }
+
+/* ---------- Việc đã hủy ---------- */
+.chip-cancel {
+  background: transparent;
+  color: var(--text-title);
+  border: 1px dashed var(--line-strong);
+  white-space: nowrap;
+}
+.grid-row.row-cancel > td:not(.col-actions):not(.col-check) {
+  opacity: 0.55;
+}
+.grid-row.row-cancel .cell-task,
+.task-card.is-cancel .tc-title,
+.pp-kid.is-cancel .pp-kid-t {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-dim);
+}
+.grid-row.row-cancel .mini-progress *,
+.task-card.is-cancel .mini-progress * {
+  filter: grayscale(1);
+}
+.task-card.is-cancel {
+  opacity: 0.6;
+}
+.tb-cancel {
+  background: repeating-linear-gradient(135deg, var(--idle-bar) 0 6px, rgba(255, 255, 255, 0.06) 6px 12px);
+  color: var(--text-title);
+  opacity: 0.75;
+}
+.tb-cancel .tb-title,
+.tb-cancel .tb-person {
+  text-decoration: line-through;
+}
+.sb-cancel,
+.ch-legend i.sb-cancel {
+  display: inline-block;
+  background: repeating-linear-gradient(135deg, var(--idle-bar) 0 4px, transparent 4px 8px);
+}
+.stackbar b.sb-cancel {
+  display: block;
+}
+.chip-s.cancel {
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+  color: var(--text-title);
+}
+.pp-verdict.cancel {
+  background: var(--idle-soft);
+  color: var(--text-value);
+  border: 1px dashed var(--line-strong);
+}
+.cancel-banner {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  border: 1px dashed var(--line-strong);
+  background: var(--idle-soft);
+  font-size: 13px;
+  color: var(--text-value);
+}
+.cancel-banner svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--text-title);
+}
+.cancel-banner small {
+  color: var(--text-title);
+}
+.drawer-foot .foot-left {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.danger-text {
+  color: var(--bad);
+}
+.btn.danger-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.qa-cancel:hover:not(:disabled) {
+  color: var(--bad);
+}
+.qa-restore {
+  color: var(--accent);
+}
+.confirm-input {
+  margin: -6px 0 16px;
+}
+.confirm-input input {
+  width: 100%;
+}

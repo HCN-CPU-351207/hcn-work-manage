@@ -4,7 +4,7 @@ import { completeTree, endNgay, endRange, resetNgay, resetRange, startNgay, star
 import { nowIso, todayStr } from '../core/dates.ts';
 import { MigrationError, parseImport } from '../core/migrate.ts';
 import type { Level, Quick, Status } from '../core/model.ts';
-import { cascadeCounts, hasKids } from '../core/ops.ts';
+import { cancelItems, cascadeCounts, hasKids, restoreItems } from '../core/ops.ts';
 import type { CommandId } from '../core/search.ts';
 import { derive } from '../core/status.ts';
 import { useApp } from '../store/app.ts';
@@ -94,9 +94,60 @@ export function confirmDelete(level: Level, ids: string[]): void {
   });
 }
 
+/** Hủy việc (hỏi lý do, không bắt buộc). Việc con chưa xong bị hủy theo; việc đã làm vẫn giữ. */
+export function cancelFlow(level: Level, ids: string[]): void {
+  const st = S();
+  const pool: { id: string; huy?: unknown }[] = level === 'thang' ? st.data.thang : level === 'tuan' ? st.data.tuan : st.data.ngay;
+  const todo = ids.filter((id) => pool.some((x) => x.id === id && !x.huy));
+  if (!todo.length) return;
+  st.askConfirm({
+    title: t('cancel.title', { n: todo.length }),
+    message: level === 'ngay' ? t('cancel.msgNgay') : t('cancel.msgParent'),
+    confirmLabel: t('cancel.confirm'),
+    cancelLabel: t('cancel.keep'),
+    danger: true,
+    input: { label: t('cancel.reason'), placeholder: t('cancel.reasonPh') },
+    onConfirm: (reason) => {
+      let n = 0;
+      st.mutate((d) => {
+        const r = cancelItems(d, level, todo, nowIso(), reason);
+        n = r.count;
+        return r.data;
+      });
+      st.toast(t('cancel.done', { n }), 'ok', { action: { label: t('cancel.undo'), run: () => restoreNow(level, todo) } });
+    }
+  });
+}
+
+function restoreNow(level: Level, ids: string[]): number {
+  let n = 0;
+  S().mutate((d) => {
+    const r = restoreItems(d, level, ids);
+    n = r.count;
+    return r.data;
+  });
+  return n;
+}
+
+/** Khôi phục việc đã hủy (kèm việc con bị hủy theo nó) */
+export function restoreCancelled(level: Level, ids: string[]): void {
+  const n = restoreNow(level, ids);
+  if (n) S().toast(t('cancel.restored', { n }), 'ok');
+}
+
+const isCancelled = (level: Level, id: string): boolean => {
+  const d = S().data;
+  const pool: { id: string; huy?: unknown }[] = level === 'thang' ? d.thang : level === 'tuan' ? d.tuan : d.ngay;
+  return !!pool.find((x) => x.id === id)?.huy;
+};
+
 /** ▶ Bắt đầu · ■ Kết thúc · ↺ Reset (mục 6.4) */
 export function quickAction(level: Level, id: string, act: 'start' | 'end' | 'reset'): void {
   const st = S();
+  if (isCancelled(level, id)) {
+    st.toast(t('cancel.locked'), 'info');
+    return;
+  }
   const today = todayStr();
   st.mutate((d) => {
     if (level === 'ngay') {
@@ -112,6 +163,10 @@ export function quickAction(level: Level, id: string, act: 'start' | 'end' | 're
 /** Vuốt phải trên mobile: Hoàn thành nhanh, xác nhận nếu là việc cha */
 export function swipeComplete(level: Level, id: string): void {
   const st = S();
+  if (isCancelled(level, id)) {
+    st.toast(t('cancel.locked'), 'info');
+    return;
+  }
   if (hasKids(st.data, level, id)) {
     st.askConfirm({
       title: t('swipe.title'),
@@ -124,6 +179,10 @@ export function swipeComplete(level: Level, id: string): void {
 
 export function setStatusInline(level: Level, id: string, status: Status): void {
   const st = S();
+  if (isCancelled(level, id)) {
+    st.toast(t('cancel.locked'), 'info');
+    return;
+  }
   if (hasKids(st.data, level, id)) {
     st.toast(t('grid.autoStatus'), 'info');
     return;

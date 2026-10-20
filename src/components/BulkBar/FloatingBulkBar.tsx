@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { STATUSES } from '../../core/model.ts';
 import type { Level, Status } from '../../core/model.ts';
 import { useApp } from '../../store/app.ts';
-import { confirmDelete, exportSelected } from '../../lib/flows.ts';
+import { cancelFlow, confirmDelete, exportSelected, restoreCancelled } from '../../lib/flows.ts';
 import { STATUS_KEY, cx } from '../../lib/labels.ts';
 import { IX } from '../Common/Icons.tsx';
 import { optLabel, placeIcon, useOpts } from '../../lib/opts.ts';
@@ -118,6 +118,25 @@ export function FloatingBulkBar() {
           </div>
         );
       })}
+      {(() => {
+        const sel = (pool as { id: string; huy?: unknown }[]).filter((x) => ids.includes(x.id));
+        const anyCancelled = sel.some((x) => x.huy);
+        const anyLive = sel.some((x) => !x.huy);
+        return (
+          <>
+            {anyLive && (
+              <button className="btn btn-sm" tabIndex={show ? 0 : -1} onClick={() => level && cancelFlow(level, ids)}>
+                {t('cancel.button')}
+              </button>
+            )}
+            {anyCancelled && (
+              <button className="btn btn-sm" tabIndex={show ? 0 : -1} onClick={() => level && restoreCancelled(level, ids)}>
+                {t('cancel.restore')}
+              </button>
+            )}
+          </>
+        );
+      })()}
       <button className="btn btn-sm" tabIndex={show ? 0 : -1} onClick={() => level && void exportSelected(level, ids)}>
         {t('bulk.export')}
       </button>

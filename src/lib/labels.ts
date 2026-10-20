@@ -1,11 +1,12 @@
 // Ánh xạ giá trị lưu trong DB (tiếng Việt) sang khóa i18n
 import type { Display, Level, Loai } from '../core/model.ts';
 
-export const STATUS_KEY: Record<Display, 'todo' | 'doing' | 'done' | 'overdue'> = {
+export const STATUS_KEY: Record<Display, 'todo' | 'doing' | 'done' | 'overdue' | 'cancel'> = {
   'Chưa làm': 'todo',
   'Đang làm': 'doing',
   'Hoàn thành': 'done',
-  'Quá hạn': 'overdue'
+  'Quá hạn': 'overdue',
+  'Đã hủy': 'cancel'
 };
 
 export const LOAI_KEY: Record<Loai, 'ui' | 'un' | 'ni' | 'nn'> = {

@@ -2,7 +2,7 @@
 export const SCHEMA_VERSION = 1;
 
 export type Status = 'Chưa làm' | 'Đang làm' | 'Hoàn thành'; // lưu trong DB
-export type Display = Status | 'Quá hạn'; // chỉ hiển thị
+export type Display = Status | 'Quá hạn' | 'Đã hủy'; // chỉ hiển thị
 export type Loai =
   | 'Gấp-Quan trọng'
   | 'Gấp-Không quan trọng'
@@ -10,7 +10,7 @@ export type Loai =
   | 'Không gấp-Không quan trọng';
 
 export const STATUSES: Status[] = ['Chưa làm', 'Đang làm', 'Hoàn thành'];
-export const DISPLAYS: Display[] = ['Chưa làm', 'Đang làm', 'Quá hạn', 'Hoàn thành'];
+export const DISPLAYS: Display[] = ['Chưa làm', 'Đang làm', 'Quá hạn', 'Hoàn thành', 'Đã hủy'];
 export const LOAI_LIST: Loai[] = [
   'Gấp-Quan trọng',
   'Gấp-Không quan trọng',
@@ -57,6 +57,14 @@ export const DEFAULT_PLACES: Opt[] = [
 /** danh mục đang dùng: chưa sửa lần nào thì lấy mặc định */
 export const optsOf = (d: { cats?: Opt[]; places?: Opt[] }, k: OptKind): Opt[] => d[k] ?? (k === 'cats' ? DEFAULT_CATS : DEFAULT_PLACES);
 
+/** Dấu "đã hủy": không ghi đè trạng thái / ngày thực tế để vẫn xem được việc đã làm.
+ * root = id việc cha đã hủy kéo theo việc này (khôi phục cha thì khôi phục theo). */
+export interface Cancel {
+  at: string; // 'YYYY-MM-DDTHH:mm:ss'
+  reason?: string;
+  root?: string;
+}
+
 export interface Thang {
   id: string;
   ma: string; // M001...
@@ -71,6 +79,7 @@ export interface Thang {
   bdtt: string | null;
   kttt: string | null;
   gc: string;
+  huy?: Cancel | null;
 }
 
 export interface Tuan {
@@ -86,6 +95,7 @@ export interface Tuan {
   bdtt: string | null;
   kttt: string | null;
   gc: string;
+  huy?: Cancel | null;
 }
 
 export interface Ngay {
@@ -105,6 +115,7 @@ export interface Ngay {
   a2: string | null;
   tt: Status;
   gc: string;
+  huy?: Cancel | null;
 }
 
 export type Item = Thang | Tuan | Ngay;

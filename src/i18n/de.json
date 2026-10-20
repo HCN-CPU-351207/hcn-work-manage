@@ -39,7 +39,8 @@
     "todo": "Offen",
     "doing": "In Arbeit",
     "done": "Erledigt",
-    "overdue": "Überfällig"
+    "overdue": "Überfällig",
+    "cancel": "Abgebrochen"
   },
   "loai": {
     "ui": "Dringend - Wichtig",
@@ -589,7 +590,8 @@
       "ahead": "{{p}} % vor dem Plan",
       "ontrack": "Im Plan",
       "behind": "{{p}} % hinter dem Plan · noch {{n}} {{unit}} fertigstellen, um aufzuholen",
-      "nodates": "Start und Frist festlegen, um mit dem Plan zu vergleichen"
+      "nodates": "Start und Frist festlegen, um mit dem Plan zu vergleichen",
+      "cancelled": "Abgebrochen am {{d}} · {{p}} % erledigt beim Abbruch"
     }
   },
   "colf": {
@@ -606,5 +608,24 @@
     "blank": "(Leer)",
     "chip": "{{n}} Spaltenfilter",
     "sorted": "Nach Spalte sortiert"
+  },
+  "cancel": {
+    "button": "Aufgabe abbrechen",
+    "restore": "Wiederherstellen",
+    "title": "{{n}} Aufgabe(n) abbrechen?",
+    "msgNgay": "Aufgabe und bereits geleistete Zeit bleiben erhalten; sie zählt nur nicht mehr als offen. Jederzeit wiederherstellbar.",
+    "msgParent": "Offene Unteraufgaben werden mit abgebrochen; erledigte und geleistete Zeit bleiben, der Fortschritt wird gespeichert. Jederzeit wiederherstellbar.",
+    "confirm": "Abbrechen",
+    "reason": "Grund (optional)",
+    "reasonPh": "z. B. Kunde hat das Projekt gestoppt",
+    "reasonShort": "Abbruchgrund",
+    "done": "{{n}} Aufgabe(n) abgebrochen",
+    "undo": "Rückgängig",
+    "restored": "{{n}} Aufgabe(n) wiederhergestellt",
+    "locked": "Aufgabe abgebrochen: zuerst wiederherstellen, um Status oder Zeit zu ändern.",
+    "lockedShort": "Abgebrochen (zum Bearbeiten wiederherstellen)",
+    "bannerTitle": "Abgebrochen am {{d}}",
+    "bannerHint": "Fortschritt, erledigte Unteraufgaben und Arbeitszeit bleiben zum Nachschlagen erhalten.",
+    "keep": "Behalten"
   }
 }

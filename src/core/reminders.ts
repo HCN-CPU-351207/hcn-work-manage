@@ -70,7 +70,7 @@ export function computeReminders(data: Data, s: ReminderSettings, now: number): 
   const push = (r: Omit<Reminder, 'at'> & { at: number }) => out.push({ ...r, at: shiftQuiet(r.at, qs, qe) });
 
   const range = (level: 'thang' | 'tuan', x: { id: string; ma: string; ten: string; dl: string | null }, raw: string) => {
-    if (!x.dl || raw === 'Hoàn thành') return;
+    if (!x.dl || raw === 'Hoàn thành' || (x as { huy?: unknown }).huy) return;
     const base = { level, id: x.id, ma: x.ma, ten: x.ten, when: x.dl };
     const n = Math.max(0, Math.round(s.notifyDaysBefore || 0));
     if (s.notifySoon && n > 0) push({ ...base, kind: 'soon', key: `${level}:${x.id}:soon:${x.dl}:${n}`, at: localMs(addDays(x.dl, -n), morning) });
@@ -82,7 +82,7 @@ export function computeReminders(data: Data, s: ReminderSettings, now: number): 
 
   const lead = Math.max(0, Math.round(s.notifyDayLeadMin || 0));
   for (const n of data.ngay) {
-    if (!n.ngay || n.tt === 'Hoàn thành') continue;
+    if (!n.ngay || n.tt === 'Hoàn thành' || n.huy) continue;
     const base = { level: 'ngay' as const, id: n.id, ma: n.ma, ten: n.ten };
     if (s.notifyDayStart && n.g1 && n.tt === 'Chưa làm')
       push({ ...base, kind: 'start', when: n.g1, key: `ngay:${n.id}:start:${n.ngay}T${n.g1}:${lead}`, at: localMs(n.ngay, n.g1) - lead * 60_000 });

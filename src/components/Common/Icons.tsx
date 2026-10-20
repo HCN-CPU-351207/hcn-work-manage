@@ -59,3 +59,6 @@ export const IHardHat = mk(<><path d="M3 17h18v2H3z" /><path d="M5 17a7 7 0 0 1 
 export const IFactory = mk(<><path d="M3 21V10l6 4V10l6 4V5h3l1 16Z" /><path d="M7 18h2M12 18h2" /></>);
 export const IPin = mk(<><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></>);
 export const IColumns = mk(<><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16M15 4v16" /></>);
+// Hủy / khôi phục
+export const IBan = mk(<><circle cx="12" cy="12" r="9" /><path d="m5.7 5.7 12.6 12.6" /></>);
+export const IUndo = mk(<><path d="M9 14 4 9l5-5" /><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" /></>);

@@ -1,7 +1,7 @@
 // Thao tác dữ liệu: xóa dây chuyền, hàng loạt, gán lại (mục 6.9, 6.10, 8.6.5)
 import { syncCounters } from './codes.ts';
-import { tuansOf, ngaysOf } from './status.ts';
-import type { Data, Level, Status } from './model.ts';
+import { rawTuan } from './status.ts';
+import type { Cancel, Data, Level, Status } from './model.ts';
 
 export interface Removed {
   thang: number;
@@ -49,19 +49,88 @@ export function removeItems(data: Data, level: Level, ids: string[]): { data: Da
 export const hasKids = (data: Data, level: Level, id: string): boolean => {
   if (level === 'ngay') return false;
   if (level === 'tuan') {
-    const t = data.tuan.find((x) => x.id === id);
-    return !!t && ngaysOf(t, data.ngay).length > 0;
+    return data.ngay.some((n) => n.parentId === id);
   }
   const m = data.thang.find((x) => x.id === id);
-  return !!m && tuansOf(m, data.tuan).length > 0;
+  return !!m && data.tuan.some((t) => t.parentMa === m.ma);
 };
+
+/**
+ * Hủy việc: đặt dấu hủy, giữ nguyên trạng thái / ngày / giờ thực tế (để vẫn xem được việc đã làm).
+ * Việc con CHƯA XONG và chưa hủy bị hủy theo (root = id việc cha); việc con đã xong giữ nguyên.
+ * Việc đã hủy rồi thì bỏ qua. Trả về số việc bị hủy (gồm việc con).
+ */
+export function cancelItems(data: Data, level: Level, ids: string[], at: string, reason?: string): { data: Data; count: number } {
+  const set = new Set(ids);
+  const why = reason?.trim() ? reason.trim().slice(0, 200) : undefined;
+  const mk = (root?: string): Cancel => ({ at, ...(why ? { reason: why } : {}), ...(root ? { root } : {}) });
+  let count = 0;
+  const thangHit = new Map<string, string>(); // ma → id
+  const tuanHit = new Map<string, string>(); // id tuần → root
+  const thang = data.thang.map((m) => {
+    if (level !== 'thang' || !set.has(m.id) || m.huy) return m;
+    count++;
+    thangHit.set(m.ma, m.id);
+    return { ...m, huy: mk() };
+  });
+  const tuan = data.tuan.map((t) => {
+    if (t.huy) return t;
+    if (level === 'tuan' && set.has(t.id)) {
+      count++;
+      tuanHit.set(t.id, t.id);
+      return { ...t, huy: mk() };
+    }
+    const root = thangHit.get(t.parentMa);
+    if (root && rawTuan(t, data.ngay) !== 'Hoàn thành') {
+      count++;
+      tuanHit.set(t.id, root);
+      return { ...t, huy: mk(root) };
+    }
+    return t;
+  });
+  const ngay = data.ngay.map((n) => {
+    if (n.huy) return n;
+    if (level === 'ngay' && set.has(n.id)) {
+      count++;
+      return { ...n, huy: mk() };
+    }
+    const root = tuanHit.get(n.parentId);
+    if (root && n.tt !== 'Hoàn thành') {
+      count++;
+      return { ...n, huy: mk(root) };
+    }
+    return n;
+  });
+  return { data: { ...data, thang, tuan, ngay }, count };
+}
+
+/** Khôi phục: bỏ dấu hủy của việc được chọn và các việc con bị hủy theo nó */
+export function restoreItems(data: Data, level: Level, ids: string[]): { data: Data; count: number } {
+  const set = new Set(ids);
+  let count = 0;
+  const clear = <T extends { id: string; huy?: Cancel | null }>(x: T, self: boolean): T => {
+    if (!x.huy) return x;
+    if ((self && set.has(x.id)) || (x.huy.root && set.has(x.huy.root))) {
+      count++;
+      return { ...x, huy: null };
+    }
+    return x;
+  };
+  const thang = data.thang.map((m) => clear(m, level === 'thang'));
+  const tuan = data.tuan.map((t) => clear(t, level === 'tuan'));
+  const ngay = data.ngay.map((n) => clear(n, level === 'ngay'));
+  return { data: { ...data, thang, tuan, ngay }, count };
+}
 
 /** Đổi trạng thái hàng loạt: bỏ qua việc cha (có việc con) */
 export function bulkSetStatus(data: Data, level: Level, ids: string[], status: Status): { data: Data; skipped: number } {
+  // việc đã hủy: không đổi trạng thái (khôi phục trước)
   let skipped = 0;
   const okIds = new Set<string>();
+  const pool: { id: string; huy?: unknown }[] = level === 'thang' ? data.thang : level === 'tuan' ? data.tuan : data.ngay;
+  const cancelled = new Set(pool.filter((x) => x.huy).map((x) => x.id));
   for (const id of new Set(ids)) {
-    if (hasKids(data, level, id)) skipped++;
+    if (hasKids(data, level, id) || cancelled.has(id)) skipped++;
     else okIds.add(id);
   }
   const map = <T extends { id: string; tt: Status }>(arr: T[]): T[] => arr.map((x) => (okIds.has(x.id) ? { ...x, tt: status } : x));

@@ -39,7 +39,8 @@
     "todo": "Por fazer",
     "doing": "Em curso",
     "done": "Concluída",
-    "overdue": "Atrasada"
+    "overdue": "Atrasada",
+    "cancel": "Cancelada"
   },
   "loai": {
     "ui": "Urgente - Importante",
@@ -589,7 +590,8 @@
       "ahead": "{{p}}% à frente do plano",
       "ontrack": "Dentro do plano",
       "behind": "{{p}}% atrás do plano · conclua mais {{n}} {{unit}} para recuperar",
-      "nodates": "Defina início e prazo para comparar com o plano"
+      "nodates": "Defina início e prazo para comparar com o plano",
+      "cancelled": "Cancelada em {{d}} · {{p}}% feito no cancelamento"
     }
   },
   "colf": {
@@ -606,5 +608,24 @@
     "blank": "(Vazio)",
     "chip": "{{n}} filtros de coluna",
     "sorted": "Ordenado por coluna"
+  },
+  "cancel": {
+    "button": "Cancelar tarefa",
+    "restore": "Restaurar",
+    "title": "Cancelar {{n}} tarefa(s)?",
+    "msgNgay": "A tarefa e o tempo já trabalhado ficam guardados; apenas deixa de contar como trabalho a fazer. Pode restaurar a qualquer momento.",
+    "msgParent": "As subtarefas por concluir são canceladas também; as concluídas e o tempo trabalhado ficam, e o progresso no momento é guardado. Pode restaurar a qualquer momento.",
+    "confirm": "Cancelar",
+    "reason": "Motivo (opcional)",
+    "reasonPh": "ex.: Cliente suspendeu o projeto",
+    "reasonShort": "Motivo do cancelamento",
+    "done": "{{n}} tarefa(s) cancelada(s)",
+    "undo": "Desfazer",
+    "restored": "{{n}} tarefa(s) restaurada(s)",
+    "locked": "Tarefa cancelada: restaure antes de mudar o estado ou cronometrar.",
+    "lockedShort": "Cancelada (restaure para editar)",
+    "bannerTitle": "Cancelada em {{d}}",
+    "bannerHint": "O progresso, as subtarefas concluídas e as horas trabalhadas ficam para consulta.",
+    "keep": "Manter"
   }
 }

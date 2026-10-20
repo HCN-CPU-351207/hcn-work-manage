@@ -13,7 +13,8 @@ export type Verdict =
   | { kind: 'ahead'; pct: number }
   | { kind: 'ontrack' }
   | { kind: 'behind'; pct: number; need: number }
-  | { kind: 'nodates' };
+  | { kind: 'nodates' }
+  | { kind: 'cancelled'; at: string; reason?: string };
 
 export interface BurnPoint {
   day: string;
@@ -80,7 +81,7 @@ export interface ProjectStats {
   byPerson: Slice[];
   workMin: number;
   children: ChildRow[];
-  counts: Record<'todo' | 'doing' | 'overdue' | 'done', number>;
+  counts: Record<'todo' | 'doing' | 'overdue' | 'done' | 'cancel', number>;
   accuracy: { doneCount: number; onTime: number; measured: number; planMin: number; actualMin: number; top: Deviation[] };
   upcoming: UpcomingRow[];
 }
@@ -135,21 +136,23 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
           id: n.id,
           ma: n.ma,
           ten: n.ten,
-          status: n.tt as Display,
+          status: (n.huy ? 'Đã hủy' : n.tt) as Display,
           progress: null,
           dl: n.ngay || null,
           doneOn: doneDay(n),
           time: n.g1 && n.g2 ? `${n.g1}–${n.g2}` : null
         }));
-  const counts = { todo: 0, doing: 0, overdue: 0, done: 0 };
+  const counts = { todo: 0, doing: 0, overdue: 0, done: 0, cancel: 0 };
   for (const c of children) {
-    const late = c.level === 'ngay' && c.status !== 'Hoàn thành' && !!c.dl && c.dl < today;
-    if (c.status === 'Hoàn thành') counts.done++;
+    const late = c.level === 'ngay' && c.status !== 'Hoàn thành' && c.status !== 'Đã hủy' && !!c.dl && c.dl < today;
+    if (c.status === 'Đã hủy') counts.cancel++;
+    else if (c.status === 'Hoàn thành') counts.done++;
     else if (c.status === 'Quá hạn' || late) counts.overdue++;
     else if (c.status === 'Đang làm') counts.doing++;
     else counts.todo++;
   }
-  const childTotal = children.length;
+  // việc con đã hủy không tính vào tổng (trừ khi chính việc này đã hủy: giữ đúng tiến độ lúc hủy)
+  const childTotal = item.huy ? children.length : children.length - counts.cancel;
   const childDone = counts.done;
 
   // thời gian đã trôi
@@ -167,7 +170,8 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
   // kết luận
   const raw: Status = info.raw;
   let verdict: Verdict;
-  if (raw === 'Hoàn thành') {
+  if (item.huy) verdict = { kind: 'cancelled', at: item.huy.at, ...(item.huy.reason ? { reason: item.huy.reason } : {}) };
+  else if (raw === 'Hoàn thành') {
     const fin = info.actual.end;
     verdict = { kind: 'done', lateDays: fin && end && fin > end ? diffDays(end, fin) : 0 };
   } else if (end && today > end) verdict = { kind: 'late', days: diffDays(end, today) };
@@ -182,7 +186,9 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
     }
   }
 
-  // đường cộng dồn CV Ngày: kế hoạch = theo ngày được xếp; thực tế = theo ngày xong
+  // đường cộng dồn CV Ngày: kế hoạch = theo ngày được xếp (bỏ việc bị hủy mà chưa làm); thực tế = theo ngày xong
+  const planned = ngays.filter((n) => !n.huy || n.tt === 'Hoàn thành');
+  const pDays = planned.map((n) => n.ngay).filter(Boolean).sort();
   const burn: BurnPoint[] = [];
   const bStart = start && days[0] ? (days[0] < start ? days[0] : start) : start ?? days[0];
   const bEnd = end && days.length ? (days[days.length - 1] > end ? days[days.length - 1] : end) : end ?? days[days.length - 1];
@@ -192,7 +198,7 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
     let pi = 0;
     for (let day = bStart; day <= bEnd; day = addDays(day, 1)) {
       while (di < doneDays.length && doneDays[di] <= day) di++;
-      while (pi < days.length && days[pi] <= day) pi++;
+      while (pi < pDays.length && pDays[pi] <= day) pi++;
       burn.push({ day, actual: day <= today ? di : null, plan: pi });
     }
   }
@@ -211,7 +217,7 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
     if (!n.ngay) continue;
     const k = keyOf(n.ngay);
     const b = bucketMap.get(k) ?? { key: k, label: level === 'thang' ? `W${isoWeek(k)}` : ddmm(k), plan: 0, actual: 0, current: k === curKey };
-    const p = plannedMinutes(n) ?? 0;
+    const p = n.huy && n.tt !== 'Hoàn thành' ? 0 : plannedMinutes(n) ?? 0;
     const a = n.a2 ? actualMinutes(n) ?? 0 : 0;
     b.plan += p;
     b.actual += a;
@@ -256,11 +262,11 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
     }
   }
   for (const n of ngays) {
-    if (n.tt === 'Hoàn thành' || !n.ngay) continue;
+    if (n.tt === 'Hoàn thành' || !n.ngay || n.huy) continue;
     const time = n.g1 && n.g2 ? `${n.g1}–${n.g2}` : null;
     if (n.ngay < today) upcoming.push({ kind: 'missed', level: 'ngay', id: n.id, ma: n.ma, ten: n.ten, day: n.ngay, time });
   }
-  const next = ngays.filter((n) => n.tt !== 'Hoàn thành' && n.ngay >= today).slice(0, 5);
+  const next = ngays.filter((n) => n.tt !== 'Hoàn thành' && !n.huy && n.ngay >= today).slice(0, 5);
   for (const n of next) {
     const kind = n.ngay === today ? 'today' : n.ngay === addDays(today, 1) ? 'tomorrow' : 'later';
     upcoming.push({ kind, level: 'ngay', id: n.id, ma: n.ma, ten: n.ten, day: n.ngay, time: n.g1 && n.g2 ? `${n.g1}–${n.g2}` : null });
@@ -279,7 +285,7 @@ export function projectStats(data: Data, d: Derived, level: PLevel, id: string, 
     daysLeft,
     verdict,
     burn,
-    burnTotal: ngays.length,
+    burnTotal: planned.length,
     buckets,
     planMin,
     actualMin,

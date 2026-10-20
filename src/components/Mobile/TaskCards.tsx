@@ -124,7 +124,7 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
         </button>
       </div>
       <article
-        className={cx('task-card', dragging && 'dragging', selected && 'row-checked')}
+        className={cx('task-card', dragging && 'dragging', selected && 'row-checked', row.item.huy && 'is-cancel')}
         style={{ transform: `translateX(${dx}px)` }}
         onPointerDown={onDown}
         onPointerMove={onMove}

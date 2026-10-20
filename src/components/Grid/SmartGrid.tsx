@@ -13,13 +13,13 @@ import { useColValue } from '../../lib/colValues.ts';
 import { ColFilterButton } from './ColumnFilter.tsx';
 import { optMap, useOpts } from '../../lib/opts.ts';
 import { CatChip, PlaceChip } from '../Common/OptChip.tsx';
-import { confirmDelete, quickAction, setStatusInline } from '../../lib/flows.ts';
+import { cancelFlow, confirmDelete, quickAction, restoreCancelled, setStatusInline } from '../../lib/flows.ts';
 import { fmtDay, hhmm } from '../../lib/fmt.ts';
 import { useIsTablet } from '../../lib/hooks.ts';
 import { LOAI_KEY, STATUS_KEY, cx } from '../../lib/labels.ts';
 import type { NgayRow, Row, ThangRow, TuanRow } from '../../lib/rows.ts';
 import { Avatar, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
-import { IEdit, IPlay, IReset, IStop, ITrash, IWarn } from '../Common/Icons.tsx';
+import { IBan, IEdit, IPlay, IReset, IStop, ITrash, IUndo, IWarn } from '../Common/Icons.tsx';
 
 export function useRowHighlight(level: Level) {
   const hl = useApp((s) => s.highlight);
@@ -173,7 +173,7 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
         return row.level !== 'ngay' ? <DeadlineCell row={row as ThangRow | TuanRow} label={d(row.item.dl)} /> : null;
       case 'as': {
         if (row.level === 'ngay') return null;
-        const n = runningDays(row.item, today);
+        const n = row.item.huy ? null : runningDays(row.item, today);
         return (
           <span className="cell-stack">
             <span>{d(row.actualStart)}</span>
@@ -227,7 +227,7 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
   return (
     <tr
       data-id={row.id}
-      className={cx('grid-row', hl && 'row-hl', checked && 'row-checked', active && 'row-active', row.level !== 'ngay' && 'row-click')}
+      className={cx('grid-row', hl && 'row-hl', checked && 'row-checked', active && 'row-active', row.level !== 'ngay' && 'row-click', row.item.huy && 'row-cancel')}
       onClick={(e) => {
         // CV Tháng / Tuần: bấm 1 lần mở Tổng quan dự án (bỏ qua ô tích, nút, ô sửa nhanh)
         if (row.level === 'ngay' || (e.target as HTMLElement).closest('input, button, select, a, [data-inline], .qa')) return;
@@ -311,6 +311,7 @@ function StatusCell({ row }: { row: Row }) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const toast = useApp((s) => s.toast);
+  if (row.item.huy) return <CancelChip huy={row.item.huy} />;
   if (editing && !row.locked) {
     const cur = row.level === 'ngay' ? row.item.tt : row.item.tt;
     return (
@@ -351,11 +352,23 @@ function StatusCell({ row }: { row: Row }) {
   );
 }
 
+/** Nhãn "Đã hủy · ngày" kèm lý do khi rê chuột */
+export function CancelChip({ huy }: { huy: { at: string; reason?: string } }) {
+  const { t } = useTranslation();
+  const d = `${huy.at.slice(8, 10)}/${huy.at.slice(5, 7)}`;
+  return (
+    <span className="chip chip-cancel" title={huy.reason ? `${t('cancel.reasonShort')}: ${huy.reason}` : t('status.cancel')}>
+      {t('status.cancel')} · {d}
+    </span>
+  );
+}
+
 /** ▶ ■ ↺ ✎ 🗑 (mục 8.6.4) */
 export function QuickActions({ row, today }: { row: Row; today: string }) {
   const { t } = useTranslation();
   const openDrawer = useApp((s) => s.openDrawer);
-  const running = row.level === 'ngay' ? !!row.item.a1 && !row.item.a2 : !!row.item.bdtt && !row.item.kttt;
+  const cancelled = !!row.item.huy;
+  const running = !cancelled && (row.level === 'ngay' ? !!row.item.a1 && !row.item.a2 : !!row.item.bdtt && !row.item.kttt);
   const done = row.level === 'ngay' ? !!row.item.a2 : !!row.item.kttt;
   const clock =
     row.level === 'ngay' && running ? (
@@ -366,16 +379,25 @@ export function QuickActions({ row, today }: { row: Row; today: string }) {
     {clock}
     <div className="qa">
       {clock ? null : (
-        <button className="icon-btn sm qa-start" title={t('qa.start')} aria-label={t('qa.start')} onClick={() => quickAction(row.level, row.id, 'start')} disabled={running && row.level !== 'ngay'}>
+        <button className="icon-btn sm qa-start" title={t('qa.start')} aria-label={t('qa.start')} onClick={() => quickAction(row.level, row.id, 'start')} disabled={cancelled || (running && row.level !== 'ngay')}>
           <IPlay size={13} />
         </button>
       )}
-      <button className="icon-btn sm qa-end" title={t('qa.end')} aria-label={t('qa.end')} onClick={() => quickAction(row.level, row.id, 'end')} disabled={done && !running}>
+      <button className="icon-btn sm qa-end" title={t('qa.end')} aria-label={t('qa.end')} onClick={() => quickAction(row.level, row.id, 'end')} disabled={cancelled || (done && !running)}>
         <IStop size={13} />
       </button>
-      <button className="icon-btn sm" title={t('qa.reset')} aria-label={t('qa.reset')} onClick={() => quickAction(row.level, row.id, 'reset')}>
+      <button className="icon-btn sm" title={t('qa.reset')} aria-label={t('qa.reset')} onClick={() => quickAction(row.level, row.id, 'reset')} disabled={cancelled}>
         <IReset size={14} />
       </button>
+      {cancelled ? (
+        <button className="icon-btn sm qa-restore" title={t('cancel.restore')} aria-label={t('cancel.restore')} onClick={() => restoreCancelled(row.level, [row.id])}>
+          <IUndo size={14} />
+        </button>
+      ) : (
+        <button className="icon-btn sm qa-cancel" title={t('cancel.button')} aria-label={t('cancel.button')} onClick={() => cancelFlow(row.level, [row.id])}>
+          <IBan size={14} />
+        </button>
+      )}
       <button className="icon-btn sm" title={t('qa.edit')} aria-label={t('qa.edit')} onClick={() => openDrawer({ level: row.level, id: row.id })}>
         <IEdit size={14} />
       </button>

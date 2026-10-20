@@ -11,7 +11,8 @@ import { useApp } from '../../store/app.ts';
 import { useToday } from '../../lib/hooks.ts';
 import { hhmm } from '../../lib/fmt.ts';
 import { LOAI_KEY, STATUS_KEY } from '../../lib/labels.ts';
-import { ILock, IX } from '../Common/Icons.tsx';
+import { IBan, ILock, IUndo, IX } from '../Common/Icons.tsx';
+import { cancelFlow, restoreCancelled } from '../../lib/flows.ts';
 import { optLabel, useOpts } from '../../lib/opts.ts';
 
 type Form = Record<string, string>;
@@ -157,9 +158,15 @@ function DrawerInner() {
   const thangOpts = [...data.thang].sort((a, b) => b.ma.localeCompare(a.ma));
   const tuanOpts = [...data.tuan].sort((a, b) => b.ma.localeCompare(a.ma));
 
+  const huy = (item as { huy?: { at: string; reason?: string } | null } | undefined)?.huy ?? null;
   const statusField = (
     <Field label={t('col.status')}>
-      {kids ? (
+      {huy ? (
+        <span className="locked-field" title={t('cancel.locked')}>
+          <IBan size={13} />
+          {t('cancel.lockedShort')}
+        </span>
+      ) : kids ? (
         <span className="locked-field" title={t('grid.autoStatus')}>
           <ILock size={13} />
           {t('grid.autoStatus')}
@@ -224,6 +231,17 @@ function DrawerInner() {
           </button>
         </header>
         <div className="drawer-body">
+          {huy && (
+            <div className="cancel-banner" role="note">
+              <IBan size={15} />
+              <span>
+                <b>{t('cancel.bannerTitle', { d: `${huy.at.slice(8, 10)}/${huy.at.slice(5, 7)}/${huy.at.slice(0, 4)}` })}</b>
+                {huy.reason && <span> · {huy.reason}</span>}
+                <br />
+                <small>{t('cancel.bannerHint')}</small>
+              </span>
+            </div>
+          )}
           {level === 'thang' && (
             <>
               <Field label={t('col.loai')}>
@@ -331,6 +349,18 @@ function DrawerInner() {
           )}
         </div>
         <footer className="drawer-foot">
+          {dr.id &&
+            (huy ? (
+              <button className="btn btn-ghost foot-left" onClick={() => { restoreCancelled(level, [dr.id!]); close(); }}>
+                <IUndo size={14} />
+                {t('cancel.restore')}
+              </button>
+            ) : (
+              <button className="btn btn-ghost foot-left danger-text" onClick={() => { close(); cancelFlow(level, [dr.id!]); }}>
+                <IBan size={14} />
+                {t('cancel.button')}
+              </button>
+            ))}
           <button className="btn" onClick={close}>
             {t('common.cancel')}
           </button>

@@ -30,8 +30,12 @@ export interface ConfirmState {
   title: string;
   message: string;
   confirmLabel?: string;
+  /** nhãn nút đóng (mặc định "Hủy") */
+  cancelLabel?: string;
   danger?: boolean;
-  onConfirm: () => void | Promise<void>;
+  /** ô nhập kèm theo (vd. lý do hủy); giá trị truyền vào onConfirm */
+  input?: { label: string; placeholder?: string };
+  onConfirm: (value?: string) => void | Promise<void>;
 }
 export interface TipData {
   level: Level;

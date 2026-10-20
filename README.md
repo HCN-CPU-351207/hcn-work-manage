@@ -42,6 +42,13 @@ Vì so theo giờ sửa, hãy để đồng hồ PC và điện thoại ở ch�
 - Bảng gồm: 3 vòng chỉ số (tiến độ, thời gian đã trôi, ngày còn lại) kèm kết luận nhanh/chậm; đường tiến độ thực tế so với kế hoạch; cột giờ làm theo tuần (CV Tháng) hoặc theo ngày (CV Tuần); phân bổ thời gian theo Phân loại / Vị trí / người; danh sách việc con; độ chính xác kế hoạch; việc sắp tới và đang trễ. Bấm vào việc con để nhảy tới việc đó.
 - **Lọc theo cột kiểu Excel:** rê chuột lên tiêu đề cột → nút ▾ → sắp xếp tăng/giảm, tìm giá trị, tích chọn giá trị (kèm số lượng), OK. Cột đang lọc đổi màu; nút *Lọc N cột* trên thanh lọc để xóa nhanh. Bộ lọc cột được lưu cùng **Lưu bộ lọc**.
 
+## Hủy công việc
+
+- Nút **⊘ Hủy việc** ở cột thao tác, khung sửa, bảng Tổng quan dự án và thanh chọn nhiều việc; có thể ghi lý do. Nút **Khôi phục** để bỏ hủy (hoặc bấm *Hoàn tác* ngay sau khi hủy).
+- "Đã hủy" là dấu riêng: trạng thái, ngày và giờ thực tế đã làm **vẫn giữ nguyên**; tiến độ lúc hủy được lưu (ví dụ 60%). Việc hiện mờ, gạch ngang, nhãn "Đã hủy · ngày", thanh Gantt sọc xám.
+- Hủy CV Tháng / Tuần thì các việc con **chưa xong** bị hủy theo, việc con đã xong giữ nguyên; khôi phục việc cha thì việc con bị hủy theo cũng được khôi phục.
+- Việc đã hủy không tính vào tiến độ việc cha đang chạy, không quá hạn, không nhắc việc, không vào chuông và thẻ tổng quan. Lọc được bằng trạng thái "Đã hủy" hoặc lọc cột.
+
 ## Thông báo trễ hạn
 
 Bật trong **Cài đặt > Thông báo**:

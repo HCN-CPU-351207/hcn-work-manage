@@ -7,14 +7,14 @@ import { projectStats } from '../../core/projectStats.ts';
 import type { ProjectStats, Slice } from '../../core/projectStats.ts';
 import { durationLabel } from '../../core/time.ts';
 import { useApp } from '../../store/app.ts';
-import { quickAction } from '../../lib/flows.ts';
+import { cancelFlow, quickAction, restoreCancelled } from '../../lib/flows.ts';
 import { fmtDate } from '../../lib/fmt.ts';
 import { useDerived, usePeopleMap } from '../../lib/hooks.ts';
 import { LOAI_KEY, cx } from '../../lib/labels.ts';
 import { optLabel, optMap, useOpts } from '../../lib/opts.ts';
 import { Avatar, StatusChip } from '../Common/bits.tsx';
 import { CatChip } from '../Common/OptChip.tsx';
-import { IEdit, IGantt, IPlay, IStop, IX } from '../Common/Icons.tsx';
+import { IBan, IEdit, IGantt, IPlay, IStop, IUndo, IX } from '../Common/Icons.tsx';
 import { BurnChart, Donut, PairBars, Ring, StackBar } from '../Charts/Charts.tsx';
 
 const ddmm = (d: string | null) => (d ? `${d.slice(8, 10)}/${d.slice(5, 7)}` : '—');
@@ -83,7 +83,7 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
             <IEdit size={13} />
             {t('qa.edit')}
           </button>
-          {!item.kttt && (
+          {!item.kttt && !item.huy && (
             <button className="btn btn-sm" onClick={() => quickAction(level, id, running ? 'end' : 'start')}>
               {running ? <IStop size={12} /> : <IPlay size={12} />}
               {running ? t('qa.end') : t('qa.start')}
@@ -93,6 +93,17 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
             <IGantt size={13} />
             {t('pp.openGantt')}
           </button>
+          {item.huy ? (
+            <button className="btn btn-sm" onClick={() => restoreCancelled(level, [id])}>
+              <IUndo size={13} />
+              {t('cancel.restore')}
+            </button>
+          ) : (
+            <button className="btn btn-sm danger-text" onClick={() => cancelFlow(level, [id])}>
+              <IBan size={13} />
+              {t('cancel.button')}
+            </button>
+          )}
         </div>
       </header>
 
@@ -108,10 +119,10 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
               label={t('pp.elapsed')}
             />
             <Ring
-              value={st.daysLeft === null || !st.totalDays ? 0 : st.daysLeft < 0 ? 1 : Math.min(1, st.daysLeft / st.totalDays)}
+              value={item.huy || st.daysLeft === null || !st.totalDays ? 0 : st.daysLeft < 0 ? 1 : Math.min(1, st.daysLeft / st.totalDays)}
               color={st.daysLeft !== null && st.daysLeft < 0 ? 'var(--bad)' : 'var(--warn)'}
-              big={st.daysLeft === null ? '—' : String(Math.abs(st.daysLeft))}
-              small={st.daysLeft === null ? undefined : t('pp.days')}
+              big={item.huy || st.daysLeft === null ? '—' : String(Math.abs(st.daysLeft))}
+              small={item.huy || st.daysLeft === null ? undefined : t('pp.days')}
               label={st.daysLeft !== null && st.daysLeft < 0 ? t('pp.lateBy') : t('pp.left')}
             />
           </div>
@@ -190,7 +201,8 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
               { key: 'done', value: st.counts.done, cls: 'sb-done', label: t('status.done') },
               { key: 'doing', value: st.counts.doing, cls: 'sb-doing', label: t('status.doing') },
               { key: 'over', value: st.counts.overdue, cls: 'sb-over', label: t(level === 'thang' ? 'status.overdue' : 'pp.lateNgay') },
-              { key: 'todo', value: st.counts.todo, cls: 'sb-todo', label: t('status.todo') }
+              { key: 'todo', value: st.counts.todo, cls: 'sb-todo', label: t('status.todo') },
+              ...(st.counts.cancel ? [{ key: 'cancel', value: st.counts.cancel, cls: 'sb-cancel', label: t('status.cancel') }] : [])
             ]}
           />
           {st.children.length === 0 ? (
@@ -198,10 +210,11 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
           ) : (
             <ul className="pp-kids">
               {st.children.slice(0, 40).map((c) => {
-                const late = c.status === 'Quá hạn' || (c.level === 'ngay' && c.status !== 'Hoàn thành' && !!c.dl && c.dl < today);
+                const late = c.status === 'Quá hạn' || (c.level === 'ngay' && c.status !== 'Hoàn thành' && c.status !== 'Đã hủy' && !!c.dl && c.dl < today);
+                const cancelled = c.status === 'Đã hủy';
                 return (
                   <li key={c.id}>
-                    <button className="pp-kid" onClick={() => navigateTo(c.level, c.id)} title={t('pp.goto')}>
+                    <button className={cx('pp-kid', cancelled && 'is-cancel')} onClick={() => navigateTo(c.level, c.id)} title={t('pp.goto')}>
                       <span className="code-tag">{c.ma}</span>
                       <span className="pp-kid-t">{c.ten || t('common.untitled')}</span>
                       {c.progress !== null ? (
@@ -214,8 +227,10 @@ function PanelInner({ level, id }: { level: 'thang' | 'tuan'; id: string }) {
                       ) : (
                         <span className="pp-kid-p dim">{c.time ?? ''}</span>
                       )}
-                      <span className={cx('chip-s', c.status === 'Hoàn thành' ? 'ok' : late ? 'bad' : c.status === 'Đang làm' ? 'info' : 'idle')}>
-                        {c.status === 'Hoàn thành'
+                      <span className={cx('chip-s', cancelled ? 'cancel' : c.status === 'Hoàn thành' ? 'ok' : late ? 'bad' : c.status === 'Đang làm' ? 'info' : 'idle')}>
+                        {cancelled
+                          ? t('status.cancel')
+                          : c.status === 'Hoàn thành'
                           ? t('pp.doneOn', { d: ddmm(c.doneOn ?? c.dl) })
                           : late && c.level === 'tuan' && c.dl
                             ? t('pp.lateDays', { n: Math.max(1, Math.round((Date.parse(today) - Date.parse(c.dl)) / 86400000)) })
@@ -324,6 +339,8 @@ function VerdictLine({ st, unit }: { st: ProjectStats; unit: string }) {
             ? ['ok', t('pp.v.ontrack')]
             : v.kind === 'behind'
               ? ['warn', t('pp.v.behind', { p: v.pct, n: v.need, unit })]
-              : ['idle', t('pp.v.nodates')];
+              : v.kind === 'cancelled'
+                ? ['cancel', `${t('pp.v.cancelled', { d: `${v.at.slice(8, 10)}/${v.at.slice(5, 7)}/${v.at.slice(0, 4)}`, p: Math.round(st.progress * 100) })}${v.reason ? ` · ${v.reason}` : ''}`]
+                : ['idle', t('pp.v.nodates')];
   return <div className={cx('pp-verdict', cls)}>{text}</div>;
 }

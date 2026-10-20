@@ -1,5 +1,5 @@
 // Hộp xác nhận, thông báo nổi (toast) và toast cập nhật
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../store/app.ts';
 import { cx } from '../../lib/labels.ts';
@@ -11,27 +11,47 @@ export function ConfirmDialog() {
   const c = useApp((s) => s.confirm);
   const ask = useApp((s) => s.askConfirm);
   const okRef = useRef<HTMLButtonElement>(null);
+  const inRef = useRef<HTMLInputElement>(null);
+  const [val, setVal] = useState('');
   useEffect(() => {
-    if (c) okRef.current?.focus();
+    setVal('');
+    if (c?.input) inRef.current?.focus();
+    else if (c) okRef.current?.focus();
   }, [c]);
   if (!c) return null;
   const close = () => ask(null);
+  const ok = async () => {
+    close();
+    await c.onConfirm(c.input ? val : undefined);
+  };
   return (
     <div className="modal-backdrop" onMouseDown={close}>
       <div className="confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" onMouseDown={(e) => e.stopPropagation()}>
         <h2 id="confirm-title">{c.title}</h2>
         <p>{c.message}</p>
+        {c.input && (
+          <label className="field confirm-input">
+            <span>{c.input.label}</span>
+            <input
+              ref={inRef}
+              value={val}
+              maxLength={200}
+              placeholder={c.input.placeholder}
+              onChange={(e) => setVal(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') void ok();
+              }}
+            />
+          </label>
+        )}
         <div className="confirm-actions">
           <button className="btn" onClick={close}>
-            {t('common.cancel')}
+            {c.cancelLabel ?? t('common.cancel')}
           </button>
           <button
             ref={okRef}
             className={cx('btn', c.danger ? 'btn-danger' : 'btn-primary')}
-            onClick={async () => {
-              close();
-              await c.onConfirm();
-            }}
+            onClick={() => void ok()}
           >
             {c.confirmLabel ?? t('common.ok')}
           </button>

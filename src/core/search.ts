@@ -138,6 +138,7 @@ function quickMatches(r: RowFacts, quick: Quick | null, ctx: FilterCtx): boolean
     case 'overdue':
       return !isNgay && r.display === 'Quá hạn';
     case 'duesoon':
+      if (r.display === 'Đã hủy') return false;
       return isNgay
         ? !!r.start && r.raw !== 'Hoàn thành' && r.start >= ctx.today && r.start <= addDays(ctx.today, ctx.dueDays)
         : isDueSoon(r.end, r.raw, ctx.today, ctx.dueDays);

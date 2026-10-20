@@ -39,7 +39,8 @@
     "todo": "To do",
     "doing": "In progress",
     "done": "Done",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "cancel": "Cancelled"
   },
   "loai": {
     "ui": "Urgent - Important",
@@ -589,7 +590,8 @@
       "ahead": "{{p}}% ahead of plan",
       "ontrack": "On track",
       "behind": "{{p}}% behind plan · finish {{n}} more {{unit}} to catch up",
-      "nodates": "Set start and deadline dates to compare with the plan"
+      "nodates": "Set start and deadline dates to compare with the plan",
+      "cancelled": "Cancelled on {{d}} · {{p}}% done at cancellation"
     }
   },
   "colf": {
@@ -606,5 +608,24 @@
     "blank": "(Blank)",
     "chip": "{{n}} column filters",
     "sorted": "Sorted by column"
+  },
+  "cancel": {
+    "button": "Cancel task",
+    "restore": "Restore",
+    "title": "Cancel {{n}} task(s)?",
+    "msgNgay": "The task and the time already worked are kept; it just no longer counts as work to do. You can restore it at any time.",
+    "msgParent": "Unfinished child tasks are cancelled too; finished ones and worked time are kept, and progress at cancellation is preserved. You can restore at any time.",
+    "confirm": "Cancel task",
+    "reason": "Reason (optional)",
+    "reasonPh": "e.g. Client put the project on hold",
+    "reasonShort": "Cancel reason",
+    "done": "Cancelled {{n}} task(s)",
+    "undo": "Undo",
+    "restored": "Restored {{n}} task(s)",
+    "locked": "This task is cancelled: restore it before changing status or timing.",
+    "lockedShort": "Cancelled (restore to edit)",
+    "bannerTitle": "Cancelled on {{d}}",
+    "bannerHint": "Progress, finished child tasks and worked hours are kept for reference.",
+    "keep": "Keep task"
   }
 }

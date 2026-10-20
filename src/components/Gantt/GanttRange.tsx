@@ -139,7 +139,7 @@ export function GanttRange({
           {rows.length === 0 && <div className="g-empty">{emptyText}</div>}
           {rows.map((r, ri) => {
             const plan = span(r.item.bd, r.item.dl);
-            const runN = runningDays(r.item, today);
+            const runN = r.item.huy ? null : runningDays(r.item, today);
             const actEnd = r.actualEnd ?? (r.actualStart ? today : null);
             const act = r.actualStart ? span(r.actualStart, actEnd) : null;
             const tone = actualTone({ start: r.actualStart, end: r.actualEnd }, r.item.dl, today);

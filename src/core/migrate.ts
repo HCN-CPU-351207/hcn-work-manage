@@ -3,7 +3,7 @@ import { syncCounters, formatCode } from './codes.ts';
 import { isDate } from './dates.ts';
 import { newId } from './ids.ts';
 import { LOAI_LIST, SCHEMA_VERSION, STATUSES } from './model.ts';
-import type { Counters, Data, Loai, Ngay, Opt, Person, Status, Thang, Tuan } from './model.ts';
+import type { Cancel, Counters, Data, Loai, Ngay, Opt, Person, Status, Thang, Tuan } from './model.ts';
 
 export type MigrationErrorCode = 'INVALID_FILE' | 'FUTURE_SCHEMA' | 'MIGRATION_FAILED';
 export class MigrationError extends Error {
@@ -96,8 +96,17 @@ function normPerson(x: unknown, i: number): Person | null {
 
 const optRef = (x: unknown): string | null => (typeof x === 'string' && x ? x : null);
 /** chỉ thêm trường khi có giá trị (giữ dữ liệu cũ y nguyên) */
+const asCancel = (x: unknown): Cancel | null => {
+  if (!isObj(x) || typeof x.at !== 'string' || !x.at) return null;
+  const c: Cancel = { at: x.at.slice(0, 19) };
+  if (typeof x.reason === 'string' && x.reason.trim()) c.reason = x.reason.trim().slice(0, 200);
+  if (typeof x.root === 'string' && x.root) c.root = x.root;
+  return c;
+};
 const extra = (x: Obj, ngay: boolean): Record<string, unknown> => {
   const o: Record<string, unknown> = {};
+  const h = asCancel(x.huy);
+  if (h) o.huy = h;
   const c = optRef(x.cat);
   if (c) o.cat = c;
   if (ngay) {

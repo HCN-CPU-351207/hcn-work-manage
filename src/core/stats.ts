@@ -4,6 +4,8 @@ import { actualMinutes, plannedMinutes } from './time.ts';
 
 /** phút của một việc: giờ thực tế nếu đã có bắt đầu và kết thúc, chưa có thì lấy giờ kế hoạch */
 export function workMinutes(n: Ngay): { min: number; actual: boolean } {
+  // việc đã hủy: chỉ tính giờ đã thực sự làm
+  if (n.huy && !(n.a1 && n.a2)) return { min: 0, actual: false };
   if (n.a1 && n.a2) {
     const a = actualMinutes(n);
     if (a !== null && a > 0) return { min: a, actual: true };

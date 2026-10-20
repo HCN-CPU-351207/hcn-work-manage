@@ -76,9 +76,9 @@ export function buildRows(level: Level, data: Data, d: Derived, people: Map<stri
   const wMa = new Map(data.tuan.map((w) => [w.id, w.ma]));
   return sortNgay(data.ngay).map((x): NgayRow => ({
     level: 'ngay', id: x.id, ma: x.ma, ten: x.ten, personId: x.personId, person: x.personId ? people.get(x.personId) : undefined,
-    display: x.tt, raw: x.tt, progress: null, childCount: 0, locked: false,
+    display: x.huy ? 'Đã hủy' : x.tt, raw: x.tt, progress: null, childCount: 0, locked: false,
     item: x, parentMa: wMa.get(x.parentId) ?? '', conflict: d.conflicts.has(x.id),
-    facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: x.tt, raw: x.tt, start: x.ngay || null, end: x.ngay || null, ...ex(x) }
+    facts: { ma: x.ma, ten: x.ten, person: pname(x.personId), personId: x.personId, display: x.huy ? 'Đã hủy' : x.tt, raw: x.tt, start: x.ngay || null, end: x.ngay || null, ...ex(x) }
   }));
 }
 

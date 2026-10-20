@@ -11,8 +11,10 @@ export function agg(list: Status[], manual: Status): Status {
 }
 
 export const rawNgay = (n: Ngay): Status => n.tt;
-export const ngaysOf = (t: Tuan, ngays: Ngay[]): Ngay[] => ngays.filter((n) => n.parentId === t.id);
-export const tuansOf = (m: Thang, tuans: Tuan[]): Tuan[] => tuans.filter((t) => t.parentMa === m.ma);
+/** việc đã hủy không tính vào trạng thái / tiến độ của việc cha */
+export const live = <T extends { huy?: unknown }>(x: T): boolean => !x.huy;
+export const ngaysOf = (t: Tuan, ngays: Ngay[]): Ngay[] => ngays.filter((n) => n.parentId === t.id && live(n));
+export const tuansOf = (m: Thang, tuans: Tuan[]): Tuan[] => tuans.filter((t) => t.parentMa === m.ma && live(t));
 
 export const rawTuan = (t: Tuan, ngays: Ngay[]): Status => agg(ngaysOf(t, ngays).map((n) => n.tt), t.tt);
 export const rawThang = (m: Thang, tuans: Tuan[], ngays: Ngay[]): Status =>
@@ -22,9 +24,10 @@ export function over(raw: Status, dl: string | null, today: string): Display {
   if (raw !== 'Hoàn thành' && dl && dl < today) return 'Quá hạn';
   return raw;
 }
-export const displayTuan = (t: Tuan, ngays: Ngay[], today: string): Display => over(rawTuan(t, ngays), t.dl, today);
+export const displayTuan = (t: Tuan, ngays: Ngay[], today: string): Display => (t.huy ? 'Đã hủy' : over(rawTuan(t, ngays), t.dl, today));
 export const displayThang = (m: Thang, tuans: Tuan[], ngays: Ngay[], today: string): Display =>
-  over(rawThang(m, tuans, ngays), m.dl, today);
+  m.huy ? 'Đã hủy' : over(rawThang(m, tuans, ngays), m.dl, today);
+export const displayNgay = (n: Ngay): Display => (n.huy ? 'Đã hủy' : n.tt);
 
 export function progress(list: Status[], raw: Status): number {
   if (list.length > 0) return list.filter((s) => s === 'Hoàn thành').length / list.length;
@@ -40,7 +43,7 @@ export interface Actual {
 }
 
 export function actualTuan(t: Tuan, ngays: Ngay[]): Actual {
-  const kids = ngaysOf(t, ngays);
+  const kids = ngays.filter((n) => n.parentId === t.id);
   const started = kids.filter((n) => n.tt !== 'Chưa làm').map((n) => n.ngay).sort();
   const all = kids.map((n) => n.ngay).sort();
   return {
@@ -59,7 +62,7 @@ export function actualThang(m: Thang, tuans: Tuan[], ngays: Ngay[]): Actual {
   };
 }
 
-export const isDueSoon = (dl: string | null, raw: Status, today: string, days: number): boolean =>
+export const isDueSoon = (dl: string | null, raw: Status | Display, today: string, days: number): boolean =>
   raw !== 'Hoàn thành' && !!dl && dl >= today && dl <= addDays(today, days);
 
 /** Màu dải thực tế (Gantt): xanh = xong đúng hạn, vàng = đang làm, đỏ = trễ hạn */
@@ -82,56 +85,60 @@ export interface Derived {
   conflicts: Set<string>;
 }
 
-/** Tính một lần cho toàn bộ dữ liệu (nhóm con trước để không O(n^2)) */
+/** Tính một lần cho toàn bộ dữ liệu (nhóm con trước để không O(n^2)).
+ * Việc con đã hủy không tính vào việc cha đang chạy; riêng việc đã hủy thì tính trên mọi việc con
+ * để giữ đúng tiến độ lúc hủy (việc con chưa xong bị hủy kéo theo). */
 export function derive(data: Data, today: string): Derived {
-  const ngaysByTuan = new Map<string, Ngay[]>();
-  for (const n of data.ngay) {
-    const a = ngaysByTuan.get(n.parentId);
-    if (a) a.push(n);
-    else ngaysByTuan.set(n.parentId, [n]);
-  }
-  const tuansByMa = new Map<string, Tuan[]>();
-  for (const t of data.tuan) {
-    const a = tuansByMa.get(t.parentMa);
-    if (a) a.push(t);
-    else tuansByMa.set(t.parentMa, [t]);
-  }
+  const group = <T,>(list: T[], key: (x: T) => string) => {
+    const m = new Map<string, T[]>();
+    for (const x of list) {
+      const k = key(x);
+      const a = m.get(k);
+      if (a) a.push(x);
+      else m.set(k, [x]);
+    }
+    return m;
+  };
+  const ngaysAll = group(data.ngay, (n) => n.parentId);
+  const tuansAll = group(data.tuan, (t) => t.parentMa);
   const tuan = new Map<string, RowInfo>();
   for (const t of data.tuan) {
-    const kids = ngaysByTuan.get(t.id) ?? [];
+    const all = ngaysAll.get(t.id) ?? [];
+    const kids = t.huy ? all : all.filter(live);
     const raw = agg(kids.map((n) => n.tt), t.tt);
     const sorted = kids.map((n) => n.ngay).sort();
     const started = kids.filter((n) => n.tt !== 'Chưa làm').map((n) => n.ngay).sort();
     tuan.set(t.id, {
       raw,
-      display: over(raw, t.dl, today),
+      display: t.huy ? 'Đã hủy' : over(raw, t.dl, today),
       progress: progress(kids.map((n) => n.tt), raw),
       actual: {
         start: t.bdtt ?? (started.length ? started[0] : null),
         end: t.kttt ?? (raw === 'Hoàn thành' && sorted.length ? sorted[sorted.length - 1] : null)
       },
-      childCount: kids.length
+      childCount: all.length
     });
   }
   const thang = new Map<string, RowInfo>();
   for (const m of data.thang) {
-    const kids = tuansByMa.get(m.ma) ?? [];
+    const all = tuansAll.get(m.ma) ?? [];
+    const kids = m.huy ? all : all.filter(live);
     const infos = kids.map((t) => tuan.get(t.id)!);
     const raw = agg(infos.map((i) => i.raw), m.tt);
     const starts = infos.map((i) => i.actual.start).filter((x): x is string => !!x).sort();
     const ends = infos.map((i) => i.actual.end).filter((x): x is string => !!x).sort();
     thang.set(m.id, {
       raw,
-      display: over(raw, m.dl, today),
+      display: m.huy ? 'Đã hủy' : over(raw, m.dl, today),
       progress: progress(infos.map((i) => i.raw), raw),
       actual: {
         start: m.bdtt ?? (starts.length ? starts[0] : null),
         end: m.kttt ?? (raw === 'Hoàn thành' && ends.length ? ends[ends.length - 1] : null)
       },
-      childCount: kids.length
+      childCount: all.length
     });
   }
-  return { thang, tuan, conflicts: conflictIds(data.ngay) };
+  return { thang, tuan, conflicts: conflictIds(data.ngay.filter(live)) };
 }
 
 export interface Metrics {
@@ -142,8 +149,9 @@ export interface Metrics {
 }
 /** Số liệu 4 thẻ Module 1, tính trên CV Tháng (displayThang) */
 export function metrics(data: Data, d: Derived): Metrics {
-  const m: Metrics = { total: data.thang.length, doing: 0, overdue: 0, done: 0 };
+  const m: Metrics = { total: data.thang.filter((t) => !t.huy).length, doing: 0, overdue: 0, done: 0 };
   for (const t of data.thang) {
+    if (t.huy) continue;
     const s = d.thang.get(t.id)!.display;
     if (s === 'Đang làm') m.doing++;
     else if (s === 'Quá hạn') m.overdue++;
@@ -166,6 +174,7 @@ export const bellKey = (i: BellItem): string => `${i.level}:${i.id}:${i.kind}:${
 export function bellItems(data: Data, d: Derived, today: string, days: number): BellItem[] {
   const out: BellItem[] = [];
   const push = (level: 'thang' | 'tuan', x: Thang | Tuan, info: RowInfo) => {
+    if (x.huy) return;
     if (info.display === 'Quá hạn') out.push({ level, id: x.id, ma: x.ma, ten: x.ten, dl: x.dl, kind: 'overdue' });
     else if (isDueSoon(x.dl, info.raw, today, days)) out.push({ level, id: x.id, ma: x.ma, ten: x.ten, dl: x.dl, kind: 'soon' });
   };

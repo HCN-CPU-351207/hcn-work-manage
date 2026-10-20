@@ -39,7 +39,8 @@
     "todo": "À faire",
     "doing": "En cours",
     "done": "Terminée",
-    "overdue": "En retard"
+    "overdue": "En retard",
+    "cancel": "Annulée"
   },
   "loai": {
     "ui": "Urgent - Important",
@@ -589,7 +590,8 @@
       "ahead": "{{p}} % en avance",
       "ontrack": "Dans les temps",
       "behind": "{{p}} % de retard · terminez encore {{n}} {{unit}} pour rattraper",
-      "nodates": "Définissez début et échéance pour comparer au plan"
+      "nodates": "Définissez début et échéance pour comparer au plan",
+      "cancelled": "Annulée le {{d}} · {{p}} % fait à l'annulation"
     }
   },
   "colf": {
@@ -606,5 +608,24 @@
     "blank": "(Vide)",
     "chip": "{{n}} filtres de colonne",
     "sorted": "Trié par colonne"
+  },
+  "cancel": {
+    "button": "Annuler la tâche",
+    "restore": "Rétablir",
+    "title": "Annuler {{n}} tâche(s) ?",
+    "msgNgay": "La tâche et le temps déjà travaillé sont conservés ; elle ne compte simplement plus comme travail à faire. Rétablissable à tout moment.",
+    "msgParent": "Les sous-tâches non terminées sont annulées aussi ; celles terminées et le temps travaillé restent, l'avancement est conservé. Rétablissable à tout moment.",
+    "confirm": "Annuler",
+    "reason": "Raison (facultatif)",
+    "reasonPh": "ex. Le client a suspendu le projet",
+    "reasonShort": "Raison de l'annulation",
+    "done": "{{n}} tâche(s) annulée(s)",
+    "undo": "Annuler",
+    "restored": "{{n}} tâche(s) rétablie(s)",
+    "locked": "Tâche annulée : rétablissez-la avant de changer le statut ou le chrono.",
+    "lockedShort": "Annulée (rétablir pour modifier)",
+    "bannerTitle": "Annulée le {{d}}",
+    "bannerHint": "L'avancement, les sous-tâches terminées et les heures travaillées sont conservés.",
+    "keep": "Garder"
   }
 }

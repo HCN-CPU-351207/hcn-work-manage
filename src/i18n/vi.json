@@ -39,7 +39,8 @@
     "todo": "Chưa làm",
     "doing": "Đang làm",
     "done": "Hoàn thành",
-    "overdue": "Quá hạn"
+    "overdue": "Quá hạn",
+    "cancel": "Đã hủy"
   },
   "loai": {
     "ui": "Gấp - Quan trọng",
@@ -589,7 +590,8 @@
       "ahead": "Nhanh hơn kế hoạch {{p}}%",
       "ontrack": "Đúng tiến độ kế hoạch",
       "behind": "Chậm {{p}}% so với kế hoạch · cần xong thêm {{n}} {{unit}} để bắt kịp",
-      "nodates": "Đặt ngày bắt đầu và hạn để so sánh với kế hoạch"
+      "nodates": "Đặt ngày bắt đầu và hạn để so sánh với kế hoạch",
+      "cancelled": "Đã hủy ngày {{d}} · tiến độ lúc hủy {{p}}%"
     }
   },
   "colf": {
@@ -606,5 +608,24 @@
     "blank": "(Trống)",
     "chip": "Lọc {{n}} cột",
     "sorted": "Đang sắp xếp theo cột"
+  },
+  "cancel": {
+    "button": "Hủy việc",
+    "restore": "Khôi phục",
+    "title": "Hủy {{n}} việc?",
+    "msgNgay": "Việc vẫn được giữ lại cùng giờ đã làm, chỉ không còn tính là việc phải làm. Có thể khôi phục bất cứ lúc nào.",
+    "msgParent": "Các việc con chưa xong sẽ bị hủy theo; việc con đã xong và giờ đã làm vẫn giữ nguyên. Tiến độ lúc hủy được lưu lại. Có thể khôi phục bất cứ lúc nào.",
+    "confirm": "Hủy việc",
+    "reason": "Lý do (không bắt buộc)",
+    "reasonPh": "vd. Khách hàng dừng dự án",
+    "reasonShort": "Lý do hủy",
+    "done": "Đã hủy {{n}} việc",
+    "undo": "Hoàn tác",
+    "restored": "Đã khôi phục {{n}} việc",
+    "locked": "Việc đã hủy: khôi phục trước khi đổi trạng thái hay bấm giờ.",
+    "lockedShort": "Đã hủy (khôi phục để sửa)",
+    "bannerTitle": "Đã hủy ngày {{d}}",
+    "bannerHint": "Tiến độ, việc con đã xong và giờ đã làm vẫn được giữ để tra cứu.",
+    "keep": "Không hủy"
   }
 }
