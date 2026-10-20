@@ -17,6 +17,7 @@ import { ProjectPanel } from './components/Panel/ProjectPanel.tsx';
 import { SettingsDialog } from './components/Settings/SettingsDialog.tsx';
 import { TaskTooltip } from './components/Tooltip/TaskTooltip.tsx';
 import { ConfirmDialog, Toasts, UpdateToast } from './components/Common/Overlays.tsx';
+import { SyncChoiceDialog } from './components/Settings/SyncChoiceDialog.tsx';
 import type { Tab } from './core/model.ts';
 
 const TABS: Tab[] = ['overview', 'thang', 'tuan', 'ngay'];
@@ -169,6 +170,7 @@ export function App() {
       <SettingsDialog />
       <TaskTooltip />
       <ConfirmDialog />
+      <SyncChoiceDialog />
       <UpdateToast />
       <Toasts />
     </div>

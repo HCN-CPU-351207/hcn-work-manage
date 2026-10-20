@@ -715,5 +715,32 @@
     "bannerTitle": "Cancelled on {{d}}",
     "bannerHint": "Progress, finished child tasks and worked hours are kept for reference.",
     "keep": "Keep task"
+  },
+  "choice": {
+    "title": "Choose how to sync",
+    "first": "Both the PC and the phone have data, and it differs. Choose how to sync:",
+    "riskPc": "Careful: an automatic merge would delete {{n}} tasks on the PC (because they were deleted on the phone earlier). Sync is paused so you can choose:",
+    "riskPhone": "Careful: an automatic merge would delete {{n}} tasks on the phone (because the PC deleted them). Sync is paused so you can choose:",
+    "tasks": "{{n}} tasks",
+    "phone": "Phone",
+    "merge": "Automatic by edit time",
+    "mergeDesc": "The newer edit overwrites the older one; a task deleted on one side is deleted on the other too.",
+    "pull": "PC → Phone",
+    "pullDesc": "The phone gets exactly the PC's data ({{n}} tasks).",
+    "pullRes": "Phone: loses {{lost}} tasks that only exist on the phone, {{rep}} tasks replaced by the PC version",
+    "push": "Phone → PC",
+    "pushDesc": "The PC gets exactly the phone's data ({{n}} tasks).",
+    "pushRes": "PC: loses {{lost}} tasks that only exist on the PC, {{rep}} tasks replaced by the phone version",
+    "upd": "changed {{n}}",
+    "del": "deleted {{n}}",
+    "suggest": "Safest",
+    "backupNote": "Before overwriting or deleting, the device being changed always makes a backup (PC: Settings > Data > Restore).",
+    "later": "Later",
+    "go": "Sync",
+    "goLoss": "Sync (lose {{n}} tasks)",
+    "done": "Synced ({{n}} changes)",
+    "paused": "Sync is paused: please choose how to sync.",
+    "open": "Choose now",
+    "pick": "Choose sync direction"
   }
 }

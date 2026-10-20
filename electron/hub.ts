@@ -2,7 +2,7 @@
 import crypto from 'node:crypto';
 import { createDataHub } from '../src/core/dataHub.ts';
 import type { Data } from '../src/core/model.ts';
-import { countDiff, initMeta, isMeta } from '../src/core/sync.ts';
+import { countDiff, initMeta, isMeta, needsChoice } from '../src/core/sync.ts';
 import type { SyncMeta } from '../src/core/sync.ts';
 import type { SaveResult, SyncAction, SyncActionResult, SyncInfo } from '../src/core/api.ts';
 import { emptySyncInfo } from '../src/core/api.ts';
@@ -32,6 +32,8 @@ export interface HubDeps {
   netInfo?: () => WinNetSnapshot | null;
   /** Windows: mở tường lửa cho cổng đồng bộ (hỏi quyền quản trị) */
   fixFirewall?: (ports: [number, number]) => Promise<boolean>;
+  /** sao lưu dữ liệu PC trước khi đồng bộ xóa / ghi đè */
+  backup?: (data: Data, reason: string) => void;
   /** đóng cửa sổ thì app vẫn chạy ở khay */
   keepsRunning?: () => boolean;
   /** bật / tắt trạm → cập nhật khay hệ thống */
@@ -82,23 +84,56 @@ export function createHubController(initialData: Data, deps: HubDeps) {
       file = { ...file, hub: { ...file.hub, devices: list } };
       persistMeta();
     },
-    handleSync: async (data, meta) => {
+    handleSync: async (data, meta, device, opts) => {
       await deps.requestFlush().catch(() => undefined);
       return serial(() => {
         const before = hub.state.data;
-        const r = hub.mergeRemote(data, meta, now());
-        if (r.changed) {
-          deps.saveData(r.data);
-          deps.onExternal(r.data, r.rev);
+        const t = now();
+        // PC → điện thoại: không đụng dữ liệu PC, trả nguyên bản PC
+        if (opts.mode === 'pull') {
+          lastSync = new Date(t).toISOString();
+          lastChanges = countDiff(data, before);
+          lastError = null;
+          deps.log.info(`${device.name}: lấy dữ liệu PC ghi đè điện thoại`);
+          return { data: before, meta: hub.state.meta, changes: lastChanges };
         }
+        if (opts.mode === 'merge') {
+          const stats = hub.preview(data, meta, t);
+          if (needsChoice(stats, opts.guard)) return { needsChoice: stats };
+          if (stats.pc.del > 0) safeBackup(before, 'sync');
+          const r = hub.mergeRemote(data, meta, t);
+          if (r.changed) {
+            deps.saveData(r.data);
+            deps.onExternal(r.data, r.rev);
+          }
+          persistMeta();
+          lastSync = new Date(t).toISOString();
+          lastChanges = countDiff(before, r.data) + countDiff(data, r.data);
+          lastError = null;
+          if (stats.pc.del > 0) deps.log.info(`${device.name}: đồng bộ xóa ${stats.pc.del} việc trên PC (đã sao lưu trước)`);
+          return { data: r.data, meta: r.meta, changes: lastChanges };
+        }
+        // điện thoại → PC: thay dữ liệu PC bằng dữ liệu điện thoại (đã sao lưu)
+        safeBackup(before, 'push');
+        const rev = hub.replace(data, t);
+        deps.saveData(hub.state.data);
+        deps.onExternal(hub.state.data, rev);
         persistMeta();
-        lastSync = new Date(now()).toISOString();
-        lastChanges = countDiff(before, r.data) + countDiff(data, r.data);
+        lastSync = new Date(t).toISOString();
+        lastChanges = countDiff(before, data);
         lastError = null;
-        return { data: r.data, meta: r.meta, changes: lastChanges };
+        deps.log.info(`${device.name}: lấy dữ liệu điện thoại ghi đè PC (${lastChanges} thay đổi, đã sao lưu)`);
+        return { data: hub.state.data, meta: hub.state.meta, changes: lastChanges };
       });
     }
   });
+  function safeBackup(d: Data, reason: string): void {
+    try {
+      deps.backup?.(d, reason);
+    } catch (e) {
+      deps.log.error('Không sao lưu được trước khi đồng bộ', e);
+    }
+  }
 
   const info = (): SyncInfo => {
     const net = server.running ? (deps.netInfo?.() ?? null) : null;

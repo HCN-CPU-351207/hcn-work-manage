@@ -715,5 +715,32 @@
     "bannerTitle": "Abgebrochen am {{d}}",
     "bannerHint": "Fortschritt, erledigte Unteraufgaben und Arbeitszeit bleiben zum Nachschlagen erhalten.",
     "keep": "Behalten"
+  },
+  "choice": {
+    "title": "Synchronisierung wählen",
+    "first": "PC und Telefon haben beide Daten, und sie unterscheiden sich. Wählen Sie, wie synchronisiert wird:",
+    "riskPc": "Achtung: Automatisches Zusammenführen würde {{n}} Aufgaben auf dem PC löschen (weil sie zuvor auf dem Telefon gelöscht wurden). Die Synchronisierung ist pausiert, damit Sie wählen können:",
+    "riskPhone": "Achtung: Automatisches Zusammenführen würde {{n}} Aufgaben auf dem Telefon löschen (weil der PC sie gelöscht hat). Die Synchronisierung ist pausiert, damit Sie wählen können:",
+    "tasks": "{{n}} Aufgaben",
+    "phone": "Telefon",
+    "merge": "Automatisch nach Änderungszeit",
+    "mergeDesc": "Die neuere Änderung überschreibt die ältere; eine auf einer Seite gelöschte Aufgabe wird auch auf der anderen gelöscht.",
+    "pull": "PC → Telefon",
+    "pullDesc": "Das Telefon erhält genau die Daten des PCs ({{n}} Aufgaben).",
+    "pullRes": "Telefon: verliert {{lost}} Aufgaben, die nur auf dem Telefon existieren, {{rep}} werden durch die PC-Version ersetzt",
+    "push": "Telefon → PC",
+    "pushDesc": "Der PC erhält genau die Daten des Telefons ({{n}} Aufgaben).",
+    "pushRes": "PC: verliert {{lost}} Aufgaben, die nur auf dem PC existieren, {{rep}} werden durch die Telefon-Version ersetzt",
+    "upd": "geändert {{n}}",
+    "del": "gelöscht {{n}}",
+    "suggest": "Am sichersten",
+    "backupNote": "Vor dem Überschreiben oder Löschen sichert das geänderte Gerät immer zuerst (PC: Einstellungen > Daten > Wiederherstellen).",
+    "later": "Später",
+    "go": "Synchronisieren",
+    "goLoss": "Synchronisieren ({{n}} Aufgaben gehen verloren)",
+    "done": "Synchronisiert ({{n}} Änderungen)",
+    "paused": "Synchronisierung pausiert: bitte Art der Synchronisierung wählen.",
+    "open": "Jetzt wählen",
+    "pick": "Richtung wählen"
   }
 }

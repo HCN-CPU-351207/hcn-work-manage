@@ -152,6 +152,10 @@ function boot(): void {
     onExternal: (data, rev) => send('hcn:external', { data, rev }),
     requestFlush,
     ...(winNet ? { netInfo: () => winNet!.get(), fixFirewall: (ports: [number, number]) => winNet!.fix(ports) } : {}),
+    backup: (d, reason) => {
+      const file = storage.preSyncBackup(d, reason);
+      log.info(`Đã sao lưu trước khi đồng bộ: ${file}`);
+    },
     keepsRunning: keepInTray,
     onEnabledChange: () => applyBackgroundSettings()
   });

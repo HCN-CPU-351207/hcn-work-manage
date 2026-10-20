@@ -8,7 +8,7 @@ import os from 'node:os';
 import type { Data } from '../src/core/model.ts';
 import { normalizeData } from '../src/core/migrate.ts';
 import { isMeta } from '../src/core/sync.ts';
-import type { SyncMeta } from '../src/core/sync.ts';
+import type { SyncGuard, SyncMeta, SyncMode, SyncStats } from '../src/core/sync.ts';
 import type { LinkKind, SyncLink } from '../src/core/api.ts';
 
 export const DEFAULT_PORT = 47821;
@@ -29,8 +29,16 @@ export interface SyncServerDeps {
   version: string;
   getDevices(): SyncDevice[];
   setDevices(list: SyncDevice[]): void;
-  /** gộp dữ liệu máy con và trả kết quả cuối cùng */
-  handleSync(data: Data, meta: SyncMeta, device: SyncDevice): Promise<{ data: Data; meta: SyncMeta; changes: number }>;
+  /**
+   * Gộp dữ liệu máy con và trả kết quả cuối cùng; hoặc trả `needsChoice` (không ghi gì)
+   * khi lần đồng bộ này cần người dùng chọn cách (sắp xóa nhiều việc, lần đầu hai bên khác nhau).
+   */
+  handleSync(
+    data: Data,
+    meta: SyncMeta,
+    device: SyncDevice,
+    opts: { mode: SyncMode; guard: SyncGuard }
+  ): Promise<{ data: Data; meta: SyncMeta; changes: number } | { needsChoice: SyncStats }>;
   onPaired?(device: SyncDevice): void;
   log?: { info(m: string): void; warn(m: string): void };
 }
@@ -175,13 +183,24 @@ export function createSyncServer(deps: SyncServerDeps) {
     if (req.method === 'POST' && url === '/hcn/sync') {
       const device = auth(req);
       if (!device) return send(res, 401, { error: 'unpaired' });
-      const body = (await readJson(req)) as { data?: unknown; meta?: unknown; schemaVersion?: number };
+      const body = (await readJson(req)) as { data?: unknown; meta?: unknown; schemaVersion?: number; mode?: string; guard?: string };
       if ((body.schemaVersion ?? 1) !== 1) return send(res, 409, { error: 'schema' });
       if (!body.data || typeof body.data !== 'object' || !isMeta(body.meta)) return send(res, 400, { error: 'bad-request' });
       const data = normalizeData(body.data as Record<string, unknown>);
-      const result = await deps.handleSync(data, body.meta, device);
+      const mode: SyncMode = body.mode === 'pull' || body.mode === 'push' ? body.mode : 'merge';
+      const guards: SyncGuard[] = ['first', 'normal', 'preview', 'off'];
+      // app điện thoại đời cũ không gửi guard → vẫn chặn khi sắp xóa nhiều
+      const legacy = !guards.includes(body.guard as SyncGuard);
+      const guard: SyncGuard = legacy ? 'normal' : (body.guard as SyncGuard);
+      const result = await deps.handleSync(data, body.meta, device, { mode, guard });
       deps.setDevices(deps.getDevices().map((d) => (d.id === device.id ? { ...d, lastSeen: new Date().toISOString() } : d)));
-      return send(res, 200, { data: result.data, meta: result.meta, changes: result.changes, hubName, hubId: deps.hubId, addresses: hosts() });
+      if ('needsChoice' in result) {
+        deps.log?.warn(`Đồng bộ tạm dừng chờ người dùng chọn (${device.name})`);
+        // bản cũ không hiểu needsChoice: trả 409 → điện thoại báo "cập nhật app trên cả hai máy"
+        if (legacy) return send(res, 409, { error: 'update' });
+        return send(res, 200, { needsChoice: result.needsChoice, hubName, hubId: deps.hubId, addresses: hosts() });
+      }
+      return send(res, 200, { data: result.data, meta: result.meta, changes: result.changes, mode, hubName, hubId: deps.hubId, addresses: hosts() });
     }
     return send(res, 404, { error: 'not-found' });
   }

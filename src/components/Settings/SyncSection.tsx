@@ -9,6 +9,7 @@ import { useApp } from '../../store/app.ts';
 import { api } from '../../lib/devApi.ts';
 import { cx } from '../../lib/labels.ts';
 import { ICheck, ITrash, IWarn, IX } from '../Common/Icons.tsx';
+import { openSyncChoice } from './SyncChoiceDialog.tsx';
 
 const ERR_KEY: Record<string, string> = {
   code: 'wifi.err.code',
@@ -57,7 +58,9 @@ export function SyncSection() {
     try {
       const r = await api().syncAction(a);
       setInfo(r);
-      if (r.error) setErr(r.error);
+      // 'choice': không phải lỗi — hộp thoại chọn cách đồng bộ sẽ hiện
+      if (r.error === 'choice') openSyncChoice();
+      else if (r.error) setErr(r.error);
       return r;
     } finally {
       setBusy(null);
@@ -287,7 +290,7 @@ function ClientView({ info, busy, err, run }: ViewProps) {
   const [name, setName] = useState('Android');
   const [found, setFound] = useState<{ addr: string; name: string }[]>([]);
   const [report, setReport] = useState<DiagReport | null>(null);
-  const shownErr = err ?? info.lastError;
+  const shownErr = err ?? (info.lastError === 'choice' ? null : info.lastError);
   const check = async () => {
     setReport(null);
     const r = await run({ type: 'diagnose' });
@@ -333,7 +336,7 @@ function ClientView({ info, busy, err, run }: ViewProps) {
               disabled={!!busy || code.length !== 6}
               onClick={async () => {
                 const r = await run({ type: 'pair', addr, code, name });
-                if (r.enabled && !r.error) toast(t('wifi.connected', { name: r.hubName ?? '' }), 'ok');
+                if (r.enabled && (!r.error || r.error === 'choice')) toast(t('wifi.connected', { name: r.hubName ?? '' }), 'ok');
               }}
             >
               {busy === 'pair' ? (addr ? t('wifi.connecting') : t('wifi.connectingAuto')) : t('wifi.connect')}
@@ -386,6 +389,15 @@ function ClientView({ info, busy, err, run }: ViewProps) {
           )}
         </dl>
         {shownErr && <p className="set-status err">{t(ERR_KEY[shownErr] ?? 'wifi.err.server')}</p>}
+        {info.choice && (
+          <div className="choice-banner">
+            <IWarn size={16} />
+            <span>{t('choice.paused')}</span>
+            <button className="btn btn-sm btn-primary" onClick={openSyncChoice}>
+              {t('choice.open')}
+            </button>
+          </div>
+        )}
         <div className="btn-row">
           <button
             className="btn btn-primary"
@@ -396,6 +408,9 @@ function ClientView({ info, busy, err, run }: ViewProps) {
             }}
           >
             {busy === 'syncNow' || info.busy ? t('wifi.syncing') : t('wifi.now')}
+          </button>
+          <button className="btn" disabled={!!busy || info.busy} onClick={() => void run({ type: 'preview' }).then((r) => r.choice && openSyncChoice())}>
+            {busy === 'preview' ? t('wifi.checking') : t('choice.pick')}
           </button>
           {checkBtn}
           <button

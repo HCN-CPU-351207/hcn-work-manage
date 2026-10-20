@@ -13,7 +13,7 @@ import { parseImport } from '../core/migrate.ts';
 import { defaultSettings, emptyData, toBackup } from '../core/model.ts';
 import type { Data, Level, Settings } from '../core/model.ts';
 import { initMeta, isMeta } from '../core/sync.ts';
-import type { SyncMeta } from '../core/sync.ts';
+import type { SyncGuard, SyncMeta, SyncMode, SyncStats } from '../core/sync.ts';
 import { diagnose, discoverHubs, localPrefixes, pairAuto, routeKind, SyncHttpError, syncSmart } from '../lib/syncClient.ts';
 import type { LocalNet } from '../lib/syncClient.ts';
 import { localNets, syncFetch } from './netInfo.ts';
@@ -36,6 +36,8 @@ interface ClientState {
   hosts?: string[];
   /** mã nhận dạng của PC đã ghép đôi (không nhầm sang PC khác cùng IP) */
   hubId?: string | null;
+  /** false: vừa ghép đôi, lần đồng bộ đầu sẽ hỏi lấy dữ liệu bên nào nếu hai bên khác nhau */
+  firstDone?: boolean;
 }
 interface SyncFile {
   v: 1;
@@ -186,6 +188,10 @@ export function createCapacitorApi(): HcnApi {
   let lastNets: LocalNet[] | null = null;
   /** lần tự quét tìm PC gần nhất (quét tự động tối đa 2 phút một lần cho đỡ tốn pin) */
   let lastAutoScan = 0;
+  /** đồng bộ đang chờ người dùng chọn cách (tự đồng bộ tạm dừng cho tới khi chọn) */
+  let choice: SyncStats | null = null;
+  /** choice đến từ nút "Chọn chiều đồng bộ" (chỉ xem) chứ không phải do bị chặn */
+  let choiceIsPreview = false;
   const readNets = async () => {
     lastNets = await localNets();
     return lastNets;
@@ -230,7 +236,8 @@ export function createCapacitorApi(): HcnApi {
       lastError: client.lastError,
       lastChanges: client.lastChanges,
       busy: !!inflight,
-      route: client.addr ? routeKind(client.addr, lastNets) : null
+      route: client.addr ? routeKind(client.addr, lastNets) : null,
+      choice
     };
   }
 
@@ -240,8 +247,10 @@ export function createCapacitorApi(): HcnApi {
     syncTimer = setTimeout(() => void syncNow(), ms);
   }
 
-  async function doSync(manual: boolean): Promise<string | undefined> {
+  async function doSync(manual: boolean, mode?: SyncMode, preview = false): Promise<string | undefined> {
     if (!hub || !client.token || !client.addr) return 'unpaired';
+    // đang chờ chọn cách đồng bộ: tự động thì không gửi gì
+    if (choice && !mode && !manual && !preview) return 'choice';
     let scanned = false;
     try {
       await flushCb?.();
@@ -255,10 +264,36 @@ export function createCapacitorApi(): HcnApi {
       const scan = manual ? { localPrefixes: lp, tether: nets === null } : auto ? { localPrefixes: lp, tether: false } : null;
       scanned = !!scan;
       const { data, meta } = hub.state;
-      const { addr, result: r, hubId } = await syncSmart(syncFetch, { primary: client.addr, hosts: client.hosts ?? [], token: client.token, hubId: client.hubId, data, meta, scan });
-      const a = hub.adoptFromHub(r.data, r.meta, Date.now());
+      // bản cũ (đã đồng bộ trước đây) coi như đã qua lần đầu
+      const first = client.firstDone === false || (client.firstDone === undefined && !client.lastSync);
+      const guard: SyncGuard = preview ? 'preview' : mode ? 'off' : first ? 'first' : 'normal';
+      const { addr, result: r, hubId } = await syncSmart(syncFetch, {
+        primary: client.addr,
+        hosts: client.hosts ?? [],
+        token: client.token,
+        hubId: client.hubId,
+        data,
+        meta,
+        scan,
+        opts: { mode: mode ?? 'merge', guard }
+      });
       const hosts = [...new Set([addr, ...(r.addresses ?? []), ...(client.hosts ?? [])])].slice(0, 12);
-      client = { ...client, addr, hosts, hubId, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
+      if (r.needsChoice) {
+        choice = r.needsChoice;
+        choiceIsPreview = preview;
+        client = { ...client, addr, hosts, hubId, hubName: r.hubName ?? client.hubName, lastError: null };
+        void persistSync();
+        return 'choice';
+      }
+      let a: { changed: boolean; needsResync: boolean; data: Data; rev: number };
+      if (mode === 'pull') {
+        // lấy PC ghi đè điện thoại: sao lưu dữ liệu điện thoại rồi thay toàn bộ (cả dấu đồng bộ)
+        await writeAtomic(`backups/hcn-pre-sync-${stamp()}.json`, JSON.stringify(toBackup(hub.state.data, new Date().toISOString()))).catch(() => undefined);
+        const rev = hub.reset(r.data, r.meta);
+        a = { changed: true, needsResync: false, data: r.data, rev };
+      } else a = hub.adoptFromHub(r.data, r.meta, Date.now());
+      choice = null;
+      client = { ...client, addr, hosts, hubId, firstDone: true, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
       if (a.changed) {
         void persistData();
         for (const cb of externalCbs) cb(a.data, a.rev);
@@ -275,9 +310,18 @@ export function createCapacitorApi(): HcnApi {
     }
   }
 
+  /** chạy sau lần đồng bộ đang dở (nếu có) — dùng cho các lệnh người dùng chọn */
+  async function runExclusive(fn: () => Promise<string | undefined>): Promise<string | undefined> {
+    if (inflight) await inflight.catch(() => undefined);
+    inflight = fn().finally(() => {
+      inflight = null;
+    });
+    return inflight;
+  }
+
   function syncNow(manual = false): Promise<string | undefined> {
     // bấm tay đúng lúc lần tự động đang chạy mà lần đó hỏng → chạy thêm một lần đầy đủ
-    if (inflight) return manual ? inflight.then((err) => (err && err !== 'unpaired' ? syncNow(true) : err)) : inflight;
+    if (inflight) return manual ? inflight.then((err) => (err && err !== 'unpaired' && err !== 'choice' ? syncNow(true) : err)) : inflight;
     inflight = doSync(manual).finally(() => {
       inflight = null;
     });
@@ -483,7 +527,8 @@ export function createCapacitorApi(): HcnApi {
         try {
           const nets = await readNets();
           const r = await pairAuto(syncFetch, { addr: a.addr, code: a.code, name: a.name.trim() || 'Android', localPrefixes: nets ? localPrefixes(nets) : [], prefixes: nets ? [] : undefined });
-          client = { addr: r.addr, token: r.token, hubName: r.hubName, hubId: r.hubId, lastSync: null, lastError: null, lastChanges: null, hosts: [...new Set([r.addr, ...r.addresses])] };
+          choice = null;
+          client = { addr: r.addr, token: r.token, hubName: r.hubName, hubId: r.hubId, firstDone: false, lastSync: null, lastError: null, lastChanges: null, hosts: [...new Set([r.addr, ...r.addresses])] };
           lastAutoScan = 0;
           await persistSync();
           const err = await syncNow();
@@ -511,11 +556,24 @@ export function createCapacitorApi(): HcnApi {
         }
         return { ...info(), report, found: client.token ? undefined : report.found };
       }
+      if (a.type === 'preview') {
+        const err = await runExclusive(() => doSync(true, undefined, true));
+        return { ...info(), error: err === 'choice' ? undefined : err };
+      }
+      if (a.type === 'dismiss') {
+        if (choiceIsPreview) choice = null;
+        return info();
+      }
+      if (a.type === 'resolve') {
+        const err = await runExclusive(() => doSync(true, a.mode));
+        return { ...info(), error: err };
+      }
       if (a.type === 'syncNow') {
         const err = await syncNow(true);
         return { ...info(), error: err };
       }
       if (a.type === 'unpair') {
+        choice = null;
         client = { addr: client.addr, token: null, hubName: null, hubId: null, lastSync: null, lastError: null, lastChanges: null };
         await persistSync();
       }

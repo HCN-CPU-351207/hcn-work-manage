@@ -1,6 +1,7 @@
 // Hợp đồng giữa renderer và main (preload expose đúng các hàm này, mục 2.2)
 import type { Data, Level, Settings } from './model.ts';
 import type { DiagReport, LocalKind } from '../lib/syncClient.ts';
+import type { SyncMode, SyncStats } from './sync.ts';
 
 export type LoadNotice =
   | { kind: 'fresh' }
@@ -95,6 +96,8 @@ export interface SyncInfo {
   keepsRunning?: boolean;
   /** điện thoại: đang đi qua mạng nào để tới PC */
   route?: LocalKind | null;
+  /** điện thoại: đồng bộ đang tạm dừng, chờ người dùng chọn cách (kèm số việc mỗi bên sẽ đổi) */
+  choice?: SyncStats | null;
 }
 export type SyncAction =
   | { type: 'enable' }
@@ -106,6 +109,11 @@ export type SyncAction =
   | { type: 'discover' }
   | { type: 'diagnose' }
   | { type: 'fixFirewall' }
+  /** xem trước số việc mỗi bên sẽ đổi, rồi tự chọn chiều đồng bộ */
+  | { type: 'preview' }
+  | { type: 'resolve'; mode: SyncMode }
+  /** "Để sau": bỏ bản xem trước (đồng bộ bị chặn vì rủi ro thì vẫn tạm dừng) */
+  | { type: 'dismiss' }
   | { type: 'unpair' };
 export type SyncActionResult = SyncInfo & { error?: string; found?: FoundHub[]; report?: DiagReport };
 

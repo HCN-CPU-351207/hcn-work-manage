@@ -28,7 +28,8 @@ PC làm trạm; điện thoại tự đồng bộ khi **app PC đang mở** và 
 2. Khi đang bật đồng bộ, bấm X chỉ ẩn app xuống khay để điện thoại vẫn đồng bộ được; bật **Tự mở cùng Windows** để trạm luôn sẵn sàng sau khi khởi động máy.
 3. Trên điện thoại: **Cài đặt > Đồng bộ** → nhập **mã ghép đôi 6 số** hiện trên PC → **Kết nối**. Không cần gõ địa chỉ: app tự tìm PC trong dải mạng điện thoại đang dùng (Wi-Fi, chia sẻ qua USB, chia sẻ qua Bluetooth).
 4. Từ đó điện thoại tự đồng bộ khi mở app, sau mỗi thay đổi (khoảng 3 giây) và mỗi 30 giây. PC đổi IP, hoặc bạn chuyển Wi-Fi ↔ USB ↔ Bluetooth: app tự quét lại và nhận đúng PC đã ghép đôi (theo mã nhận dạng của trạm), không cần ghép lại.
-5. Không kết nối được: bấm **Kiểm tra kết nối** trên điện thoại — app liệt kê mạng của điện thoại, kết quả từng địa chỉ PC và nguyên nhân kèm cách sửa (khác mạng, tường lửa, PC chưa mở HCN…).
+5. **Hỏi trước khi đồng bộ có thay đổi lớn.** Lần đầu sau ghép đôi (nếu hai bên đều có việc và khác nhau), hoặc khi đồng bộ sắp xóa từ 3 việc và từ 20% số việc của một bên, đồng bộ tạm dừng và hiện hộp thoại chọn: **Tự động theo giờ sửa** (bản sửa mới hơn ghi đè bản cũ hơn), **PC → Điện thoại**, hoặc **Điện thoại → PC**, kèm số việc mỗi bên sẽ thêm / sửa / xóa và gợi ý cách mất ít việc nhất. Bấm **Chọn chiều đồng bộ** trong Cài đặt > Đồng bộ để chọn bất cứ lúc nào. Trước khi bị ghi đè hoặc xóa, máy đó luôn tự sao lưu (PC: `backups/hcn-pre-sync-*.json`, khôi phục ở Cài đặt > Dữ liệu > Khôi phục).
+6. Không kết nối được: bấm **Kiểm tra kết nối** trên điện thoại — app liệt kê mạng của điện thoại, kết quả từng địa chỉ PC và nguyên nhân kèm cách sửa (khác mạng, tường lửa, PC chưa mở HCN…).
 
 iPhone / iPad (cáp Lightning) chưa được hỗ trợ: app chỉ có bản Android.
 
@@ -106,7 +107,7 @@ Khóa ký APK nằm ở `android-signing/hcn-release.jks` (mật khẩu `hcn-wor
 ```
 npm install
 npm run dev      # mở cửa sổ Electron, tự nạp lại khi sửa giao diện
-npm test         # 213 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
+npm test         # 225 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
 npm run typecheck
 ```
 

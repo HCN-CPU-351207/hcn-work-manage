@@ -1,8 +1,8 @@
 // Giữ bản dữ liệu mới nhất + dấu đồng bộ + số phiên bản (rev), dùng chung cho PC và Android.
 // Giao diện lưu kèm baseRev; nếu trong lúc đó dữ liệu đã đổi do đồng bộ, chỉ áp phần giao diện thực sự sửa.
 import type { Data } from './model.ts';
-import { applyEdit, mergeData, sameData, stampChanges } from './sync.ts';
-import type { SyncMeta } from './sync.ts';
+import { applyEdit, mergeData, sameData, stampChanges, syncStats } from './sync.ts';
+import type { SyncMeta, SyncStats } from './sync.ts';
 
 const KEEP = 40;
 
@@ -41,6 +41,14 @@ export function createDataHub(initial: { data: Data; meta: SyncMeta }) {
     /** Thay toàn bộ (khôi phục từ file) */
     replace(next: Data, now: number): number {
       return commit(next, stampChanges(data, next, meta, now));
+    },
+    /** Thay toàn bộ bằng dữ liệu + dấu của máy kia (chọn "lấy PC ghi đè điện thoại") */
+    reset(next: Data, nextMeta: SyncMeta): number {
+      return commit(next, nextMeta);
+    },
+    /** Trạm: xem trước nếu gộp thì mỗi bên đổi bao nhiêu (không ghi) */
+    preview(remote: Data, remoteMeta: SyncMeta, now: number): SyncStats {
+      return syncStats(data, meta, remote, remoteMeta, now);
     },
     /** Trạm: gộp dữ liệu máy con gửi lên */
     mergeRemote(remote: Data, remoteMeta: SyncMeta, now: number): { changed: boolean; rev: number } & HubState {

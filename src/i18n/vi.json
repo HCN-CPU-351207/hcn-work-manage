@@ -715,5 +715,32 @@
     "bannerTitle": "Đã hủy ngày {{d}}",
     "bannerHint": "Tiến độ, việc con đã xong và giờ đã làm vẫn được giữ để tra cứu.",
     "keep": "Không hủy"
+  },
+  "choice": {
+    "title": "Chọn cách đồng bộ",
+    "first": "PC và điện thoại đều có dữ liệu và đang khác nhau. Chọn cách đồng bộ:",
+    "riskPc": "Cẩn thận: nếu gộp tự động, {{n}} việc trên PC sẽ bị xóa (vì điện thoại đã xóa chúng trước đó). Đồng bộ đã tạm dừng để bạn chọn:",
+    "riskPhone": "Cẩn thận: nếu gộp tự động, {{n}} việc trên điện thoại sẽ bị xóa (vì PC đã xóa chúng). Đồng bộ đã tạm dừng để bạn chọn:",
+    "tasks": "{{n}} việc",
+    "phone": "Điện thoại",
+    "merge": "Tự động theo giờ sửa",
+    "mergeDesc": "Bản sửa mới hơn ghi đè bản cũ hơn; việc đã xóa ở một bên cũng bị xóa ở bên kia.",
+    "pull": "PC → Điện thoại",
+    "pullDesc": "Điện thoại nhận đúng dữ liệu của PC ({{n}} việc).",
+    "pullRes": "Điện thoại: mất {{lost}} việc chỉ có trên điện thoại, {{rep}} việc bị thay bằng bản của PC",
+    "push": "Điện thoại → PC",
+    "pushDesc": "PC nhận đúng dữ liệu của điện thoại ({{n}} việc).",
+    "pushRes": "PC: mất {{lost}} việc chỉ có trên PC, {{rep}} việc bị thay bằng bản của điện thoại",
+    "upd": "sửa {{n}}",
+    "del": "xóa {{n}}",
+    "suggest": "An toàn nhất",
+    "backupNote": "Trước khi ghi đè hoặc xóa, máy bị thay đổi luôn tự sao lưu (PC: Cài đặt > Dữ liệu > Khôi phục).",
+    "later": "Để sau",
+    "go": "Đồng bộ",
+    "goLoss": "Đồng bộ (mất {{n}} việc)",
+    "done": "Đã đồng bộ ({{n}} thay đổi)",
+    "paused": "Đồng bộ đang tạm dừng: cần bạn chọn cách đồng bộ.",
+    "open": "Chọn ngay",
+    "pick": "Chọn chiều đồng bộ"
   }
 }

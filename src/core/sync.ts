@@ -300,3 +300,84 @@ export function countDiff(a: Data, b: Data): number {
   return n;
 }
 
+
+// ---------- Hỏi trước khi đồng bộ có thay đổi lớn ----------
+
+/** Cách đồng bộ người dùng chọn: gộp theo giờ sửa, lấy PC ghi đè điện thoại, lấy điện thoại ghi đè PC */
+export type SyncMode = 'merge' | 'pull' | 'push';
+/** first: lần đầu sau ghép đôi · normal: chặn khi sắp xóa nhiều · preview: chỉ xem, không ghi · off: làm luôn */
+export type SyncGuard = 'first' | 'normal' | 'preview' | 'off';
+
+export interface SideStats {
+  /** số việc (tháng + tuần + ngày) hiện có */
+  total: number;
+  add: number;
+  upd: number;
+  del: number;
+}
+export interface SyncStats {
+  pc: SideStats;
+  phone: SideStats;
+  /** việc chỉ có trên PC / chỉ có trên điện thoại / có ở cả hai nhưng nội dung khác */
+  pcOnly: number;
+  phoneOnly: number;
+  differ: number;
+}
+
+const TASK_KINDS: Kind[] = ['thang', 'tuan', 'ngay'];
+const taskCount = (d: Data) => TASK_KINDS.reduce((n, k) => n + recs(d, k).length, 0);
+
+function sideStats(before: Data, after: Data): SideStats {
+  const s: SideStats = { total: taskCount(before), add: 0, upd: 0, del: 0 };
+  for (const k of TASK_KINDS) {
+    const A = new Map(recs(before, k).map((r) => [r.id, JSON.stringify(r)]));
+    const B = new Map(recs(after, k).map((r) => [r.id, JSON.stringify(r)]));
+    for (const [id, j] of B) {
+      if (!A.has(id)) s.add++;
+      else if (A.get(id) !== j) s.upd++;
+    }
+    for (const id of A.keys()) if (!B.has(id)) s.del++;
+  }
+  return s;
+}
+
+/** Xem trước kết quả gộp: mỗi bên sẽ thêm / sửa / xóa bao nhiêu việc */
+export function syncStats(pc: Data, pcMeta: SyncMeta, phone: Data, phoneMeta: SyncMeta, now: number): SyncStats {
+  const merged = mergeData(pc, pcMeta, phone, phoneMeta, now).data;
+  let pcOnly = 0;
+  let phoneOnly = 0;
+  let differ = 0;
+  for (const k of TASK_KINDS) {
+    const A = new Map(recs(pc, k).map((r) => [r.id, JSON.stringify(r)]));
+    const B = new Map(recs(phone, k).map((r) => [r.id, JSON.stringify(r)]));
+    for (const [id, j] of A) {
+      if (!B.has(id)) pcOnly++;
+      else if (B.get(id) !== j) differ++;
+    }
+    for (const id of B.keys()) if (!A.has(id)) phoneOnly++;
+  }
+  return { pc: sideStats(pc, merged), phone: sideStats(phone, merged), pcOnly, phoneOnly, differ };
+}
+
+/** Gộp sẽ xóa nhiều việc của một bên: từ 3 việc và từ 20% số việc của bên đó */
+export const isRisky = (s: SideStats): boolean => s.del >= 3 && s.del * 5 >= s.total;
+
+/** Có cần hỏi người dùng chọn cách đồng bộ không */
+export function needsChoice(s: SyncStats, guard: SyncGuard): boolean {
+  if (guard === 'off') return false;
+  if (guard === 'preview') return true;
+  if (isRisky(s.pc) || isRisky(s.phone)) return true;
+  // lần đầu: hai bên đều có việc mà khác nhau → hỏi lấy bên nào
+  return guard === 'first' && s.pc.total > 0 && s.phone.total > 0 && s.pcOnly + s.phoneOnly + s.differ > 0;
+}
+
+/** Số việc mất đi (bị xóa hoặc bị thay) nếu chọn từng cách — để gợi ý cách an toàn nhất */
+export function lossOf(s: SyncStats, m: SyncMode): number {
+  if (m === 'merge') return s.pc.del + s.phone.del;
+  if (m === 'pull') return s.phoneOnly;
+  return s.pcOnly;
+}
+export function suggestMode(s: SyncStats): SyncMode {
+  const order: SyncMode[] = ['merge', 'pull', 'push'];
+  return order.reduce<SyncMode>((best, m) => (lossOf(s, m) < lossOf(s, best) ? m : best), 'merge');
+}

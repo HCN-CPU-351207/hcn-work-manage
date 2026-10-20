@@ -6,7 +6,7 @@
 // - Một PC khác (cũng chạy HCN) có thể nhận đúng IP cũ → mỗi trạm có mã nhận dạng (hubId), không nhầm trạm,
 //   và không coi câu trả lời "chưa ghép đôi" của PC lạ là bị gỡ ghép đôi.
 import type { Data } from '../core/model.ts';
-import type { SyncMeta } from '../core/sync.ts';
+import type { SyncGuard, SyncMeta, SyncMode, SyncStats } from '../core/sync.ts';
 
 export const DEFAULT_PORT = 47821;
 
@@ -249,16 +249,23 @@ export interface SyncResult {
   hubName: string;
   hubId?: string;
   addresses?: string[];
+  /** PC chưa ghi gì: cần người dùng chọn cách đồng bộ (data/meta không có) */
+  needsChoice?: SyncStats;
+  mode?: SyncMode;
+}
+export interface SyncOpts {
+  mode?: SyncMode;
+  guard?: SyncGuard;
 }
 
-export async function syncWithHub(fetchFn: FetchFn, addr: string, token: string, data: Data, meta: SyncMeta): Promise<SyncResult> {
+export async function syncWithHub(fetchFn: FetchFn, addr: string, token: string, data: Data, meta: SyncMeta, opts: SyncOpts = {}): Promise<SyncResult> {
   const res = await call(
     fetchFn,
     `http://${addr}/hcn/sync`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ schemaVersion: 1, data, meta })
+      body: JSON.stringify({ schemaVersion: 1, data, meta, mode: opts.mode ?? 'merge', guard: opts.guard ?? 'normal' })
     },
     20000
   );
@@ -273,6 +280,7 @@ export interface SmartArgs {
   hubId?: string | null;
   data: Data;
   meta: SyncMeta;
+  opts?: SyncOpts;
   /** quét tìm lại PC khi mọi địa chỉ đã biết đều hỏng; null = không quét */
   scan?: { localPrefixes: string[]; tether: boolean; port?: number } | null;
 }
@@ -285,7 +293,7 @@ export interface SmartArgs {
 export async function syncSmart(fetchFn: FetchFn, a: SmartArgs): Promise<{ addr: string; result: SyncResult; hubId: string | null }> {
   const tryHost = async (addr: string, isPrimary: boolean): Promise<SyncResult> => {
     try {
-      return await syncWithHub(fetchFn, addr, a.token, a.data, a.meta);
+      return await syncWithHub(fetchFn, addr, a.token, a.data, a.meta, a.opts);
     } catch (e) {
       if (e instanceof SyncHttpError && e.code === 'unpaired') {
         // IP có thể đã thuộc về PC khác: chỉ coi là bị gỡ khi chắc đây đúng là PC đã ghép đôi
@@ -349,9 +357,10 @@ export async function syncWithFailover(
   token: string,
   data: Data,
   meta: SyncMeta,
-  hubId?: string | null
+  hubId?: string | null,
+  opts?: SyncOpts
 ): Promise<{ addr: string; result: SyncResult }> {
-  const r = await syncSmart(fetchFn, { primary, hosts, token, data, meta, hubId });
+  const r = await syncSmart(fetchFn, { primary, hosts, token, data, meta, hubId, opts });
   return { addr: r.addr, result: r.result };
 }
 

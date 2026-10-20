@@ -715,5 +715,32 @@
     "bannerTitle": "Cancelada em {{d}}",
     "bannerHint": "O progresso, as subtarefas concluídas e as horas trabalhadas ficam para consulta.",
     "keep": "Manter"
+  },
+  "choice": {
+    "title": "Escolher como sincronizar",
+    "first": "O PC e o telemóvel têm dados e são diferentes. Escolha como sincronizar:",
+    "riskPc": "Atenção: uma junção automática apagaria {{n}} tarefas no PC (porque foram apagadas antes no telemóvel). A sincronização está em pausa para escolher:",
+    "riskPhone": "Atenção: uma junção automática apagaria {{n}} tarefas no telemóvel (porque o PC as apagou). A sincronização está em pausa para escolher:",
+    "tasks": "{{n}} tarefas",
+    "phone": "Telemóvel",
+    "merge": "Automático pela hora de edição",
+    "mergeDesc": "A edição mais recente substitui a mais antiga; uma tarefa apagada de um lado é apagada também do outro.",
+    "pull": "PC → Telemóvel",
+    "pullDesc": "O telemóvel fica exatamente com os dados do PC ({{n}} tarefas).",
+    "pullRes": "Telemóvel: perde {{lost}} tarefas que só existem no telemóvel, {{rep}} substituídas pela versão do PC",
+    "push": "Telemóvel → PC",
+    "pushDesc": "O PC fica exatamente com os dados do telemóvel ({{n}} tarefas).",
+    "pushRes": "PC: perde {{lost}} tarefas que só existem no PC, {{rep}} substituídas pela versão do telemóvel",
+    "upd": "alteradas {{n}}",
+    "del": "apagadas {{n}}",
+    "suggest": "Mais seguro",
+    "backupNote": "Antes de substituir ou apagar, o aparelho alterado faz sempre uma cópia de segurança (PC: Definições > Dados > Restaurar).",
+    "later": "Mais tarde",
+    "go": "Sincronizar",
+    "goLoss": "Sincronizar (perder {{n}} tarefas)",
+    "done": "Sincronizado ({{n}} alterações)",
+    "paused": "Sincronização em pausa: escolha como sincronizar.",
+    "open": "Escolher agora",
+    "pick": "Escolher direção da sincronização"
   }
 }

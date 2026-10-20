@@ -715,5 +715,32 @@
     "bannerTitle": "Annulée le {{d}}",
     "bannerHint": "L'avancement, les sous-tâches terminées et les heures travaillées sont conservés.",
     "keep": "Garder"
+  },
+  "choice": {
+    "title": "Choisir comment synchroniser",
+    "first": "Le PC et le téléphone ont tous deux des données, et elles diffèrent. Choisissez comment synchroniser :",
+    "riskPc": "Attention : une fusion automatique supprimerait {{n}} tâches sur le PC (supprimées auparavant sur le téléphone). La synchro est en pause pour que vous choisissiez :",
+    "riskPhone": "Attention : une fusion automatique supprimerait {{n}} tâches sur le téléphone (supprimées par le PC). La synchro est en pause pour que vous choisissiez :",
+    "tasks": "{{n}} tâches",
+    "phone": "Téléphone",
+    "merge": "Automatique selon l'heure de modification",
+    "mergeDesc": "La modification la plus récente remplace la plus ancienne ; une tâche supprimée d'un côté l'est aussi de l'autre.",
+    "pull": "PC → Téléphone",
+    "pullDesc": "Le téléphone reçoit exactement les données du PC ({{n}} tâches).",
+    "pullRes": "Téléphone : perd {{lost}} tâches présentes seulement sur le téléphone, {{rep}} remplacées par la version du PC",
+    "push": "Téléphone → PC",
+    "pushDesc": "Le PC reçoit exactement les données du téléphone ({{n}} tâches).",
+    "pushRes": "PC : perd {{lost}} tâches présentes seulement sur le PC, {{rep}} remplacées par la version du téléphone",
+    "upd": "modifiées {{n}}",
+    "del": "supprimées {{n}}",
+    "suggest": "Le plus sûr",
+    "backupNote": "Avant de remplacer ou supprimer, l'appareil modifié fait toujours une sauvegarde (PC : Paramètres > Données > Restaurer).",
+    "later": "Plus tard",
+    "go": "Synchroniser",
+    "goLoss": "Synchroniser (perdre {{n}} tâches)",
+    "done": "Synchronisé ({{n}} modifications)",
+    "paused": "Synchro en pause : choisissez comment synchroniser.",
+    "open": "Choisir",
+    "pick": "Choisir le sens de synchro"
   }
 }

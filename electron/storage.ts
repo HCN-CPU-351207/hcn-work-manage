@@ -210,6 +210,12 @@ export function createStorage(dir: string, opts: StorageOptions = {}) {
     rotate('hcn-pre-restore-', 5);
     return file;
   }
+  /** Trước khi đồng bộ xóa việc hoặc điện thoại ghi đè PC (giữ 10 bản gần nhất) */
+  function preSyncBackup(data: Data, reason = 'sync'): string {
+    const file = writeBackup(`hcn-pre-sync-${stamp(now())}-${reason}.json`, data);
+    rotate('hcn-pre-sync-', 10);
+    return file;
+  }
   function crashBackup(): string | null {
     try {
       if (!f.existsSync(dataFile)) return null;
@@ -236,6 +242,7 @@ export function createStorage(dir: string, opts: StorageOptions = {}) {
     autoBackupIfNeeded,
     preUpdateBackup,
     preRestoreBackup,
+    preSyncBackup,
     crashBackup,
     listBackups
   };
