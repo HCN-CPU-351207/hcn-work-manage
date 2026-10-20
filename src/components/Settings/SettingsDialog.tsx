@@ -28,6 +28,10 @@ export function SettingsDialog() {
   useEffect(() => {
     if (open) closeRef.current?.focus();
   }, [open !== null]); // eslint-disable-line react-hooks/exhaustive-deps
+  // điện thoại: menu mục cuộn ngang → đưa mục đang chọn vào giữa
+  useEffect(() => {
+    if (open) document.querySelector('.settings-link.on')?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }, [open]);
   if (!open) return null;
   return (
     <div className="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title">
@@ -361,7 +365,7 @@ function NotifySection() {
   return (
     <>
       <Block hint={t('notify.hint2')}>
-        <Toggle label={t('notify.enable')} checked={s.notificationsEnabled} onChange={(v) => setSettings({ notificationsEnabled: v })} />
+        <Toggle label={isAndroid() ? t('notify.enableMobile') : t('notify.enable')} checked={s.notificationsEnabled} onChange={(v) => setSettings({ notificationsEnabled: v })} />
         <div className="btn-row">
           <button
             className="btn btn-sm"

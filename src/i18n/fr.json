@@ -327,7 +327,8 @@
     "bgHint": "HCN doit tourner pour rappeler à l'heure. Activé, X masque la fenêtre dans la zone de notification ; pour quitter : clic droit sur l'icône HCN > Quitter.",
     "background": "Rester dans la zone de notification à la fermeture",
     "login": "Démarrer avec Windows (masqué)",
-    "androidHint": "Sur le téléphone, les rappels sont programmés par le système : ils arrivent même appli fermée ou après redémarrage. S'ils sont en retard, désactivez l'économie de batterie pour HCN."
+    "androidHint": "Sur le téléphone, les rappels sont programmés par le système : ils arrivent même appli fermée ou après redémarrage. S'ils sont en retard, désactivez l'économie de batterie pour HCN.",
+    "enableMobile": "Activer les notifications"
   },
   "settings": {
     "title": "Paramètres",

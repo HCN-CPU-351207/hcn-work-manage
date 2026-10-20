@@ -327,7 +327,8 @@
     "bgHint": "O HCN tem de estar aberto para avisar a horas. Ligado, o X só esconde a janela na área de notificação; para sair: botão direito no ícone HCN > Sair.",
     "background": "Continuar na área de notificação ao fechar",
     "login": "Iniciar com o Windows (oculto)",
-    "androidHint": "No telemóvel, os lembretes são agendados pelo sistema e chegam mesmo com a app fechada ou após reiniciar. Se atrasarem, desative a poupança de bateria para o HCN."
+    "androidHint": "No telemóvel, os lembretes são agendados pelo sistema e chegam mesmo com a app fechada ou após reiniciar. Se atrasarem, desative a poupança de bateria para o HCN.",
+    "enableMobile": "Ativar notificações"
   },
   "settings": {
     "title": "Definições",

@@ -327,7 +327,8 @@
     "bgHint": "HCN muss laufen, um pünktlich zu erinnern. Dann blendet X das Fenster in den Infobereich aus; zum Beenden: Rechtsklick auf das HCN-Symbol > Beenden.",
     "background": "Beim Schließen im Infobereich weiterlaufen",
     "login": "Mit Windows starten (ausgeblendet)",
-    "androidHint": "Am Telefon plant das System die Erinnerungen – sie kommen auch bei geschlossener App oder nach einem Neustart. Bei Verzögerung den Energiesparmodus für HCN deaktivieren."
+    "androidHint": "Am Telefon plant das System die Erinnerungen – sie kommen auch bei geschlossener App oder nach einem Neustart. Bei Verzögerung den Energiesparmodus für HCN deaktivieren.",
+    "enableMobile": "Benachrichtigungen aktivieren"
   },
   "settings": {
     "title": "Einstellungen",

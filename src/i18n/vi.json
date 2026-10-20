@@ -5,7 +5,7 @@
     "loadError": "Không đọc được dữ liệu"
   },
   "common": {
-    "cancel": "Hủy",
+    "cancel": "Đóng",
     "save": "Lưu",
     "ok": "Đồng ý",
     "close": "Đóng",
@@ -327,7 +327,8 @@
     "bgHint": "Để nhắc đúng giờ, HCN cần đang chạy. Khi bật, bấm X chỉ ẩn cửa sổ xuống khay hệ thống (cạnh đồng hồ); muốn tắt hẳn: chuột phải biểu tượng HCN > Thoát hẳn.",
     "background": "Bấm X thì chạy nền ở khay hệ thống",
     "login": "Tự mở cùng Windows (chạy ẩn)",
-    "androidHint": "Trên điện thoại, nhắc việc được hẹn giờ bằng hệ thống nên vẫn báo khi app đã tắt hoặc sau khi khởi động lại máy. Nếu báo trễ, hãy tắt chế độ tiết kiệm pin cho HCN."
+    "androidHint": "Trên điện thoại, nhắc việc được hẹn giờ bằng hệ thống nên vẫn báo khi app đã tắt hoặc sau khi khởi động lại máy. Nếu báo trễ, hãy tắt chế độ tiết kiệm pin cho HCN.",
+    "enableMobile": "Bật thông báo"
   },
   "settings": {
     "title": "Cài đặt",

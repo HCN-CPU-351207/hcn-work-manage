@@ -327,7 +327,8 @@
     "bgHint": "HCN must be running to remind on time. When on, clicking X hides the window to the system tray (by the clock); to quit, right-click the HCN icon > Quit.",
     "background": "Keep running in the tray when closed",
     "login": "Start with Windows (hidden)",
-    "androidHint": "On the phone, reminders are scheduled by the system, so they arrive even when the app is closed or after a restart. If they're late, turn off battery saving for HCN."
+    "androidHint": "On the phone, reminders are scheduled by the system, so they arrive even when the app is closed or after a restart. If they're late, turn off battery saving for HCN.",
+    "enableMobile": "Enable notifications"
   },
   "settings": {
     "title": "Settings",

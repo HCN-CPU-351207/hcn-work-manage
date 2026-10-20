@@ -2182,13 +2182,16 @@ th.col-actions {
   z-index: 95;
   background: rgba(0, 0, 0, 0.45);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding: 16px;
   animation: fade 150ms ease-out;
 }
 .confirm {
-  width: 440px;
+  width: min(440px, 100%);
   max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
   background: var(--pop-bg);
   border: 1px solid var(--line-strong);
   border-radius: 16px;
@@ -3594,4 +3597,76 @@ th.col-actions {
 }
 .confirm-input input {
   width: 100%;
+}
+
+/* ---------- Điện thoại: thanh lọc, thanh chọn nhiều, ô giờ ---------- */
+@media (max-width: 767px) {
+  .filterbar {
+    flex-direction: column;
+    flex-wrap: nowrap; /* xếp dọc + xuống dòng sẽ làm cột giãn theo nội dung, tràn màn hình */
+    align-items: stretch;
+    gap: 8px;
+  }
+  .fb-fields,
+  .fb-right {
+    min-width: 0;
+    max-width: 100%;
+  }
+  /* các bộ lọc trên một hàng, vuốt ngang khi không đủ chỗ */
+  .fb-fields {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fb-fields::-webkit-scrollbar {
+    display: none;
+  }
+  .fb-fields > * {
+    flex: none;
+  }
+  .fb-fields select {
+    max-width: 150px;
+  }
+  .fb-right {
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+  /* thanh chọn nhiều: một hàng, vuốt ngang */
+  .bulkbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 8px 10px;
+    /* làm mờ nền tạo khung chứa cho menu cố định → cắt menu; dùng nền đặc */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--pop-bg);
+    /* căn giữa khi tràn sẽ đẩy phần đầu ra ngoài, không vuốt tới được */
+    justify-content: flex-start;
+  }
+  .bulkbar::-webkit-scrollbar {
+    display: none;
+  }
+  .bulkbar > * {
+    flex: none;
+  }
+  .bulk-menu-wrap {
+    position: static;
+  }
+  .bulk-menu {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: calc(76px + var(--sab));
+    top: auto;
+    max-height: 50vh;
+    overflow: auto;
+  }
+  /* ô giờ trong Thông báo: 2 cột, không cắt chữ */
+  .narrow-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
 }

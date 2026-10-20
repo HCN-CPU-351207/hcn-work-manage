@@ -4,7 +4,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
-@media (max-width: 1023px) {
+@media (max-width: 1023px) and (min-width: 768px) {
   .metrics {
     grid-template-columns: none;
     grid-auto-flow: column;
@@ -126,5 +126,23 @@
 @media (hover: hover) {
   [data-theme='light'] .metric-card:hover {
     box-shadow: 10px 14px 24px rgba(0, 0, 0, 0.12), -4px -4px 10px rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (max-width: 767px) {
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .metric-card {
+    min-height: 0;
+    padding: 12px 14px 14px;
+  }
+  .metric-card .metric-value {
+    margin-top: 6px;
+    font-size: 32px;
+  }
+  .metric-card .metric-sub {
+    margin-top: 6px;
   }
 }
