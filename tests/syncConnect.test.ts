@@ -99,7 +99,7 @@ describe('PC đổi IP: tự quét lại dải mạng', () => {
       const pr = await pairWithHub(fetch, a.addr, a.info.pairCode!, 'ĐT');
       const dead = '127.0.0.1:1';
       expect(await errCode(syncSmart(fetch, args(dead, pr.token, { hubId: pr.hubId })))).toBe('network'); // không quét
-      const r = await syncSmart(fetch, args(dead, pr.token, { hubId: pr.hubId, scan: { localPrefixes: [], tether: false } }));
+      const r = await syncSmart(fetch, args(dead, pr.token, { hubId: pr.hubId, scan: { localPrefixes: [], tether: false, port: a.info.port! } }));
       expect(r.result.hubName).toBe('PC-A');
       expect(r.addr.endsWith(`:${a.info.port}`)).toBe(true);
     } finally {
@@ -110,12 +110,12 @@ describe('PC đổi IP: tự quét lại dải mạng', () => {
   it('ghép đôi không cần nhập địa chỉ: tự tìm PC rồi thử mã', async () => {
     const a = await mkHub('PC-A');
     try {
-      const r = await pairAuto(fetch, { code: a.info.pairCode!, name: 'ĐT', localPrefixes: ['127.0.0'], prefixes: [] });
+      const r = await pairAuto(fetch, { code: a.info.pairCode!, name: 'ĐT', localPrefixes: ['127.0.0'], prefixes: [], port: a.info.port! });
       expect(r.hubName).toBe('PC-A');
       expect(r.token).toMatch(/^[0-9a-f]+$/);
       // địa chỉ gõ sai (không tới được) → vẫn tự tìm
       const code2 = a.hub.info().pairCode!;
-      const r2 = await pairAuto(fetch, { addr: '127.0.0.1:1', code: code2, name: 'ĐT2', localPrefixes: ['127.0.0'], prefixes: [] });
+      const r2 = await pairAuto(fetch, { addr: '127.0.0.1:1', code: code2, name: 'ĐT2', localPrefixes: ['127.0.0'], prefixes: [], port: a.info.port! });
       expect(r2.hubName).toBe('PC-A');
       // không có PC nào trong dải → notFound
       expect(await errCode(pairAuto(fetch, { code: '123456', name: 'x', localPrefixes: ['198.51.100'], prefixes: [] }))).toBe('notFound');
@@ -170,7 +170,7 @@ describe('kiểm tra kết nối: kết luận nguyên nhân', () => {
     const a = await mkHub('PC-A');
     try {
       const id = (await probeHub(fetch, a.addr)).id!;
-      const rep = await diagnose(fetch, { nets: null, hosts: ['127.0.0.1:1'], hubId: id });
+      const rep = await diagnose(fetch, { nets: null, hosts: ['127.0.0.1:1'], hubId: id, port: a.info.port! });
       expect(rep.probes[0].reason).toBe('network');
       expect(rep.found[0].id).toBe(id);
       expect(rep.hints).toEqual(['addrChanged']);

@@ -274,7 +274,7 @@ export interface SmartArgs {
   data: Data;
   meta: SyncMeta;
   /** quét tìm lại PC khi mọi địa chỉ đã biết đều hỏng; null = không quét */
-  scan?: { localPrefixes: string[]; tether: boolean } | null;
+  scan?: { localPrefixes: string[]; tether: boolean; port?: number } | null;
 }
 
 /**
@@ -326,7 +326,8 @@ export async function syncSmart(fetchFn: FetchFn, a: SmartArgs): Promise<{ addr:
       skipKnown: true,
       localPrefixes: a.scan.localPrefixes,
       prefixes: a.scan.tether ? TETHER_PREFIXES : [],
-      hubId: a.hubId
+      hubId: a.hubId,
+      port: a.scan.port
     });
     for (const f of found) {
       try {
@@ -360,7 +361,7 @@ export async function syncWithFailover(
  */
 export async function pairAuto(
   fetchFn: FetchFn,
-  args: { addr?: string; code: string; name: string; localPrefixes: string[]; prefixes?: string[] }
+  args: { addr?: string; code: string; name: string; localPrefixes: string[]; prefixes?: string[]; port?: number }
 ): Promise<PairResult & { addr: string }> {
   const addr = args.addr ? normalizeAddr(args.addr) : '';
   if (addr) {
@@ -370,7 +371,7 @@ export async function pairAuto(
       if (!isNetErr(e)) throw e;
     }
   }
-  const found = await discoverHubs(fetchFn, addr ? [addr] : [], { skipKnown: !!addr, localPrefixes: args.localPrefixes, prefixes: args.prefixes });
+  const found = await discoverHubs(fetchFn, addr ? [addr] : [], { skipKnown: !!addr, localPrefixes: args.localPrefixes, prefixes: args.prefixes, port: args.port });
   if (!found.length) throw new SyncHttpError('notFound');
   let lastErr: unknown = new SyncHttpError('notFound');
   const ids = new Set<string>();
@@ -429,7 +430,7 @@ export function diagHints(nets: LocalNet[] | null, probes: ProbeResult[], found:
 
 export async function diagnose(
   fetchFn: FetchFn,
-  args: { nets: LocalNet[] | null; hosts: string[]; hubId: string | null }
+  args: { nets: LocalNet[] | null; hosts: string[]; hubId: string | null; port?: number }
 ): Promise<DiagReport> {
   const hosts = [...new Set(args.hosts.filter(Boolean))];
   const probes = await Promise.all(hosts.map((h) => probeHub(fetchFn, h, 3000)));
@@ -440,7 +441,8 @@ export async function diagnose(
       skipKnown: true,
       localPrefixes: args.nets ? localPrefixes(args.nets) : [],
       prefixes: args.nets ? [] : TETHER_PREFIXES,
-      hubId: args.hubId
+      hubId: args.hubId,
+      port: args.port
     });
   }
   return { nets: args.nets ? usableNets(args.nets) : null, probes, found, hints: diagHints(args.nets, probes, found, args.hubId) };
