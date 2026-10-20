@@ -121,14 +121,9 @@ npm run typecheck
 
 ## Cập nhật tự động (mục 4)
 
-1. Mở `electron-builder.yml`, thay `HCN-CPU-351207` bằng tài khoản GitHub thật (hoặc dùng khối `generic` nếu có server riêng).
-2. Sửa `src/lib/labels.ts` → `ISSUE_URL` cho đúng repo (link "Báo lỗi" trong Cài đặt > Giới thiệu).
-3. Mỗi lần phát hành: tăng `version` trong `package.json`, rồi đẩy tag, ví dụ `git tag v1.0.1 && git push --tags`. Workflow sẽ build và đính kèm `HCN-Setup-1.0.1.exe`, `.blockmap`, `latest.yml` vào GitHub Release.
-4. App PC đã cài kiểm tra cập nhật sau 10 giây khi mở và mỗi 6 giờ; không có mạng thì im lặng. App Android cập nhật bằng cách cài `.apk` mới (workflow Android cũng đính kèm `.apk` vào Release khi đẩy tag).
-
-Lưu ý: repo phải **Public** thì app mới tải được bản cập nhật từ GitHub Releases mà không cần token. Nếu muốn repo Private, dùng server tĩnh (`provider: generic`).
-
-Không ký số thì Windows SmartScreen hiện "Unknown publisher" khi cài lần đầu: bấm **More info → Run anyway**. Đây là điều kiện phát hành (mục 4.5), không phải lỗi của app.
+- **Máy tính:** app tự kiểm tra bản mới trên GitHub Releases 10 giây sau khi mở và mỗi 6 giờ; có bản mới thì tải ngầm và hiện nút **Cài và khởi động lại** (hoặc *Để sau* — cài khi thoát app). Kiểm tra tay: Cài đặt > Cập nhật.
+- **Điện thoại (từ bản 1.3.1):** app tự hỏi GitHub mỗi lần mở (cách nhau ít nhất 6 giờ); có bản mới thì hiện nút **Tải bản mới** → trình duyệt tải file .apk → chạm vào thông báo tải xong để cài đè. Dữ liệu giữ nguyên. Android luôn yêu cầu bạn bấm xác nhận cài với app cài ngoài CH Play.
+- Phát hành bản mới: tăng `version` trong `package.json`, đẩy lên nhánh `main`, chạy hai workflow build; file tự đăng lên Releases.
 
 ## Chuyển dữ liệu từ bản HTML cũ
 

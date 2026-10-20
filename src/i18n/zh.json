@@ -397,7 +397,9 @@
     "error": "无法检查：{{msg}}",
     "auto": "自动下载更新",
     "devNote": "开发版：检查更新仅在已安装的应用中有效。",
-    "androidNote": "在 Android 上，直接覆盖安装新的 .apk 即可更新，数据会保留。"
+    "androidNote": "在 Android 上，直接覆盖安装新的 .apk 即可更新，数据会保留。",
+    "androidGet": "下载新版本",
+    "androidHint": "应用每次打开时会在 GitHub 检查新版本（至少间隔 6 小时）。点击下载新版本，下载完成后点通知即可覆盖安装，数据保留。"
   },
   "about": {
     "log": "日志文件",

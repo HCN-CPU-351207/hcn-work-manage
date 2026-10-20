@@ -397,7 +397,9 @@
     "error": "Couldn't check: {{msg}}",
     "auto": "Download updates automatically",
     "devNote": "Development build: update checks only work in the installed app.",
-    "androidNote": "On Android, update by installing the new .apk over the old one. Your data is kept."
+    "androidNote": "On Android, update by installing the new .apk over the old one. Your data is kept.",
+    "androidGet": "Download update",
+    "androidHint": "The app checks GitHub for a new version when opened (at most every 6 hours). Tap Download update, then tap the finished download to install over the current app; your data is kept."
   },
   "about": {
     "log": "Log file",

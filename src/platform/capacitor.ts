@@ -6,6 +6,7 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { Share } from '@capacitor/share';
 import type { HcnApi, LoadNotice, SyncActionResult, SyncInfo, UpdateEvent } from '../core/api.ts';
 import { emptySyncInfo } from '../core/api.ts';
+import { RELEASES_API, isNewer, parseRelease } from '../core/version.ts';
 import { createDataHub } from '../core/dataHub.ts';
 import type { DataHub } from '../core/dataHub.ts';
 import { parseImport } from '../core/migrate.ts';
@@ -134,6 +135,47 @@ export function createCapacitorApi(): HcnApi {
   let flushCb: (() => Promise<void> | void) | null = null;
   const externalCbs = new Set<(d: Data, rev: number) => void>();
   const updateCbs = new Set<(e: UpdateEvent) => void>();
+  const emitUpd = (e: UpdateEvent) => {
+    for (const cb of updateCbs) cb(e);
+  };
+  // Tự cập nhật: hỏi GitHub bản phát hành mới nhất; có bản mới thì hiện nút tải file .apk
+  let updUrl: string | null = null;
+  let updChecking = false;
+  const UPD_KEY = 'hcn.updCheckedAt';
+  const UPD_EVERY = 6 * 3600_000;
+  async function checkUpdate(manual: boolean): Promise<void> {
+    if (updChecking) return;
+    updChecking = true;
+    if (manual) emitUpd({ type: 'checking' });
+    try {
+      try {
+        localStorage.setItem(UPD_KEY, String(Date.now()));
+      } catch {
+        /* bỏ qua */
+      }
+      const res = await fetch(RELEASES_API, { headers: { Accept: 'application/vnd.github+json' } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const rel = parseRelease(await res.json());
+      const cur = (await App.getInfo()).version;
+      if (rel && rel.apkUrl && isNewer(cur, rel.version)) {
+        updUrl = rel.apkUrl;
+        emitUpd({ type: 'downloaded', version: rel.version });
+      } else emitUpd({ type: 'not-available', manual });
+    } catch (e) {
+      emitUpd({ type: 'error', message: (e as Error).message, manual });
+    } finally {
+      updChecking = false;
+    }
+  }
+  function maybeCheckUpdate(): void {
+    let last = 0;
+    try {
+      last = Number(localStorage.getItem(UPD_KEY) ?? 0);
+    } catch {
+      /* bỏ qua */
+    }
+    if (Date.now() - last >= UPD_EVERY) void checkUpdate(false);
+  }
   let syncTimer: ReturnType<typeof setTimeout> | undefined;
   let inflight: Promise<string | undefined> | null = null;
 
@@ -223,9 +265,13 @@ export function createCapacitorApi(): HcnApi {
       if (document.visibilityState === 'visible') void syncNow();
     }, 30_000);
     void App.addListener('appStateChange', ({ isActive }) => {
-      if (isActive) scheduleSync(300);
+      if (isActive) {
+        scheduleSync(300);
+        maybeCheckUpdate();
+      }
     });
     scheduleSync(800);
+    setTimeout(maybeCheckUpdate, 10_000);
   }
 
   return {
@@ -388,9 +434,12 @@ export function createCapacitorApi(): HcnApi {
       return () => void h.then((l) => l.remove());
     },
     async checkUpdates() {
-      for (const cb of updateCbs) cb({ type: 'not-available', manual: true });
+      await checkUpdate(true);
     },
-    async installUpdate() {},
+    async installUpdate() {
+      // mở link .apk bằng trình duyệt: tải về rồi chạm vào thông báo tải xong để cài đè (dữ liệu giữ nguyên)
+      if (updUrl) window.open(updUrl, '_blank');
+    },
     async setAutoDownload() {},
     onUpdate(cb) {
       updateCbs.add(cb);

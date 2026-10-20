@@ -397,7 +397,9 @@
     "error": "Không kiểm tra được: {{msg}}",
     "auto": "Tự động tải bản cập nhật",
     "devNote": "Đang chạy bản phát triển: kiểm tra cập nhật chỉ hoạt động ở bản đã cài.",
-    "androidNote": "Trên Android, cập nhật bằng cách cài file .apk mới đè lên bản cũ. Dữ liệu được giữ nguyên."
+    "androidNote": "Trên Android, cập nhật bằng cách cài file .apk mới đè lên bản cũ. Dữ liệu được giữ nguyên.",
+    "androidGet": "Tải bản mới",
+    "androidHint": "App tự kiểm tra bản mới trên GitHub mỗi lần mở (cách nhau ít nhất 6 giờ). Bấm Tải bản mới → khi tải xong, chạm vào thông báo để cài đè lên bản cũ; dữ liệu giữ nguyên."
   },
   "about": {
     "log": "Nhật ký",

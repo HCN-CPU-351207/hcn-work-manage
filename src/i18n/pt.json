@@ -397,7 +397,9 @@
     "error": "Não foi possível verificar: {{msg}}",
     "auto": "Transferir atualizações automaticamente",
     "devNote": "Versão de desenvolvimento: só funciona na aplicação instalada.",
-    "androidNote": "No Android, atualize instalando o novo .apk por cima. Os dados mantêm-se."
+    "androidNote": "No Android, atualize instalando o novo .apk por cima. Os dados mantêm-se.",
+    "androidGet": "Transferir atualização",
+    "androidHint": "A app verifica o GitHub ao abrir (no máximo a cada 6 horas). Toque em Transferir atualização e depois na transferência concluída para instalar por cima; os dados mantêm-se."
   },
   "about": {
     "log": "Ficheiro de registo",

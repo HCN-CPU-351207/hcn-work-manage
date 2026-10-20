@@ -397,7 +397,9 @@
     "error": "Prüfung fehlgeschlagen: {{msg}}",
     "auto": "Updates automatisch herunterladen",
     "devNote": "Entwicklungsversion: Updateprüfung nur in der installierten App.",
-    "androidNote": "Unter Android das neue .apk über die alte Version installieren. Die Daten bleiben erhalten."
+    "androidNote": "Unter Android das neue .apk über die alte Version installieren. Die Daten bleiben erhalten.",
+    "androidGet": "Update herunterladen",
+    "androidHint": "Die App prüft beim Öffnen GitHub auf neue Versionen (höchstens alle 6 Stunden). Update herunterladen tippen, dann den fertigen Download antippen, um darüber zu installieren; Daten bleiben erhalten."
   },
   "about": {
     "log": "Protokolldatei",

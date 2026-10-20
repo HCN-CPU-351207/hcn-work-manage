@@ -397,7 +397,9 @@
     "error": "Vérification impossible : {{msg}}",
     "auto": "Télécharger les mises à jour automatiquement",
     "devNote": "Version de développement : la recherche ne fonctionne que dans l'application installée.",
-    "androidNote": "Sur Android, mettez à jour en installant le nouvel .apk par-dessus. Les données sont conservées."
+    "androidNote": "Sur Android, mettez à jour en installant le nouvel .apk par-dessus. Les données sont conservées.",
+    "androidGet": "Télécharger la mise à jour",
+    "androidHint": "L'appli vérifie GitHub à l'ouverture (au plus toutes les 6 heures). Touchez Télécharger la mise à jour, puis le téléchargement terminé pour installer par-dessus ; les données sont conservées."
   },
   "about": {
     "log": "Fichier journal",

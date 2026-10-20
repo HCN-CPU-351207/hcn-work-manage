@@ -304,11 +304,22 @@ function UpdateSection() {
     : '';
   if (isAndroid())
     return (
-      <Block hint={t('update.androidNote')}>
+      <Block hint={t('update.androidHint')}>
         <dl className="kv">
           <dt>{t('update.current')}</dt>
           <dd>{`v${info.version}`}</dd>
         </dl>
+        <div className="btn-row">
+          <button className="btn" disabled={u.status === 'checking'} onClick={() => void api().checkUpdates()}>
+            {t('update.check')}
+          </button>
+          {u.status === 'ready' && (
+            <button className="btn btn-primary" onClick={() => void api().installUpdate()}>
+              {t('update.androidGet')}
+            </button>
+          )}
+        </div>
+        {status && <p className={cx('set-status', u.status === 'error' && 'err')} role="status">{status}</p>}
       </Block>
     );
   return (

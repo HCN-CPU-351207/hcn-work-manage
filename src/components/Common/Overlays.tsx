@@ -108,7 +108,7 @@ export function UpdateToast() {
           await api().installUpdate();
         }}
       >
-        {t('update.installNow')}
+        {api().platform === 'android' ? t('update.androidGet') : t('update.installNow')}
       </button>
       <button className="btn btn-sm" onClick={dismiss}>
         {t('update.later')}
