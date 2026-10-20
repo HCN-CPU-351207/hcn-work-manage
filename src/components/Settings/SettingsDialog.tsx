@@ -360,7 +360,6 @@ function NotifySection() {
   const s = useApp((st) => st.settings);
   const setSettings = useApp((st) => st.setSettings);
   const toast = useApp((st) => st.toast);
-  const num = (v: string, min: number, max: number, dflt: number) => Math.max(min, Math.min(max, Number(v) || dflt));
   const off = !s.notificationsEnabled;
   return (
     <>
@@ -383,7 +382,7 @@ function NotifySection() {
         <Block title={t('notify.rangeTitle')}>
           <div className="toggle-num">
             <Toggle label={t('notify.soon')} checked={s.notifySoon} onChange={(v) => setSettings({ notifySoon: v })} />
-            <input type="number" min={1} max={30} value={s.notifyDaysBefore} aria-label={t('notify.days')} onChange={(e) => setSettings({ notifyDaysBefore: num(e.target.value, 1, 30, 3) })} />
+            <NumInput min={1} max={30} value={s.notifyDaysBefore} label={t('notify.days')} onChange={(v) => setSettings({ notifyDaysBefore: v })} />
             <span className="unit">{t('notify.daysUnit')}</span>
           </div>
           <Toggle label={t('notify.due')} checked={s.notifyDue} onChange={(v) => setSettings({ notifyDue: v })} />
@@ -392,7 +391,7 @@ function NotifySection() {
         <Block title={t('notify.dayTitle')}>
           <div className="toggle-num">
             <Toggle label={t('notify.dayStart')} checked={s.notifyDayStart} onChange={(v) => setSettings({ notifyDayStart: v })} />
-            <input type="number" min={0} max={240} value={s.notifyDayLeadMin} aria-label={t('notify.leadUnit')} onChange={(e) => setSettings({ notifyDayLeadMin: num(e.target.value, 0, 240, 10) })} />
+            <NumInput min={0} max={240} value={s.notifyDayLeadMin} label={t('notify.leadUnit')} onChange={(v) => setSettings({ notifyDayLeadMin: v })} />
             <span className="unit">{t('notify.leadUnit')}</span>
           </div>
           <Toggle label={t('notify.dayLate')} checked={s.notifyDayLate} onChange={(v) => setSettings({ notifyDayLate: v })} />
@@ -457,6 +456,50 @@ function AboutSection() {
         </dd>
       </dl>
     </Block>
+  );
+}
+
+/**
+ * Ô nhập số: cho xóa trắng và gõ lại tự do (không bật về giá trị mặc định giữa chừng);
+ * số hợp lệ được lưu ngay, rời ô thì đưa về trong khoảng [min, max].
+ */
+export function NumInput({ value, min, max, label, onChange }: { value: number; min: number; max: number; label: string; onChange: (v: number) => void }) {
+  const [text, setText] = useState(String(value));
+  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    if (!focused) setText(String(value));
+  }, [value, focused]);
+  const clamp = (n: number) => Math.max(min, Math.min(max, Math.round(n)));
+  return (
+    <input
+      type="number"
+      inputMode="numeric"
+      min={min}
+      max={max}
+      value={text}
+      aria-label={label}
+      onFocus={(e) => {
+        setFocused(true);
+        e.currentTarget.select();
+      }}
+      onChange={(e) => {
+        const v = e.target.value;
+        setText(v);
+        if (v.trim() === '') return;
+        const n = Number(v);
+        if (Number.isFinite(n) && n >= min && n <= max) onChange(Math.round(n));
+      }}
+      onBlur={() => {
+        setFocused(false);
+        const n = Number(text);
+        const v = text.trim() === '' || !Number.isFinite(n) ? value : clamp(n);
+        setText(String(v));
+        if (v !== value) onChange(v);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') e.currentTarget.blur();
+      }}
+    />
   );
 }
 
