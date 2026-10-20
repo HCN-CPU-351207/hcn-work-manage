@@ -14,7 +14,9 @@ import { defaultSettings, emptyData, toBackup } from '../core/model.ts';
 import type { Data, Level, Settings } from '../core/model.ts';
 import { initMeta, isMeta } from '../core/sync.ts';
 import type { SyncMeta } from '../core/sync.ts';
-import { discoverHubs, normalizeAddr, pairWithHub, SyncHttpError, syncWithFailover } from '../lib/syncClient.ts';
+import { diagnose, discoverHubs, localPrefixes, pairAuto, routeKind, SyncHttpError, syncSmart } from '../lib/syncClient.ts';
+import type { LocalNet } from '../lib/syncClient.ts';
+import { localNets, syncFetch } from './netInfo.ts';
 import { fillWorkbook } from '../lib/xlsxBuild.ts';
 
 const DIR = Directory.Data;
@@ -32,6 +34,8 @@ interface ClientState {
   lastChanges: number | null;
   /** mọi địa chỉ đã biết của PC (Wi-Fi, USB, Bluetooth) */
   hosts?: string[];
+  /** mã nhận dạng của PC đã ghép đôi (không nhầm sang PC khác cùng IP) */
+  hubId?: string | null;
 }
 interface SyncFile {
   v: 1;
@@ -178,6 +182,14 @@ export function createCapacitorApi(): HcnApi {
   }
   let syncTimer: ReturnType<typeof setTimeout> | undefined;
   let inflight: Promise<string | undefined> | null = null;
+  /** mạng của điện thoại đọc gần nhất (để biết đang đi qua Wi-Fi hay USB / Bluetooth) */
+  let lastNets: LocalNet[] | null = null;
+  /** lần tự quét tìm PC gần nhất (quét tự động tối đa 2 phút một lần cho đỡ tốn pin) */
+  let lastAutoScan = 0;
+  const readNets = async () => {
+    lastNets = await localNets();
+    return lastNets;
+  };
 
   /** ghi tuần tự để các lần ghi không chen nhau */
   const queue = (fn: () => Promise<void>) => {
@@ -217,7 +229,8 @@ export function createCapacitorApi(): HcnApi {
       lastSync: client.lastSync,
       lastError: client.lastError,
       lastChanges: client.lastChanges,
-      busy: !!inflight
+      busy: !!inflight,
+      route: client.addr ? routeKind(client.addr, lastNets) : null
     };
   }
 
@@ -227,16 +240,25 @@ export function createCapacitorApi(): HcnApi {
     syncTimer = setTimeout(() => void syncNow(), ms);
   }
 
-  async function doSync(): Promise<string | undefined> {
+  async function doSync(manual: boolean): Promise<string | undefined> {
     if (!hub || !client.token || !client.addr) return 'unpaired';
+    let scanned = false;
     try {
       await flushCb?.();
       await writes;
+      const nets = await readNets();
+      const lp = nets ? localPrefixes(nets) : [];
+      // Quét lại khi mọi địa chỉ cũ đều hỏng: bấm tay thì quét cả các dải chia sẻ mạng;
+      // tự động thì chỉ quét dải điện thoại đang dùng, và chỉ khi có Wi-Fi / USB / Bluetooth (không quét trên 4G)
+      const auto = (nets === null || lp.length > 0) && Date.now() - lastAutoScan > 120_000;
+      // dải chia sẻ mạng đoán sẵn chỉ cần khi không đọc được mạng thật của điện thoại
+      const scan = manual ? { localPrefixes: lp, tether: nets === null } : auto ? { localPrefixes: lp, tether: false } : null;
+      scanned = !!scan;
       const { data, meta } = hub.state;
-      const { addr, result: r } = await syncWithFailover(fetch, client.addr, client.hosts ?? [], client.token, data, meta);
+      const { addr, result: r, hubId } = await syncSmart(syncFetch, { primary: client.addr, hosts: client.hosts ?? [], token: client.token, hubId: client.hubId, data, meta, scan });
       const a = hub.adoptFromHub(r.data, r.meta, Date.now());
       const hosts = [...new Set([addr, ...(r.addresses ?? []), ...(client.hosts ?? [])])].slice(0, 12);
-      client = { ...client, addr, hosts, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
+      client = { ...client, addr, hosts, hubId, hubName: r.hubName ?? client.hubName, lastSync: new Date().toISOString(), lastError: null, lastChanges: r.changes ?? null };
       if (a.changed) {
         void persistData();
         for (const cb of externalCbs) cb(a.data, a.rev);
@@ -246,15 +268,17 @@ export function createCapacitorApi(): HcnApi {
       return undefined;
     } catch (e) {
       const code = e instanceof SyncHttpError ? e.code : 'server';
+      if (scanned && !manual && (code === 'network' || code === 'timeout')) lastAutoScan = Date.now();
       client = { ...client, lastError: code, ...(code === 'unpaired' ? { token: null } : {}) };
       void persistSync();
       return code;
     }
   }
 
-  function syncNow(): Promise<string | undefined> {
-    if (inflight) return inflight;
-    inflight = doSync().finally(() => {
+  function syncNow(manual = false): Promise<string | undefined> {
+    // bấm tay đúng lúc lần tự động đang chạy mà lần đó hỏng → chạy thêm một lần đầy đủ
+    if (inflight) return manual ? inflight.then((err) => (err && err !== 'unpaired' ? syncNow(true) : err)) : inflight;
+    inflight = doSync(manual).finally(() => {
       inflight = null;
     });
     return inflight;
@@ -456,11 +480,11 @@ export function createCapacitorApi(): HcnApi {
     },
     async syncAction(a): Promise<SyncActionResult> {
       if (a.type === 'pair') {
-        const addr = normalizeAddr(a.addr);
-        if (!addr) return { ...info(), error: 'addr' };
         try {
-          const r = await pairWithHub(fetch, addr, a.code, a.name.trim() || 'Android');
-          client = { addr, token: r.token, hubName: r.hubName, lastSync: null, lastError: null, lastChanges: null, hosts: [...new Set([addr, ...r.addresses])] };
+          const nets = await readNets();
+          const r = await pairAuto(syncFetch, { addr: a.addr, code: a.code, name: a.name.trim() || 'Android', localPrefixes: nets ? localPrefixes(nets) : [], prefixes: nets ? [] : undefined });
+          client = { addr: r.addr, token: r.token, hubName: r.hubName, hubId: r.hubId, lastSync: null, lastError: null, lastChanges: null, hosts: [...new Set([r.addr, ...r.addresses])] };
+          lastAutoScan = 0;
           await persistSync();
           const err = await syncNow();
           return { ...info(), error: err };
@@ -469,15 +493,30 @@ export function createCapacitorApi(): HcnApi {
         }
       }
       if (a.type === 'discover') {
-        const found = await discoverHubs(fetch, [client.addr, ...(client.hosts ?? [])].filter((x): x is string => !!x));
+        const nets = await readNets();
+        const found = await discoverHubs(syncFetch, [client.addr, ...(client.hosts ?? [])].filter((x): x is string => !!x), { localPrefixes: nets ? localPrefixes(nets) : [], prefixes: nets ? [] : undefined });
         return { ...info(), found, error: found.length ? undefined : 'notFound' };
       }
+      if (a.type === 'diagnose') {
+        const nets = await readNets();
+        const hosts = client.token ? [client.addr, ...(client.hosts ?? [])].filter((x): x is string => !!x) : [];
+        const report = await diagnose(syncFetch, { nets, hosts, hubId: client.token ? (client.hubId ?? null) : null });
+        // tìm thấy PC ở địa chỉ mới → dùng luôn và đồng bộ
+        const f = report.found[0];
+        if (client.token && report.hints[0] === 'addrChanged' && f) {
+          client = { ...client, addr: f.addr, hosts: [...new Set([f.addr, ...(client.hosts ?? [])])].slice(0, 12) };
+          await persistSync();
+          const err = await syncNow();
+          return { ...info(), report, error: err };
+        }
+        return { ...info(), report, found: client.token ? undefined : report.found };
+      }
       if (a.type === 'syncNow') {
-        const err = await syncNow();
+        const err = await syncNow(true);
         return { ...info(), error: err };
       }
       if (a.type === 'unpair') {
-        client = { addr: client.addr, token: null, hubName: null, lastSync: null, lastError: null, lastChanges: null };
+        client = { addr: client.addr, token: null, hubName: null, hubId: null, lastSync: null, lastError: null, lastChanges: null };
         await persistSync();
       }
       return info();

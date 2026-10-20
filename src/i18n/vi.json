@@ -425,21 +425,20 @@
     "hubHint": "Máy này làm trạm: điện thoại cùng mạng Wi-Fi sẽ gửi và nhận thay đổi khi app PC đang mở. Dữ liệu không đi ra ngoài mạng nội bộ.",
     "enable": "Cho phép điện thoại đồng bộ (Wi-Fi, USB, Bluetooth)",
     "addresses": "Địa chỉ của máy này",
-    "addressesHint": "Nhập một trong các địa chỉ này trên điện thoại (hoặc bấm Tìm PC tự động trên điện thoại). Nhãn cho biết đường kết nối: Wi-Fi, Cáp USB hay Bluetooth.",
+    "addressesHint": "Điện thoại chỉ cần mã ghép đôi — app tự tìm địa chỉ. Các địa chỉ dưới đây để nhập tay khi cần; nhãn cho biết đường kết nối.",
     "noAddress": "Máy này chưa kết nối mạng Wi-Fi hoặc mạng dây.",
     "code": "Mã ghép đôi",
     "codeHint": "Mỗi mã chỉ dùng được một lần. Sau khi một điện thoại ghép đôi xong, mã tự đổi.",
     "regen": "Đổi mã",
     "devices": "Điện thoại đã ghép đôi",
-    "noDevices": "Chưa có điện thoại nào. Mở app HCN trên điện thoại, vào Cài đặt > Đồng bộ và nhập địa chỉ cùng mã ở trên.",
+    "noDevices": "Chưa có điện thoại nào. Trên điện thoại: Cài đặt > Đồng bộ, nhập mã ở trên rồi bấm Kết nối.",
     "lastSeen": "Đồng bộ gần nhất: {{time}}",
     "never": "chưa đồng bộ",
     "remove": "Gỡ điện thoại",
     "removeTitle": "Gỡ điện thoại",
     "removeMsg": "{{name}} sẽ không đồng bộ được nữa cho đến khi ghép đôi lại. Dữ liệu trên điện thoại vẫn còn.",
     "lastSyncLine": "Lần đồng bộ gần nhất lúc {{time}}, {{n}} thay đổi.",
-    "firewall": "Lần đầu bật (hoặc khi cắm USB / Bluetooth lần đầu), Windows có thể hỏi quyền tường lửa cho HCN Work Manage: tích cả Riêng tư (Private) và Công cộng (Public) rồi chọn Cho phép (Allow), vì mạng USB/Bluetooth thường được Windows xếp vào Công cộng.",
-    "clientHint": "Trên PC, mở HCN > Cài đặt > Đồng bộ, bật đồng bộ, rồi nhập địa chỉ và mã hiển thị ở đó. Điện thoại và PC cần cùng mạng Wi-Fi, hoặc nối với nhau qua cáp USB / Bluetooth.",
+    "clientHint": "Trên PC: mở HCN > Cài đặt > Đồng bộ và bật đồng bộ. Trên điện thoại chỉ cần nhập mã 6 số hiện trên PC rồi bấm Kết nối — app tự tìm PC trong cùng Wi-Fi hoặc qua cáp USB / Bluetooth.",
     "addr": "Địa chỉ PC",
     "addrPlaceholder": "vd. 192.168.1.5:47821",
     "pairCode": "Mã ghép đôi (6 số)",
@@ -447,7 +446,7 @@
     "connect": "Kết nối",
     "connecting": "Đang kết nối…",
     "connected": "Đã kết nối với {{name}}",
-    "auto": "Tự đồng bộ khi mở app, khi có thay đổi và mỗi 30 giây, miễn là điện thoại cùng mạng Wi-Fi với PC đang mở HCN. Khác mạng thì vẫn dùng bình thường, sẽ đồng bộ khi về lại.",
+    "auto": "Tự đồng bộ khi mở app, khi có thay đổi và mỗi 30 giây khi điện thoại nối được với PC đang chạy HCN. PC đổi địa chỉ, hay bạn chuyển giữa Wi-Fi, cáp USB và Bluetooth thì app tự tìm lại, không cần ghép đôi lại.",
     "hub": "Máy PC",
     "lastSync": "Đồng bộ gần nhất",
     "now": "Đồng bộ ngay",
@@ -459,29 +458,115 @@
       "code": "Mã ghép đôi không đúng hoặc đã được dùng. Xem mã mới trên PC.",
       "unpaired": "PC đã gỡ điện thoại này. Hãy ghép đôi lại.",
       "tooMany": "Nhập sai quá nhiều lần. Thử lại sau 1 phút.",
-      "network": "Không kết nối được PC. Kiểm tra: cùng mạng Wi-Fi, PC đang mở HCN và đã bật đồng bộ, địa chỉ đúng.",
-      "timeout": "PC không phản hồi kịp. Thử lại khi tín hiệu Wi-Fi tốt hơn.",
+      "network": "Không tới được PC. Bấm Kiểm tra kết nối để xem nguyên nhân.",
+      "timeout": "PC không phản hồi (thường do tường lửa Windows). Bấm Kiểm tra kết nối để xem cách sửa.",
       "schema": "Hai máy dùng phiên bản dữ liệu khác nhau. Cập nhật app trên cả hai máy.",
       "server": "PC báo lỗi khi đồng bộ. Thử lại sau.",
       "addr": "Nhập địa chỉ PC.",
-      "notFound": "Không tìm thấy PC. Kiểm tra PC đang mở HCN và đã bật đồng bộ, rồi nhập địa chỉ hiện trên PC."
+      "notFound": "Không tìm thấy PC nào. Kiểm tra PC đang mở HCN và đã bật đồng bộ, hai máy nối cùng mạng, rồi bấm Kiểm tra kết nối.",
+      "firewall": "Chưa mở được tường lửa (có thể đã bấm Không ở hộp thoại quyền quản trị). Thử lại, hoặc nhờ người có quyền quản trị máy."
     },
     "kind": {
       "wifi": "Wi-Fi",
       "usb": "Cáp USB",
       "bluetooth": "Bluetooth",
-      "lan": "Mạng dây / USB"
+      "lan": "Mạng dây / USB",
+      "hotspot": "Điểm phát",
+      "other": "Mạng khác",
+      "cellular": "4G/5G",
+      "vpn": "VPN"
     },
     "tetherTitle": "Không có Wi-Fi? Dùng cáp USB hoặc Bluetooth",
     "tetherHint": "Điện thoại chia sẻ mạng cho PC qua cáp hoặc Bluetooth, sau đó đồng bộ như qua Wi-Fi. Không cần Internet.",
-    "tetherUsb": "USB: cắm cáp điện thoại vào PC. Trên điện thoại: Cài đặt > Kết nối & chia sẻ (hoặc Điểm phát sóng & chia sẻ) > bật Chia sẻ kết nối qua USB.",
-    "tetherBt": "Bluetooth: ghép đôi Bluetooth điện thoại với PC trước. Trên điện thoại bật Chia sẻ kết nối qua Bluetooth. Trên PC: biểu tượng Bluetooth ở khay > Tham gia mạng cá nhân (Join a Personal Area Network) > chọn điện thoại > Kết nối bằng > Điểm truy cập.",
-    "tetherThen": "Sau đó địa chỉ mới sẽ hiện ở trên (nhãn Cáp USB, Bluetooth hoặc Mạng dây / USB). Điện thoại đã ghép đôi thì tự tìm ra đường mới, không cần nhập lại.",
+    "tetherUsb": "Cáp USB: cắm cáp điện thoại vào PC, rồi trên điện thoại bật Chia sẻ kết nối qua USB (Cài đặt > Kết nối & chia sẻ, hoặc Điểm phát sóng & chia sẻ). Chỉ cắm để sạc hoặc chọn \"Truyền tệp\" thì không đồng bộ được.",
+    "tetherBt": "Bluetooth: ghép đôi Bluetooth điện thoại với PC, rồi bật Chia sẻ kết nối qua Bluetooth trên điện thoại. Trên PC: biểu tượng Bluetooth ở khay > Tham gia mạng cá nhân (Join a Personal Area Network) > chuột phải điện thoại > Kết nối bằng > Điểm truy cập. Chỉ ghép đôi Bluetooth thôi thì chưa có mạng để đồng bộ.",
+    "tetherThen": "Sau đó địa chỉ mới hiện ở trên (nhãn Cáp USB / Bluetooth). Điện thoại đã ghép đôi sẽ tự tìm ra đường mới, không cần nhập lại.",
     "discover": "Tìm PC tự động",
-    "searching": "Đang tìm PC… (tối đa khoảng 30 giây)",
+    "searching": "Đang tìm PC…",
     "found": "Đã tìm thấy {{name}} ({{addr}}). Nhập mã ghép đôi rồi bấm Kết nối.",
-    "clientTether": "Không có Wi-Fi: bật Chia sẻ kết nối qua USB (cắm cáp vào PC) hoặc qua Bluetooth trong cài đặt điện thoại, rồi bấm Tìm PC tự động.",
-    "routes": "Các đường tới PC"
+    "clientTether": "Không có Wi-Fi chung: cắm cáp vào PC rồi bật Chia sẻ kết nối qua USB, hoặc bật Chia sẻ kết nối qua Bluetooth trong cài đặt điện thoại. Chỉ cắm sạc hay chỉ ghép đôi Bluetooth thì chưa đủ.",
+    "routes": "Các đường tới PC",
+    "addrOptional": "Địa chỉ PC (để trống để tự tìm)",
+    "manualAddr": "Nhập địa chỉ PC thủ công",
+    "connectingAuto": "Đang tìm PC và kết nối…",
+    "check": "Kiểm tra kết nối",
+    "checking": "Đang kiểm tra…",
+    "route": "Đường đang dùng",
+    "foundN": "Tìm thấy {{n}} PC. Chọn PC muốn nối (hoặc để trống để tự chọn), nhập mã rồi bấm Kết nối.",
+    "ready": "Tình trạng sẵn sàng",
+    "fixFw": "Mở tường lửa cho HCN",
+    "fixingFw": "Đang chờ cấp quyền…",
+    "fixFwHint": "Windows sẽ hỏi quyền quản trị — chọn Có (Yes).",
+    "fwFixed": "Đã mở tường lửa cho HCN",
+    "publicWarn": "Mạng Công cộng (thường là cáp USB / Bluetooth từ điện thoại) bị tường lửa Windows chặn nếu chưa mở tường lửa cho HCN.",
+    "iphone": "iPhone / iPad (cáp Lightning): chưa có app HCN cho iPhone — app hiện chỉ có bản Android (.apk), nên iPhone không cài và không đồng bộ được.",
+    "profile": {
+      "public": "Mạng Công cộng",
+      "private": "Mạng Riêng tư",
+      "domain": "Mạng Miền"
+    },
+    "st": {
+      "running": "Trạm đồng bộ đang chạy (cổng {{port}})",
+      "fw_ok": "Tường lửa Windows cho phép điện thoại kết nối, kể cả qua cáp USB, Bluetooth và Wi-Fi Công cộng",
+      "fw_missing": "Tường lửa Windows có thể chặn điện thoại khi nối qua cáp USB, Bluetooth hoặc Wi-Fi Công cộng",
+      "fw_blocked": "Tường lửa Windows đang chặn HCN (thường do trước đây đã bấm Hủy ở hộp thoại tường lửa)",
+      "fw_unknown": "Không kiểm tra được tường lửa. Nếu máy dùng phần mềm diệt virus có tường lửa riêng, hãy cho phép HCN Work Manage trong phần mềm đó.",
+      "fwChecking": "Đang kiểm tra tường lửa…",
+      "tray": "Đóng cửa sổ thì HCN vẫn chạy ở khay hệ thống, điện thoại vẫn đồng bộ được (tắt hẳn: chuột phải biểu tượng HCN > Thoát hẳn)",
+      "loginOn": "Tự mở cùng Windows: trạm luôn sẵn sàng sau khi bật máy",
+      "loginOff": "Chưa tự mở cùng Windows: sau khi khởi động lại máy, phải mở HCN thì điện thoại mới đồng bộ được",
+      "loginBtn": "Bật tự mở cùng Windows"
+    },
+    "diag": {
+      "title": "Kết quả kiểm tra kết nối",
+      "nets": "Mạng của điện thoại",
+      "netsUnknown": "Không đọc được mạng của điện thoại.",
+      "netsNone": "Điện thoại chỉ đang có dữ liệu di động (4G/5G): chưa có Wi-Fi, cáp USB hay Bluetooth nào nối với PC.",
+      "probes": "Địa chỉ PC đã thử",
+      "noProbes": "Chưa ghép đôi nên chưa có địa chỉ PC để thử.",
+      "found": "Tìm thấy PC",
+      "cause": "Nguyên nhân và cách sửa",
+      "r": {
+        "ok": "trả lời sau {{ms}} ms ({{name}})",
+        "timeout": "không phản hồi",
+        "network": "bị từ chối hoặc không tới được",
+        "notHcn": "không phải PC chạy HCN"
+      },
+      "h": {
+        "ok": {
+          "t": "Kết nối tốt",
+          "d": "PC trả lời bình thường. Nếu chưa thấy dữ liệu mới, bấm Đồng bộ ngay."
+        },
+        "addrChanged": {
+          "t": "PC đã đổi địa chỉ — đã tìm thấy ở địa chỉ mới",
+          "d": "App đã chuyển sang địa chỉ mới và đồng bộ lại. Không cần ghép đôi lại."
+        },
+        "noLocalNet": {
+          "t": "Điện thoại chưa nối với PC",
+          "d": "Bật Wi-Fi cùng mạng với PC, hoặc cắm cáp và bật Chia sẻ kết nối qua USB, hoặc bật Chia sẻ kết nối qua Bluetooth (trên PC chọn Tham gia mạng cá nhân)."
+        },
+        "diffNet": {
+          "t": "Điện thoại và PC đang ở hai mạng khác nhau",
+          "d": "Địa chỉ PC không nằm trong mạng điện thoại đang dùng. Cho hai máy vào cùng một Wi-Fi (không dùng Wi-Fi Khách), hoặc nối bằng cáp USB / Bluetooth như hướng dẫn."
+        },
+        "firewall": {
+          "t": "Cùng mạng nhưng PC không phản hồi — thường do tường lửa",
+          "d": "Trên PC: Cài đặt > Đồng bộ > bấm \"Mở tường lửa cho HCN\" rồi chọn Có. Nếu đang dùng Wi-Fi công ty hoặc Wi-Fi Khách, mạng có thể chặn các máy nói chuyện với nhau: thử cáp USB."
+        },
+        "hubOff": {
+          "t": "PC không nhận kết nối",
+          "d": "Mở HCN trên PC và bật \"Cho phép điện thoại đồng bộ\". Nếu PC vừa ngủ hoặc khởi động lại, mở lại HCN (bật Tự mở cùng Windows để khỏi quên)."
+        },
+        "otherHub": {
+          "t": "Địa chỉ cũ giờ thuộc về một PC khác",
+          "d": "App không đồng bộ nhầm sang PC đó. Kiểm tra PC của bạn đang mở HCN và cùng mạng với điện thoại."
+        },
+        "notFound": {
+          "t": "Không thấy PC nào trong mạng",
+          "d": "Kiểm tra: PC đang mở HCN và đã bật đồng bộ; hai máy cùng Wi-Fi hoặc đã bật chia sẻ kết nối qua USB / Bluetooth; trên PC đã mở tường lửa cho HCN."
+        }
+      }
+    }
   },
   "rem": {
     "soon": "Sắp đến hạn ({{when}}): {{ma}}",

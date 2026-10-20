@@ -425,21 +425,20 @@
     "hubHint": "Dieser PC ist die Zentrale: Telefone im selben WLAN tauschen Änderungen aus, solange die PC-App geöffnet ist. Die Daten verlassen das lokale Netz nicht.",
     "enable": "Telefon-Synchronisierung erlauben (WLAN, USB, Bluetooth)",
     "addresses": "Adresse dieses PCs",
-    "addressesHint": "Eine dieser Adressen am Telefon eingeben (oder dort PC automatisch suchen tippen). Die Markierung zeigt den Weg: WLAN, USB-Kabel oder Bluetooth.",
+    "addressesHint": "Das Telefon braucht nur den Kopplungscode — die App findet die Adresse. Diese Adressen dienen bei Bedarf zur manuellen Eingabe; das Etikett zeigt die Verbindungsart.",
     "noAddress": "Dieser PC ist mit keinem WLAN oder LAN verbunden.",
     "code": "Kopplungscode",
     "codeHint": "Jeder Code gilt nur einmal und ändert sich nach dem Koppeln.",
     "regen": "Neuer Code",
     "devices": "Gekoppelte Telefone",
-    "noDevices": "Noch keine Telefone. HCN am Telefon öffnen, Einstellungen > Synchronisierung, dann Adresse und Code von oben eingeben.",
+    "noDevices": "Noch keine Telefone. Am Telefon: Einstellungen > Synchronisierung, den Code oben eingeben und auf Verbinden tippen.",
     "lastSeen": "Zuletzt synchronisiert: {{time}}",
     "never": "nie",
     "remove": "Telefon entfernen",
     "removeTitle": "Telefon entfernen",
     "removeMsg": "{{name}} kann erst nach erneutem Koppeln wieder synchronisieren. Die Daten auf dem Telefon bleiben.",
     "lastSyncLine": "Letzte Synchronisierung {{time}}, {{n}} Änderungen.",
-    "firewall": "Beim ersten Mal (oder bei der ersten USB-/Bluetooth-Verbindung) fragt Windows evtl. nach Firewall-Zugriff: Privat und Öffentlich ankreuzen und Zulassen, da USB/Bluetooth-Netze oft als öffentlich gelten.",
-    "clientHint": "Am PC HCN > Einstellungen > Synchronisierung öffnen, einschalten und die angezeigte Adresse und den Code eingeben. Telefon und PC müssen im selben WLAN oder per USB-Kabel / Bluetooth verbunden sein.",
+    "clientHint": "Am PC: HCN > Einstellungen > Synchronisierung öffnen und die Synchronisierung einschalten. Am Telefon nur den 6-stelligen Code vom PC eingeben und auf Verbinden tippen — die App findet den PC im selben WLAN oder über USB-Kabel / Bluetooth.",
     "addr": "PC-Adresse",
     "addrPlaceholder": "z. B. 192.168.1.5:47821",
     "pairCode": "Code (6 Ziffern)",
@@ -447,7 +446,7 @@
     "connect": "Verbinden",
     "connecting": "Verbinde…",
     "connected": "Verbunden mit {{name}}",
-    "auto": "Synchronisiert beim Öffnen, nach Änderungen und alle 30 Sekunden im selben WLAN wie ein PC mit geöffnetem HCN. Unterwegs funktioniert alles normal und wird später synchronisiert.",
+    "auto": "Synchronisiert beim Öffnen der App, nach Änderungen und alle 30 Sekunden, solange das Telefon den PC mit geöffnetem HCN erreicht. Ändert sich die Adresse des PCs oder wechseln Sie zwischen WLAN, USB-Kabel und Bluetooth, findet die App ihn wieder — kein erneutes Koppeln nötig.",
     "hub": "PC",
     "lastSync": "Zuletzt synchronisiert",
     "now": "Jetzt synchronisieren",
@@ -459,29 +458,115 @@
       "code": "Code falsch oder schon benutzt. Neuen Code am PC ablesen.",
       "unpaired": "Der PC hat dieses Telefon entfernt. Bitte neu koppeln.",
       "tooMany": "Zu viele Fehlversuche. In einer Minute erneut versuchen.",
-      "network": "PC nicht erreichbar. Prüfen: selbes WLAN, HCN am PC geöffnet und Synchronisierung an, Adresse korrekt.",
-      "timeout": "Der PC hat nicht rechtzeitig geantwortet. Mit besserem WLAN erneut versuchen.",
+      "network": "PC nicht erreichbar. Auf Verbindung prüfen tippen, um die Ursache zu sehen.",
+      "timeout": "Der PC antwortet nicht (meist die Windows-Firewall). Auf Verbindung prüfen tippen, um die Lösung zu sehen.",
       "schema": "Die Geräte nutzen unterschiedliche Datenversionen. App auf beiden aktualisieren.",
       "server": "Der PC meldet einen Fehler. Später erneut versuchen.",
       "addr": "PC-Adresse eingeben.",
-      "notFound": "Kein PC gefunden. Prüfen, ob HCN am PC mit Synchronisierung läuft, dann die angezeigte Adresse eingeben."
+      "notFound": "Kein PC gefunden. Prüfen Sie, ob HCN am PC geöffnet und die Synchronisierung eingeschaltet ist und beide Geräte im selben Netzwerk sind; dann auf Verbindung prüfen tippen.",
+      "firewall": "Firewall konnte nicht geöffnet werden (vielleicht wurde in der Administratorabfrage Nein gewählt). Erneut versuchen oder jemanden mit Administratorrechten bitten."
     },
     "kind": {
       "wifi": "WLAN",
       "usb": "USB-Kabel",
       "bluetooth": "Bluetooth",
-      "lan": "Kabel / USB"
+      "lan": "Kabel / USB",
+      "hotspot": "Hotspot",
+      "other": "Anderes Netzwerk",
+      "cellular": "4G/5G",
+      "vpn": "VPN"
     },
     "tetherTitle": "Kein WLAN? USB-Kabel oder Bluetooth nutzen",
     "tetherHint": "Das Telefon teilt per Kabel oder Bluetooth ein Netz mit dem PC; danach funktioniert die Synchronisierung wie über WLAN. Kein Internet nötig.",
-    "tetherUsb": "USB: Telefon per Kabel anschließen. Am Telefon: Einstellungen > Verbindungen/Hotspot & Tethering > USB-Tethering einschalten.",
-    "tetherBt": "Bluetooth: Telefon zuerst per Bluetooth mit dem PC koppeln. Am Telefon Bluetooth-Tethering einschalten. Am PC: Bluetooth-Symbol > Einem persönlichen Netzwerk beitreten > Telefon wählen > Verbinden über > Zugriffspunkt.",
-    "tetherThen": "Danach erscheint oben eine neue Adresse (USB-Kabel, Bluetooth oder Kabel / USB). Bereits gekoppelte Telefone finden den neuen Weg selbst.",
+    "tetherUsb": "USB-Kabel: Telefon an den PC anschließen und am Telefon USB-Tethering einschalten (Einstellungen > Verbindungen & Freigabe bzw. Hotspot & Tethering). Nur Laden oder der Modus „Dateiübertragung“ synchronisiert nicht.",
+    "tetherBt": "Bluetooth: Telefon mit dem PC koppeln und am Telefon Bluetooth-Tethering einschalten. Am PC: Bluetooth-Symbol im Infobereich > Einem persönlichen Netzwerk (PAN) beitreten > Rechtsklick auf das Telefon > Verbindung herstellen über > Zugriffspunkt. Nur Bluetooth-Kopplung erzeugt kein Netzwerk zum Synchronisieren.",
+    "tetherThen": "Danach erscheint oben die neue Adresse (Etikett USB-Kabel / Bluetooth). Ein gekoppeltes Telefon findet den neuen Weg selbst — nichts neu eingeben.",
     "discover": "PC automatisch suchen",
-    "searching": "Suche… (bis etwa 30 Sekunden)",
+    "searching": "PC wird gesucht…",
     "found": "{{name}} gefunden ({{addr}}). Code eingeben und Verbinden tippen.",
-    "clientTether": "Kein WLAN: USB-Tethering (Kabel zum PC) oder Bluetooth-Tethering einschalten und PC automatisch suchen tippen.",
-    "routes": "Wege zum PC"
+    "clientTether": "Kein gemeinsames WLAN: Kabel an den PC anschließen und USB-Tethering einschalten, oder Bluetooth-Tethering in den Telefoneinstellungen einschalten. Nur Laden oder nur Bluetooth-Kopplung reicht nicht.",
+    "routes": "Wege zum PC",
+    "addrOptional": "PC-Adresse (leer lassen zum automatischen Suchen)",
+    "manualAddr": "PC-Adresse manuell eingeben",
+    "connectingAuto": "PC wird gesucht und verbunden…",
+    "check": "Verbindung prüfen",
+    "checking": "Wird geprüft…",
+    "route": "Verbunden über",
+    "foundN": "{{n}} PC gefunden. Einen auswählen (oder leer lassen für automatische Wahl), Code eingeben und auf Verbinden tippen.",
+    "ready": "Bereitschaft",
+    "fixFw": "Firewall für HCN öffnen",
+    "fixingFw": "Warte auf Berechtigung…",
+    "fixFwHint": "Windows fragt nach Administratorrechten — wählen Sie Ja.",
+    "fwFixed": "Firewall für HCN geöffnet",
+    "publicWarn": "Öffentliche Netzwerke (meist USB- / Bluetooth-Verbindungen vom Telefon) werden von der Windows-Firewall blockiert, bis die Firewall für HCN geöffnet ist.",
+    "iphone": "iPhone / iPad (Lightning-Kabel): Es gibt noch keine HCN-App für iPhone — die App gibt es nur für Android (.apk), daher kann ein iPhone sie weder installieren noch synchronisieren.",
+    "profile": {
+      "public": "Öffentliches Netzwerk",
+      "private": "Privates Netzwerk",
+      "domain": "Domänennetzwerk"
+    },
+    "st": {
+      "running": "Sync-Dienst läuft (Port {{port}})",
+      "fw_ok": "Die Windows-Firewall lässt Telefone zu, auch über USB-Kabel, Bluetooth und öffentliches WLAN",
+      "fw_missing": "Die Windows-Firewall blockiert das Telefon eventuell über USB-Kabel, Bluetooth oder öffentliches WLAN",
+      "fw_blocked": "Die Windows-Firewall blockiert HCN (meist, weil früher in der Firewall-Abfrage Abbrechen gewählt wurde)",
+      "fw_unknown": "Firewall konnte nicht geprüft werden. Bei einem Virenschutz mit eigener Firewall HCN Work Manage dort zulassen.",
+      "fwChecking": "Firewall wird geprüft…",
+      "tray": "Beim Schließen des Fensters läuft HCN im Infobereich weiter, das Telefon kann weiter synchronisieren (Beenden: Rechtsklick auf das HCN-Symbol > Beenden)",
+      "loginOn": "Startet mit Windows: der Dienst ist nach dem Einschalten immer bereit",
+      "loginOff": "Startet nicht mit Windows: nach einem Neustart muss HCN geöffnet werden, bevor das Telefon synchronisieren kann",
+      "loginBtn": "Mit Windows starten"
+    },
+    "diag": {
+      "title": "Ergebnis der Verbindungsprüfung",
+      "nets": "Netzwerke des Telefons",
+      "netsUnknown": "Netzwerke des Telefons konnten nicht gelesen werden.",
+      "netsNone": "Das Telefon hat nur mobile Daten (4G/5G): kein WLAN, USB oder Bluetooth zum PC.",
+      "probes": "Getestete PC-Adressen",
+      "noProbes": "Noch nicht gekoppelt, daher keine PC-Adresse zum Testen.",
+      "found": "PC gefunden",
+      "cause": "Ursache und Lösung",
+      "r": {
+        "ok": "Antwort in {{ms}} ms ({{name}})",
+        "timeout": "keine Antwort",
+        "network": "abgelehnt oder nicht erreichbar",
+        "notHcn": "kein PC mit HCN"
+      },
+      "h": {
+        "ok": {
+          "t": "Verbindung in Ordnung",
+          "d": "Der PC antwortet normal. Fehlen neue Daten, auf Jetzt synchronisieren tippen."
+        },
+        "addrChanged": {
+          "t": "Der PC hat seine Adresse geändert — unter der neuen gefunden",
+          "d": "Die App nutzt jetzt die neue Adresse und hat erneut synchronisiert. Kein erneutes Koppeln nötig."
+        },
+        "noLocalNet": {
+          "t": "Das Telefon ist nicht mit dem PC verbunden",
+          "d": "Mit demselben WLAN wie der PC verbinden, oder Kabel anschließen und USB-Tethering einschalten, oder Bluetooth-Tethering einschalten (am PC Einem persönlichen Netzwerk beitreten)."
+        },
+        "diffNet": {
+          "t": "Telefon und PC sind in verschiedenen Netzwerken",
+          "d": "Die PC-Adresse liegt nicht im aktuellen Netzwerk des Telefons. Beide in dasselbe WLAN bringen (kein Gast-WLAN) oder wie beschrieben per USB-Kabel / Bluetooth verbinden."
+        },
+        "firewall": {
+          "t": "Gleiches Netzwerk, aber der PC antwortet nicht — meist die Firewall",
+          "d": "Am PC: Einstellungen > Synchronisierung > „Firewall für HCN öffnen“ und Ja wählen. Firmen- oder Gast-WLANs verhindern oft, dass Geräte miteinander sprechen: USB-Kabel versuchen."
+        },
+        "hubOff": {
+          "t": "Der PC nimmt keine Verbindungen an",
+          "d": "HCN am PC öffnen und „Telefon-Synchronisierung erlauben“ einschalten. Wenn der PC gerade im Ruhezustand war oder neu gestartet wurde, HCN wieder öffnen (Mit Windows starten einschalten, um es nicht zu vergessen)."
+        },
+        "otherHub": {
+          "t": "Die alte Adresse gehört jetzt einem anderen PC",
+          "d": "Die App synchronisiert nicht versehentlich mit diesem PC. Prüfen Sie, ob auf Ihrem PC HCN geöffnet ist und er im selben Netzwerk wie das Telefon ist."
+        },
+        "notFound": {
+          "t": "Kein PC im Netzwerk gefunden",
+          "d": "Prüfen: HCN ist am PC geöffnet und die Synchronisierung an; beide sind im selben WLAN oder USB- / Bluetooth-Tethering ist an; die Firewall ist am PC für HCN geöffnet."
+        }
+      }
+    }
   },
   "rem": {
     "soon": "Bald fällig ({{when}}): {{ma}}",

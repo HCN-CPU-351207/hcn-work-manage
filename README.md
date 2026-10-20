@@ -24,10 +24,13 @@ Yêu cầu Android 7 trở lên (khuyến nghị Android 10+, WebView cập nh�
 
 PC làm trạm; điện thoại tự đồng bộ khi **app PC đang mở** và hai máy nối với nhau bằng **cùng Wi-Fi**, **cáp USB** hoặc **Bluetooth**. Dữ liệu không đi ra Internet, không cần tài khoản.
 
-1. Trên PC: **Cài đặt > Đồng bộ** → bật **Cho phép điện thoại đồng bộ**. Lần đầu Windows hỏi tường lửa: tích cả **Private** và **Public** rồi **Allow** (mạng USB/Bluetooth thường bị xếp vào Public; bước này cần quyền Admin).
-2. PC hiện các **địa chỉ** kèm nhãn đường kết nối (Wi-Fi / Cáp USB / Bluetooth) và **mã ghép đôi 6 số**.
-3. Trên điện thoại: **Cài đặt > Đồng bộ** → bấm **Tìm PC tự động** (hoặc gõ địa chỉ) → nhập mã → **Kết nối**.
-4. Từ đó điện thoại tự đồng bộ khi mở app, sau mỗi thay đổi (khoảng 3 giây) và mỗi 30 giây. Điện thoại nhớ mọi địa chỉ của PC nên tự chuyển Wi-Fi ↔ USB ↔ Bluetooth, không cần ghép lại.
+1. Trên PC: **Cài đặt > Đồng bộ** → bật **Cho phép điện thoại đồng bộ**. Mục **Tình trạng sẵn sàng** cho biết tường lửa Windows có chặn không; nếu có, bấm **Mở tường lửa cho HCN** (Windows hỏi quyền quản trị → Có). Mạng qua cáp USB / Bluetooth thường bị Windows xếp vào **Công cộng** nên bị chặn nếu bỏ qua bước này.
+2. Khi đang bật đồng bộ, bấm X chỉ ẩn app xuống khay để điện thoại vẫn đồng bộ được; bật **Tự mở cùng Windows** để trạm luôn sẵn sàng sau khi khởi động máy.
+3. Trên điện thoại: **Cài đặt > Đồng bộ** → nhập **mã ghép đôi 6 số** hiện trên PC → **Kết nối**. Không cần gõ địa chỉ: app tự tìm PC trong dải mạng điện thoại đang dùng (Wi-Fi, chia sẻ qua USB, chia sẻ qua Bluetooth).
+4. Từ đó điện thoại tự đồng bộ khi mở app, sau mỗi thay đổi (khoảng 3 giây) và mỗi 30 giây. PC đổi IP, hoặc bạn chuyển Wi-Fi ↔ USB ↔ Bluetooth: app tự quét lại và nhận đúng PC đã ghép đôi (theo mã nhận dạng của trạm), không cần ghép lại.
+5. Không kết nối được: bấm **Kiểm tra kết nối** trên điện thoại — app liệt kê mạng của điện thoại, kết quả từng địa chỉ PC và nguyên nhân kèm cách sửa (khác mạng, tường lửa, PC chưa mở HCN…).
+
+iPhone / iPad (cáp Lightning) chưa được hỗ trợ: app chỉ có bản Android.
 
 **Không có Wi-Fi?** Dùng chia sẻ mạng của điện thoại (không tốn dữ liệu di động cho việc đồng bộ):
 - **Cáp USB:** cắm điện thoại vào PC → trên điện thoại: Cài đặt > Kết nối & chia sẻ (Điểm phát sóng & chia sẻ) → bật **Chia sẻ kết nối qua USB**.
@@ -103,7 +106,7 @@ Khóa ký APK nằm ở `android-signing/hcn-release.jks` (mật khẩu `hcn-wor
 ```
 npm install
 npm run dev      # mở cửa sổ Electron, tự nạp lại khi sửa giao diện
-npm test         # 141 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
+npm test         # 213 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
 npm run typecheck
 ```
 

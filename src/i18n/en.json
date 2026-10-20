@@ -425,21 +425,20 @@
     "hubHint": "This PC acts as the hub: phones on the same Wi-Fi send and receive changes while the PC app is open. Data never leaves your local network.",
     "enable": "Allow phones to sync (Wi-Fi, USB, Bluetooth)",
     "addresses": "This PC's address",
-    "addressesHint": "Enter one of these addresses on the phone (or tap Find PC automatically there). The label shows the route: Wi-Fi, USB cable or Bluetooth.",
+    "addressesHint": "The phone only needs the pairing code — the app finds the address. Use these addresses to enter manually if needed; the label shows the connection type.",
     "noAddress": "This PC isn't connected to Wi-Fi or a wired network.",
     "code": "Pairing code",
     "codeHint": "Each code works once. It changes automatically after a phone pairs.",
     "regen": "New code",
     "devices": "Paired phones",
-    "noDevices": "No phones yet. Open HCN on the phone, go to Settings > Sync and enter the address and code above.",
+    "noDevices": "No phones yet. On the phone: Settings > Sync, enter the code above and tap Connect.",
     "lastSeen": "Last sync: {{time}}",
     "never": "never",
     "remove": "Remove phone",
     "removeTitle": "Remove phone",
     "removeMsg": "{{name}} won't be able to sync until it pairs again. Data on the phone stays.",
     "lastSyncLine": "Last sync at {{time}}, {{n}} changes.",
-    "firewall": "The first time (or the first USB / Bluetooth connection), Windows may ask for firewall access for HCN Work Manage: tick both Private and Public, then Allow, because Windows often treats USB/Bluetooth networks as Public.",
-    "clientHint": "On the PC, open HCN > Settings > Sync, turn sync on, then enter the address and code shown there. The phone and PC must share a Wi-Fi network or be linked by USB cable / Bluetooth.",
+    "clientHint": "On the PC: open HCN > Settings > Sync and turn sync on. On the phone, just enter the 6-digit code shown on the PC and tap Connect — the app finds the PC on the same Wi-Fi or over a USB / Bluetooth link.",
     "addr": "PC address",
     "addrPlaceholder": "e.g. 192.168.1.5:47821",
     "pairCode": "Pairing code (6 digits)",
@@ -447,7 +446,7 @@
     "connect": "Connect",
     "connecting": "Connecting…",
     "connected": "Connected to {{name}}",
-    "auto": "Syncs automatically on open, after changes and every 30 seconds while on the same Wi-Fi as a PC running HCN. Elsewhere it works normally and syncs when you're back.",
+    "auto": "Syncs when the app opens, after changes and every 30 seconds while the phone can reach the PC running HCN. If the PC's address changes, or you switch between Wi-Fi, USB cable and Bluetooth, the app finds it again — no need to pair again.",
     "hub": "PC",
     "lastSync": "Last sync",
     "now": "Sync now",
@@ -459,29 +458,115 @@
       "code": "The pairing code is wrong or already used. Check the new code on the PC.",
       "unpaired": "The PC removed this phone. Pair again.",
       "tooMany": "Too many wrong attempts. Try again in a minute.",
-      "network": "Can't reach the PC. Check: same Wi-Fi, HCN open on the PC with sync on, correct address.",
-      "timeout": "The PC didn't respond in time. Try again with a better Wi-Fi signal.",
+      "network": "Cannot reach the PC. Tap Check connection to see why.",
+      "timeout": "The PC does not respond (usually Windows Firewall). Tap Check connection to see how to fix it.",
       "schema": "The devices use different data versions. Update the app on both.",
       "server": "The PC reported an error. Try again later.",
       "addr": "Enter the PC address.",
-      "notFound": "No PC found. Make sure HCN is open on the PC with sync on, then type the address shown there."
+      "notFound": "No PC found. Make sure HCN is open on the PC with sync on and both devices are on the same network, then tap Check connection.",
+      "firewall": "Could not open the firewall (No may have been chosen in the administrator prompt). Try again, or ask someone with administrator rights."
     },
     "kind": {
       "wifi": "Wi-Fi",
       "usb": "USB cable",
       "bluetooth": "Bluetooth",
-      "lan": "Wired / USB"
+      "lan": "Wired / USB",
+      "hotspot": "Hotspot",
+      "other": "Other network",
+      "cellular": "4G/5G",
+      "vpn": "VPN"
     },
     "tetherTitle": "No Wi-Fi? Use a USB cable or Bluetooth",
     "tetherHint": "The phone shares a network with the PC over the cable or Bluetooth, then syncing works just like Wi-Fi. No Internet needed.",
-    "tetherUsb": "USB: plug the phone into the PC. On the phone: Settings > Connections/Hotspot & tethering > turn on USB tethering.",
-    "tetherBt": "Bluetooth: first pair the phone with the PC over Bluetooth. On the phone turn on Bluetooth tethering. On the PC: Bluetooth tray icon > Join a Personal Area Network > pick the phone > Connect using > Access point.",
-    "tetherThen": "A new address then appears above (labelled USB cable, Bluetooth or Wired / USB). Phones already paired find the new route by themselves.",
+    "tetherUsb": "USB cable: plug the phone into the PC, then on the phone turn on USB tethering (Settings > Connections & sharing, or Hotspot & tethering). Charging only or \"File transfer\" mode will not sync.",
+    "tetherBt": "Bluetooth: pair the phone with the PC, then turn on Bluetooth tethering on the phone. On the PC: Bluetooth icon in the tray > Join a Personal Area Network > right-click the phone > Connect using > Access point. Bluetooth pairing alone does not create a network to sync over.",
+    "tetherThen": "The new address then appears above (labelled USB cable / Bluetooth). A paired phone finds the new route by itself — nothing to re-enter.",
     "discover": "Find PC automatically",
-    "searching": "Searching… (up to about 30 seconds)",
+    "searching": "Searching for the PC…",
     "found": "Found {{name}} ({{addr}}). Enter the pairing code and tap Connect.",
-    "clientTether": "No Wi-Fi: turn on USB tethering (cable to the PC) or Bluetooth tethering in the phone settings, then tap Find PC automatically.",
-    "routes": "Routes to the PC"
+    "clientTether": "No shared Wi-Fi: plug the cable into the PC and turn on USB tethering, or turn on Bluetooth tethering in the phone settings. Charging only, or Bluetooth pairing only, is not enough.",
+    "routes": "Routes to the PC",
+    "addrOptional": "PC address (leave empty to find it)",
+    "manualAddr": "Enter the PC address manually",
+    "connectingAuto": "Finding the PC and connecting…",
+    "check": "Check connection",
+    "checking": "Checking…",
+    "route": "Connected via",
+    "foundN": "Found {{n}} PC(s). Pick one (or leave empty to choose automatically), enter the code and tap Connect.",
+    "ready": "Readiness",
+    "fixFw": "Open the firewall for HCN",
+    "fixingFw": "Waiting for permission…",
+    "fixFwHint": "Windows will ask for administrator permission — choose Yes.",
+    "fwFixed": "Firewall opened for HCN",
+    "publicWarn": "Public networks (usually USB / Bluetooth links from the phone) are blocked by Windows Firewall until you open the firewall for HCN.",
+    "iphone": "iPhone / iPad (Lightning cable): there is no HCN app for iPhone yet — the app is Android only (.apk), so an iPhone cannot install it or sync.",
+    "profile": {
+      "public": "Public network",
+      "private": "Private network",
+      "domain": "Domain network"
+    },
+    "st": {
+      "running": "Sync hub is running (port {{port}})",
+      "fw_ok": "Windows Firewall lets phones connect, including over USB cable, Bluetooth and public Wi-Fi",
+      "fw_missing": "Windows Firewall may block the phone over USB cable, Bluetooth or public Wi-Fi",
+      "fw_blocked": "Windows Firewall is blocking HCN (usually because Cancel was chosen in the firewall prompt earlier)",
+      "fw_unknown": "Could not check the firewall. If an antivirus with its own firewall is installed, allow HCN Work Manage there.",
+      "fwChecking": "Checking the firewall…",
+      "tray": "Closing the window keeps HCN running in the system tray, so the phone can still sync (to quit: right-click the HCN icon > Quit)",
+      "loginOn": "Starts with Windows: the hub is always ready after the PC boots",
+      "loginOff": "Does not start with Windows: after a restart, HCN must be opened before the phone can sync",
+      "loginBtn": "Start with Windows"
+    },
+    "diag": {
+      "title": "Connection check",
+      "nets": "Phone networks",
+      "netsUnknown": "Could not read the phone's networks.",
+      "netsNone": "The phone only has mobile data (4G/5G): no Wi-Fi, USB or Bluetooth link to the PC.",
+      "probes": "PC addresses tried",
+      "noProbes": "Not paired yet, so there is no PC address to try.",
+      "found": "PC found",
+      "cause": "Cause and fix",
+      "r": {
+        "ok": "answered in {{ms}} ms ({{name}})",
+        "timeout": "no response",
+        "network": "refused or unreachable",
+        "notHcn": "not a PC running HCN"
+      },
+      "h": {
+        "ok": {
+          "t": "Connection is fine",
+          "d": "The PC answers normally. If new data is missing, tap Sync now."
+        },
+        "addrChanged": {
+          "t": "The PC changed its address — found it at the new one",
+          "d": "The app switched to the new address and synced again. No need to pair again."
+        },
+        "noLocalNet": {
+          "t": "The phone is not connected to the PC",
+          "d": "Join the same Wi-Fi as the PC, or plug in the cable and turn on USB tethering, or turn on Bluetooth tethering (on the PC choose Join a Personal Area Network)."
+        },
+        "diffNet": {
+          "t": "The phone and the PC are on different networks",
+          "d": "The PC address is not on the phone's current network. Put both on the same Wi-Fi (not a guest Wi-Fi), or connect with a USB cable / Bluetooth as described."
+        },
+        "firewall": {
+          "t": "Same network but the PC does not respond — usually the firewall",
+          "d": "On the PC: Settings > Sync > \"Open the firewall for HCN\", then choose Yes. Company or guest Wi-Fi may stop devices talking to each other: try a USB cable."
+        },
+        "hubOff": {
+          "t": "The PC is not accepting connections",
+          "d": "Open HCN on the PC and turn on \"Allow phones to sync\". If the PC just slept or restarted, open HCN again (turn on Start with Windows so you don't forget)."
+        },
+        "otherHub": {
+          "t": "The old address now belongs to another PC",
+          "d": "The app will not sync with that PC by mistake. Make sure your PC has HCN open and is on the same network as the phone."
+        },
+        "notFound": {
+          "t": "No PC found on the network",
+          "d": "Check that HCN is open on the PC with sync on; both devices are on the same Wi-Fi or USB / Bluetooth tethering is on; the firewall is open for HCN on the PC."
+        }
+      }
+    }
   },
   "rem": {
     "soon": "Due soon ({{when}}): {{ma}}",

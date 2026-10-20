@@ -24,6 +24,8 @@ export interface SyncDevice {
 
 export interface SyncServerDeps {
   hubName?: string;
+  /** mã nhận dạng cố định của trạm: điện thoại dùng để không nhầm sang PC khác có cùng IP */
+  hubId?: string;
   version: string;
   getDevices(): SyncDevice[];
   setDevices(list: SyncDevice[]): void;
@@ -36,23 +38,44 @@ export interface SyncServerDeps {
 export const hashToken = (t: string): string => crypto.createHash('sha256').update(t).digest('hex');
 const genCode = (): string => String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
 
-/** Đoán loại kết nối từ tên card mạng và dải địa chỉ chia sẻ mạng phổ biến của Android */
-export function classifyLink(name: string, address: string): LinkKind {
-  if (/bluetooth|bnep|\bpan\b/i.test(name) || address.startsWith('192.168.44.')) return 'bluetooth';
-  if (/rndis|usb|ncm|android/i.test(name) || address.startsWith('192.168.42.')) return 'usb';
-  if (/wi-?fi|wlan|wireless|802\.11/i.test(name) || address.startsWith('192.168.43.')) return 'wifi';
+/**
+ * Đoán loại kết nối từ tên card mạng (vd. "Wi-Fi", "Ethernet 3"), mô tả phần cứng
+ * (vd. "Remote NDIS based Internet Sharing Device", "Bluetooth Device (Personal Area Network)") và dải địa chỉ.
+ */
+export function classifyLink(name: string, address: string, desc = ''): LinkKind {
+  const s = `${name} ${desc}`;
+  if (/bluetooth|bnep|\bpan\b|personal area/i.test(s)) return 'bluetooth';
+  if (/rndis|remote ndis|usb|ncm|android|internet sharing/i.test(s)) return 'usb';
+  if (address.startsWith('192.168.137.') || /wi-?fi direct|hosted network|local area connection\*/i.test(s)) return 'hotspot';
+  if (/wi-?fi|wlan|wireless|802\.11/i.test(s)) return 'wifi';
+  if (address.startsWith('192.168.44.')) return 'bluetooth';
+  if (address.startsWith('192.168.42.')) return 'usb';
+  if (address.startsWith('192.168.43.')) return 'wifi';
   return 'lan';
 }
 
-export function lanLinks(): SyncLink[] {
-  const out: SyncLink[] = [];
+/** Card ảo không dẫn tới điện thoại (máy ảo, VPN) — vẫn liệt kê nhưng xếp cuối */
+const VIRTUAL = /vmware|virtualbox|vbox|hyper-v|vethernet|wsl|docker|tap-|tailscale|zerotier|wireguard|vpn|loopback/i;
+
+export function lanLinks(extra?: (name: string) => { desc?: string; profile?: SyncLink['profile'] } | undefined): SyncLink[] {
+  const out: (SyncLink & { virt: boolean })[] = [];
   for (const [name, list] of Object.entries(os.networkInterfaces())) {
+    const x = extra?.(name);
     for (const ni of list ?? []) {
-      if (ni.family === 'IPv4' && !ni.internal && !ni.address.startsWith('169.254.')) out.push({ address: ni.address, kind: classifyLink(name, ni.address) });
+      if (ni.family === 'IPv4' && !ni.internal && !ni.address.startsWith('169.254.'))
+        out.push({
+          address: ni.address,
+          kind: classifyLink(name, ni.address, x?.desc),
+          name,
+          profile: x?.profile ?? null,
+          virt: VIRTUAL.test(`${name} ${x?.desc ?? ''}`)
+        });
     }
   }
-  const order: LinkKind[] = ['wifi', 'lan', 'usb', 'bluetooth'];
-  return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  const order: LinkKind[] = ['wifi', 'lan', 'usb', 'bluetooth', 'hotspot'];
+  return out
+    .sort((a, b) => Number(a.virt) - Number(b.virt) || order.indexOf(a.kind) - order.indexOf(b.kind))
+    .map(({ virt: _v, ...l }) => l);
 }
 
 export function lanAddresses(): string[] {
@@ -124,7 +147,7 @@ export function createSyncServer(deps: SyncServerDeps) {
     const url = (req.url ?? '').split('?')[0];
     const ip = req.socket.remoteAddress ?? '?';
     if (req.method === 'OPTIONS') return send(res, 204, {});
-    if (req.method === 'GET' && url === '/hcn/ping') return send(res, 200, { app: 'HCN', name: hubName, version: deps.version, addresses: hosts() });
+    if (req.method === 'GET' && url === '/hcn/ping') return send(res, 200, { app: 'HCN', name: hubName, id: deps.hubId, version: deps.version, addresses: hosts() });
 
     if (req.method === 'POST' && url === '/hcn/pair') {
       if (limited(ip)) return send(res, 429, { error: 'too-many' });
@@ -146,7 +169,7 @@ export function createSyncServer(deps: SyncServerDeps) {
       pairCode = genCode(); // mã chỉ dùng được một lần
       deps.log?.info(`Đã ghép đôi thiết bị ${device.id}`);
       deps.onPaired?.(device);
-      return send(res, 200, { token, deviceId: device.id, hubName, addresses: hosts() });
+      return send(res, 200, { token, deviceId: device.id, hubName, hubId: deps.hubId, addresses: hosts() });
     }
 
     if (req.method === 'POST' && url === '/hcn/sync') {
@@ -158,7 +181,7 @@ export function createSyncServer(deps: SyncServerDeps) {
       const data = normalizeData(body.data as Record<string, unknown>);
       const result = await deps.handleSync(data, body.meta, device);
       deps.setDevices(deps.getDevices().map((d) => (d.id === device.id ? { ...d, lastSeen: new Date().toISOString() } : d)));
-      return send(res, 200, { data: result.data, meta: result.meta, changes: result.changes, hubName, addresses: hosts() });
+      return send(res, 200, { data: result.data, meta: result.meta, changes: result.changes, hubName, hubId: deps.hubId, addresses: hosts() });
     }
     return send(res, 404, { error: 'not-found' });
   }

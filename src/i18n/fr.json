@@ -425,21 +425,20 @@
     "hubHint": "Ce PC sert de relais : les téléphones sur le même Wi-Fi envoient et reçoivent les modifications quand l'appli PC est ouverte. Les données restent sur le réseau local.",
     "enable": "Autoriser la synchro des téléphones (Wi-Fi, USB, Bluetooth)",
     "addresses": "Adresse de ce PC",
-    "addressesHint": "Saisissez une de ces adresses sur le téléphone (ou touchez Trouver le PC automatiquement). L'étiquette indique la route : Wi-Fi, câble USB ou Bluetooth.",
+    "addressesHint": "Le téléphone n'a besoin que du code d'association — l'app trouve l'adresse. Ces adresses servent à une saisie manuelle si besoin ; l'étiquette indique le type de connexion.",
     "noAddress": "Ce PC n'est connecté à aucun réseau Wi-Fi ou filaire.",
     "code": "Code d'appairage",
     "codeHint": "Chaque code ne sert qu'une fois ; il change après l'appairage d'un téléphone.",
     "regen": "Nouveau code",
     "devices": "Téléphones appairés",
-    "noDevices": "Aucun téléphone. Ouvrez HCN sur le téléphone, allez dans Paramètres > Synchronisation et saisissez l'adresse et le code ci-dessus.",
+    "noDevices": "Aucun téléphone pour l'instant. Sur le téléphone : Paramètres > Synchronisation, saisissez le code ci-dessus puis touchez Connecter.",
     "lastSeen": "Dernière synchro : {{time}}",
     "never": "jamais",
     "remove": "Retirer le téléphone",
     "removeTitle": "Retirer le téléphone",
     "removeMsg": "{{name}} ne pourra plus se synchroniser avant un nouvel appairage. Ses données restent sur le téléphone.",
     "lastSyncLine": "Dernière synchro à {{time}}, {{n}} modifications.",
-    "firewall": "La première fois (ou à la première connexion USB / Bluetooth), Windows peut demander l'accès pare-feu : cochez Privé et Public puis Autoriser, car les réseaux USB/Bluetooth sont souvent classés Publics.",
-    "clientHint": "Sur le PC, ouvrez HCN > Paramètres > Synchro, activez-la, puis saisissez l'adresse et le code affichés. Le téléphone et le PC doivent partager le Wi-Fi ou être reliés par câble USB / Bluetooth.",
+    "clientHint": "Sur le PC : ouvrez HCN > Paramètres > Synchronisation et activez la synchro. Sur le téléphone, saisissez simplement le code à 6 chiffres affiché sur le PC puis touchez Connecter — l'app trouve le PC sur le même Wi-Fi ou via un câble USB / Bluetooth.",
     "addr": "Adresse du PC",
     "addrPlaceholder": "ex. 192.168.1.5:47821",
     "pairCode": "Code (6 chiffres)",
@@ -447,7 +446,7 @@
     "connect": "Connecter",
     "connecting": "Connexion…",
     "connected": "Connecté à {{name}}",
-    "auto": "Synchronise à l'ouverture, après chaque modification et toutes les 30 secondes sur le même Wi-Fi qu'un PC avec HCN ouvert. Ailleurs, l'appli fonctionne normalement et se synchronise au retour.",
+    "auto": "Synchronise à l'ouverture de l'app, après chaque modification et toutes les 30 secondes tant que le téléphone peut joindre le PC où HCN est ouvert. Si l'adresse du PC change, ou si vous passez du Wi-Fi au câble USB ou au Bluetooth, l'app le retrouve — inutile de réassocier.",
     "hub": "PC",
     "lastSync": "Dernière synchro",
     "now": "Synchroniser",
@@ -459,29 +458,115 @@
       "code": "Code incorrect ou déjà utilisé. Consultez le nouveau code sur le PC.",
       "unpaired": "Le PC a retiré ce téléphone. Appairez-le à nouveau.",
       "tooMany": "Trop d'essais erronés. Réessayez dans une minute.",
-      "network": "PC injoignable. Vérifiez : même Wi-Fi, HCN ouvert sur le PC avec synchro activée, adresse correcte.",
-      "timeout": "Le PC n'a pas répondu à temps. Réessayez avec un meilleur signal Wi-Fi.",
+      "network": "Impossible de joindre le PC. Touchez Vérifier la connexion pour voir pourquoi.",
+      "timeout": "Le PC ne répond pas (souvent le pare-feu Windows). Touchez Vérifier la connexion pour voir comment corriger.",
       "schema": "Les appareils utilisent des versions de données différentes. Mettez l'appli à jour sur les deux.",
       "server": "Le PC a signalé une erreur. Réessayez plus tard.",
       "addr": "Saisissez l'adresse du PC.",
-      "notFound": "PC introuvable. Vérifiez que HCN est ouvert sur le PC avec la synchro activée, puis saisissez l'adresse affichée."
+      "notFound": "Aucun PC trouvé. Vérifiez que HCN est ouvert sur le PC avec la synchro activée et que les deux appareils sont sur le même réseau, puis touchez Vérifier la connexion.",
+      "firewall": "Impossible d'ouvrir le pare-feu (Non a peut-être été choisi dans la demande administrateur). Réessayez, ou demandez à une personne ayant les droits administrateur."
     },
     "kind": {
       "wifi": "Wi-Fi",
       "usb": "Câble USB",
       "bluetooth": "Bluetooth",
-      "lan": "Filaire / USB"
+      "lan": "Filaire / USB",
+      "hotspot": "Point d'accès",
+      "other": "Autre réseau",
+      "cellular": "4G/5G",
+      "vpn": "VPN"
     },
     "tetherTitle": "Pas de Wi-Fi ? Utilisez un câble USB ou le Bluetooth",
     "tetherHint": "Le téléphone partage un réseau avec le PC par câble ou Bluetooth, puis la synchro fonctionne comme en Wi-Fi. Pas besoin d'Internet.",
-    "tetherUsb": "USB : branchez le téléphone au PC. Sur le téléphone : Paramètres > Connexions/Point d'accès et partage > activez le partage de connexion USB.",
-    "tetherBt": "Bluetooth : appairez d'abord le téléphone avec le PC. Sur le téléphone activez le partage Bluetooth. Sur le PC : icône Bluetooth > Rejoindre un réseau personnel > choisissez le téléphone > Se connecter via > Point d'accès.",
-    "tetherThen": "Une nouvelle adresse apparaît alors ci-dessus (Câble USB, Bluetooth ou Filaire / USB). Les téléphones déjà appairés trouvent seuls la nouvelle route.",
+    "tetherUsb": "Câble USB : branchez le téléphone au PC, puis activez le partage de connexion USB sur le téléphone (Paramètres > Connexions et partage, ou Point d'accès et partage). La simple recharge ou le mode « Transfert de fichiers » ne synchronise pas.",
+    "tetherBt": "Bluetooth : associez le téléphone au PC, puis activez le partage de connexion Bluetooth sur le téléphone. Sur le PC : icône Bluetooth de la barre > Rejoindre un réseau personnel > clic droit sur le téléphone > Se connecter en utilisant > Point d'accès. La simple association Bluetooth ne crée pas de réseau pour la synchro.",
+    "tetherThen": "La nouvelle adresse apparaît alors ci-dessus (étiquette Câble USB / Bluetooth). Un téléphone associé trouve tout seul le nouveau chemin — rien à ressaisir.",
     "discover": "Trouver le PC automatiquement",
-    "searching": "Recherche… (jusqu'à environ 30 secondes)",
+    "searching": "Recherche du PC…",
     "found": "{{name}} trouvé ({{addr}}). Saisissez le code et touchez Connecter.",
-    "clientTether": "Pas de Wi-Fi : activez le partage USB (câble au PC) ou Bluetooth dans les réglages, puis touchez Trouver le PC automatiquement.",
-    "routes": "Routes vers le PC"
+    "clientTether": "Pas de Wi-Fi commun : branchez le câble au PC et activez le partage de connexion USB, ou activez le partage de connexion Bluetooth dans les paramètres du téléphone. La simple recharge, ou la seule association Bluetooth, ne suffit pas.",
+    "routes": "Routes vers le PC",
+    "addrOptional": "Adresse du PC (laisser vide pour la trouver)",
+    "manualAddr": "Saisir l'adresse du PC à la main",
+    "connectingAuto": "Recherche du PC et connexion…",
+    "check": "Vérifier la connexion",
+    "checking": "Vérification…",
+    "route": "Connecté via",
+    "foundN": "{{n}} PC trouvé(s). Choisissez-en un (ou laissez vide pour un choix automatique), saisissez le code puis touchez Connecter.",
+    "ready": "État de préparation",
+    "fixFw": "Ouvrir le pare-feu pour HCN",
+    "fixingFw": "En attente d'autorisation…",
+    "fixFwHint": "Windows va demander l'autorisation administrateur — choisissez Oui.",
+    "fwFixed": "Pare-feu ouvert pour HCN",
+    "publicWarn": "Les réseaux publics (souvent les liaisons USB / Bluetooth du téléphone) sont bloqués par le pare-feu Windows tant que le pare-feu n'est pas ouvert pour HCN.",
+    "iphone": "iPhone / iPad (câble Lightning) : il n'existe pas encore d'app HCN pour iPhone — l'app n'existe que pour Android (.apk), un iPhone ne peut donc ni l'installer ni synchroniser.",
+    "profile": {
+      "public": "Réseau public",
+      "private": "Réseau privé",
+      "domain": "Réseau de domaine"
+    },
+    "st": {
+      "running": "Le serveur de synchro fonctionne (port {{port}})",
+      "fw_ok": "Le pare-feu Windows autorise le téléphone, y compris par câble USB, Bluetooth et Wi-Fi public",
+      "fw_missing": "Le pare-feu Windows peut bloquer le téléphone par câble USB, Bluetooth ou Wi-Fi public",
+      "fw_blocked": "Le pare-feu Windows bloque HCN (souvent parce qu'Annuler a été choisi dans l'invite du pare-feu)",
+      "fw_unknown": "Impossible de vérifier le pare-feu. Si un antivirus avec son propre pare-feu est installé, autorisez-y HCN Work Manage.",
+      "fwChecking": "Vérification du pare-feu…",
+      "tray": "Fermer la fenêtre laisse HCN dans la zone de notification ; le téléphone peut toujours synchroniser (pour quitter : clic droit sur l'icône HCN > Quitter)",
+      "loginOn": "Démarre avec Windows : le serveur est toujours prêt après l'allumage du PC",
+      "loginOff": "Ne démarre pas avec Windows : après un redémarrage, il faut ouvrir HCN pour que le téléphone synchronise",
+      "loginBtn": "Démarrer avec Windows"
+    },
+    "diag": {
+      "title": "Résultat de la vérification",
+      "nets": "Réseaux du téléphone",
+      "netsUnknown": "Impossible de lire les réseaux du téléphone.",
+      "netsNone": "Le téléphone n'a que les données mobiles (4G/5G) : aucun Wi-Fi, USB ou Bluetooth relié au PC.",
+      "probes": "Adresses du PC essayées",
+      "noProbes": "Pas encore associé : aucune adresse de PC à essayer.",
+      "found": "PC trouvé",
+      "cause": "Cause et solution",
+      "r": {
+        "ok": "réponse en {{ms}} ms ({{name}})",
+        "timeout": "aucune réponse",
+        "network": "refusé ou injoignable",
+        "notHcn": "pas un PC avec HCN"
+      },
+      "h": {
+        "ok": {
+          "t": "La connexion fonctionne",
+          "d": "Le PC répond normalement. S'il manque des données, touchez Synchroniser."
+        },
+        "addrChanged": {
+          "t": "Le PC a changé d'adresse — retrouvé à la nouvelle",
+          "d": "L'app est passée à la nouvelle adresse et a resynchronisé. Inutile de réassocier."
+        },
+        "noLocalNet": {
+          "t": "Le téléphone n'est pas relié au PC",
+          "d": "Rejoignez le même Wi-Fi que le PC, ou branchez le câble et activez le partage USB, ou activez le partage Bluetooth (sur le PC, choisissez Rejoindre un réseau personnel)."
+        },
+        "diffNet": {
+          "t": "Le téléphone et le PC sont sur des réseaux différents",
+          "d": "L'adresse du PC n'est pas sur le réseau actuel du téléphone. Mettez-les sur le même Wi-Fi (pas un Wi-Fi invité), ou reliez-les par câble USB / Bluetooth comme indiqué."
+        },
+        "firewall": {
+          "t": "Même réseau mais le PC ne répond pas — souvent le pare-feu",
+          "d": "Sur le PC : Paramètres > Synchronisation > « Ouvrir le pare-feu pour HCN », puis Oui. Un Wi-Fi d'entreprise ou invité peut empêcher les appareils de communiquer : essayez le câble USB."
+        },
+        "hubOff": {
+          "t": "Le PC n'accepte pas les connexions",
+          "d": "Ouvrez HCN sur le PC et activez « Autoriser la synchro des téléphones ». Si le PC vient de se mettre en veille ou de redémarrer, rouvrez HCN (activez Démarrer avec Windows pour ne pas oublier)."
+        },
+        "otherHub": {
+          "t": "L'ancienne adresse appartient maintenant à un autre PC",
+          "d": "L'app ne synchronisera pas par erreur avec ce PC. Vérifiez que votre PC a HCN ouvert et qu'il est sur le même réseau que le téléphone."
+        },
+        "notFound": {
+          "t": "Aucun PC trouvé sur le réseau",
+          "d": "Vérifiez : HCN est ouvert sur le PC avec la synchro activée ; les deux sont sur le même Wi-Fi ou le partage USB / Bluetooth est activé ; le pare-feu est ouvert pour HCN sur le PC."
+        }
+      }
+    }
   },
   "rem": {
     "soon": "Échéance proche ({{when}}) : {{ma}}",

@@ -1,4 +1,5 @@
 // Phía PC: dữ liệu + phiên bản + trạm đồng bộ Wi-Fi. Không phụ thuộc Electron (test được bằng Node).
+import crypto from 'node:crypto';
 import { createDataHub } from '../src/core/dataHub.ts';
 import type { Data } from '../src/core/model.ts';
 import { countDiff, initMeta, isMeta } from '../src/core/sync.ts';
@@ -7,11 +8,12 @@ import type { SaveResult, SyncAction, SyncActionResult, SyncInfo } from '../src/
 import { emptySyncInfo } from '../src/core/api.ts';
 import { createSyncServer, DEFAULT_PORT, lanLinks } from './syncServer.ts';
 import type { SyncDevice } from './syncServer.ts';
+import type { WinNetSnapshot } from './winNet.ts';
 
 export interface HubFile {
   v: 1;
   meta: SyncMeta;
-  hub: { enabled: boolean; port: number; devices: SyncDevice[] };
+  hub: { enabled: boolean; port: number; devices: SyncDevice[]; id?: string };
 }
 
 export interface HubDeps {
@@ -26,6 +28,14 @@ export interface HubDeps {
   /** nhờ giao diện ghi nốt thay đổi đang chờ trước khi gộp */
   requestFlush(): Promise<void>;
   now?: () => number;
+  /** Windows: mô tả card mạng, loại mạng (Công cộng/Riêng tư), trạng thái tường lửa */
+  netInfo?: () => WinNetSnapshot | null;
+  /** Windows: mở tường lửa cho cổng đồng bộ (hỏi quyền quản trị) */
+  fixFirewall?: (ports: [number, number]) => Promise<boolean>;
+  /** đóng cửa sổ thì app vẫn chạy ở khay */
+  keepsRunning?: () => boolean;
+  /** bật / tắt trạm → cập nhật khay hệ thống */
+  onEnabledChange?: (enabled: boolean) => void;
 }
 
 export function createHubController(initialData: Data, deps: HubDeps) {
@@ -34,7 +44,13 @@ export function createHubController(initialData: Data, deps: HubDeps) {
   let file: HubFile = {
     v: 1,
     meta: saved && isMeta(saved.meta) ? saved.meta : initMeta(initialData, 1),
-    hub: { enabled: !!saved?.hub?.enabled, port: saved?.hub?.port ?? DEFAULT_PORT, devices: saved?.hub?.devices ?? [] }
+    hub: {
+      enabled: !!saved?.hub?.enabled,
+      // luôn ưu tiên cổng mặc định: điện thoại tìm theo cổng này
+      port: DEFAULT_PORT,
+      devices: saved?.hub?.devices ?? [],
+      id: saved?.hub?.id || crypto.randomBytes(8).toString('hex')
+    }
   };
   const hub = createDataHub({ data: initialData, meta: file.meta });
   let lastSync: string | null = null;
@@ -59,6 +75,7 @@ export function createHubController(initialData: Data, deps: HubDeps) {
   const server = createSyncServer({
     version: deps.version,
     hubName: deps.hubName,
+    hubId: file.hub.id,
     log: deps.log,
     getDevices: () => file.hub.devices,
     setDevices: (list) => {
@@ -83,23 +100,30 @@ export function createHubController(initialData: Data, deps: HubDeps) {
     }
   });
 
-  const info = (): SyncInfo => ({
+  const info = (): SyncInfo => {
+    const net = server.running ? (deps.netInfo?.() ?? null) : null;
+    const links = server.running ? lanLinks((name) => net?.adapters[name]) : [];
+    return {
     ...emptySyncInfo('hub'),
     enabled: file.hub.enabled && server.running,
     port: server.port,
-    addresses: server.running ? lanLinks().map((l) => l.address) : [],
-    links: server.running ? lanLinks() : [],
+    addresses: links.map((l) => l.address),
+    links,
+    firewall: net?.firewall ?? null,
+    keepsRunning: deps.keepsRunning?.() ?? false,
     pairCode: server.running ? server.pairCode : null,
     devices: file.hub.devices.map(({ id, name, pairedAt, lastSeen }) => ({ id, name, pairedAt, lastSeen })),
     lastSync,
     lastError,
     lastChanges
-  });
+    };
+  };
 
   async function enable(): Promise<void> {
-    const port = await server.start(file.hub.port);
-    file = { ...file, hub: { ...file.hub, enabled: true, port } };
+    await server.start(file.hub.port);
+    file = { ...file, hub: { ...file.hub, enabled: true } };
     persistMeta();
+    deps.onEnabledChange?.(true);
   }
 
   return {
@@ -108,6 +132,9 @@ export function createHubController(initialData: Data, deps: HubDeps) {
     },
     get data() {
       return hub.state.data;
+    },
+    get enabled() {
+      return file.hub.enabled && server.running;
     },
     /** mở trạm nếu lần trước đang bật */
     async startIfEnabled(): Promise<void> {
@@ -146,7 +173,14 @@ export function createHubController(initialData: Data, deps: HubDeps) {
             await server.stop();
             file = { ...file, hub: { ...file.hub, enabled: false } };
             persistMeta();
+            deps.onEnabledChange?.(false);
             break;
+          case 'fixFirewall': {
+            if (!deps.fixFirewall) break;
+            const okFix = await deps.fixFirewall([DEFAULT_PORT, DEFAULT_PORT + 9]);
+            if (!okFix) return { ...info(), error: 'firewall' };
+            break;
+          }
           case 'regen':
             server.regenCode();
             break;

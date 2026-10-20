@@ -12,6 +12,7 @@ import { showNotification } from './notify.ts';
 import { createStorage } from './storage.ts';
 import { createUpdater } from './updater.ts';
 import { createHubController } from './hub.ts';
+import { createWinNet } from './winNet.ts';
 import type { HubController, HubFile } from './hub.ts';
 
 // Đặt tường minh thư mục dữ liệu, không phụ thuộc tên package hay productName (mục 3.3)
@@ -55,15 +56,19 @@ function showWindow(): void {
   win.focus();
 }
 
-/** Khay hệ thống: chỉ có khi bật "chạy nền" */
+/** Đóng cửa sổ thì vẫn chạy ở khay: khi bật "chạy nền", hoặc khi đang bật trạm đồng bộ (để điện thoại luôn kết nối được) */
+const keepInTray = (): boolean => !!settings?.runInBackground || !!hubCtl?.enabled;
+
+/** Khay hệ thống: có khi bật "chạy nền" hoặc đang bật đồng bộ */
 function applyBackgroundSettings(): void {
-  if (settings.runInBackground && !tray && fs.existsSync(iconPath)) {
+  const bg = keepInTray();
+  if (bg && !tray && fs.existsSync(iconPath)) {
     tray = new Tray(nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 }));
     tray.setToolTip('HCN Work Manage');
     tray.on('click', showWindow);
   }
   if (tray) {
-    if (!settings.runInBackground) {
+    if (!bg) {
       tray.destroy();
       tray = null;
     } else {
@@ -133,6 +138,8 @@ function boot(): void {
     app.exit(1);
   });
 
+  // Windows: loại mạng + tường lửa cho trạm đồng bộ (mạng USB/Bluetooth hay bị xếp vào Công cộng)
+  const winNet = process.platform === 'win32' ? createWinNet(process.execPath, log) : null;
   hubCtl = createHubController(current, {
     loadSync: () => storage.loadSync<HubFile>(),
     saveSync: (f) => storage.saveSync(f),
@@ -143,7 +150,10 @@ function boot(): void {
     version: app.getVersion(),
     log,
     onExternal: (data, rev) => send('hcn:external', { data, rev }),
-    requestFlush
+    requestFlush,
+    ...(winNet ? { netInfo: () => winNet!.get(), fixFirewall: (ports: [number, number]) => winNet!.fix(ports) } : {}),
+    keepsRunning: keepInTray,
+    onEnabledChange: () => applyBackgroundSettings()
   });
 
   buildMenu();
@@ -223,14 +233,17 @@ function createWindow(): void {
     if (forceClose) return;
     e.preventDefault();
     // Chạy nền: bấm X chỉ ẩn cửa sổ để vẫn nhắc việc đúng giờ
-    if (!quitting && settings.runInBackground && tray) {
+    if (!quitting && keepInTray() && tray) {
       send('hcn:flush');
       win?.hide();
       if (!bgHintShown) {
         bgHintShown = true;
+        const forSync = !settings.runInBackground;
         showNotification(
           tr('HCN vẫn đang chạy', 'HCN is still running'),
-          tr('App nằm ở khay hệ thống để nhắc việc đúng giờ. Bấm chuột phải biểu tượng HCN > Thoát hẳn để tắt.', 'The app stays in the system tray to send reminders. Right-click the HCN icon > Quit to exit.'),
+          forSync
+            ? tr('App nằm ở khay hệ thống để điện thoại vẫn đồng bộ được. Bấm chuột phải biểu tượng HCN > Thoát hẳn để tắt.', 'The app stays in the system tray so your phone can still sync. Right-click the HCN icon > Quit to exit.')
+            : tr('App nằm ở khay hệ thống để nhắc việc đúng giờ. Bấm chuột phải biểu tượng HCN > Thoát hẳn để tắt.', 'The app stays in the system tray to send reminders. Right-click the HCN icon > Quit to exit.'),
           showWindow
         );
       }

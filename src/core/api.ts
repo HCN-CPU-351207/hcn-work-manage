@@ -1,5 +1,6 @@
 // Hợp đồng giữa renderer và main (preload expose đúng các hàm này, mục 2.2)
 import type { Data, Level, Settings } from './model.ts';
+import type { DiagReport, LocalKind } from '../lib/syncClient.ts';
 
 export type LoadNotice =
   | { kind: 'fresh' }
@@ -47,15 +48,22 @@ export interface SaveResult extends Result {
   data?: Data;
 }
 
-export type LinkKind = 'wifi' | 'usb' | 'bluetooth' | 'lan';
+export type LinkKind = 'wifi' | 'usb' | 'bluetooth' | 'lan' | 'hotspot';
 export interface SyncLink {
   address: string;
   kind: LinkKind;
+  /** tên card mạng trên PC (vd. "Wi-Fi", "Ethernet 3") */
+  name?: string;
+  /** Windows xếp mạng này vào Công cộng / Riêng tư / Miền */
+  profile?: 'public' | 'private' | 'domain' | null;
 }
 export interface FoundHub {
   addr: string;
   name: string;
+  id?: string;
 }
+/** PC Windows: tường lửa có cho điện thoại vào không */
+export type FirewallState = 'ok' | 'missing' | 'blocked' | 'unknown';
 
 export interface SyncDeviceInfo {
   id: string;
@@ -81,6 +89,12 @@ export interface SyncInfo {
   lastError: string | null;
   lastChanges: number | null;
   busy: boolean;
+  /** PC: trạng thái tường lửa (null nếu không phải Windows / chưa kiểm tra) */
+  firewall?: FirewallState | null;
+  /** PC: app sẽ nằm ở khay khi đóng cửa sổ (để điện thoại vẫn đồng bộ được) */
+  keepsRunning?: boolean;
+  /** điện thoại: đang đi qua mạng nào để tới PC */
+  route?: LocalKind | null;
 }
 export type SyncAction =
   | { type: 'enable' }
@@ -90,8 +104,10 @@ export type SyncAction =
   | { type: 'pair'; addr: string; code: string; name: string }
   | { type: 'syncNow' }
   | { type: 'discover' }
+  | { type: 'diagnose' }
+  | { type: 'fixFirewall' }
   | { type: 'unpair' };
-export type SyncActionResult = SyncInfo & { error?: string; found?: FoundHub[] };
+export type SyncActionResult = SyncInfo & { error?: string; found?: FoundHub[]; report?: DiagReport };
 
 export interface SheetSpec {
   name: string;

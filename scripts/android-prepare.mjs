@@ -17,10 +17,45 @@ if (!manifest.includes('usesCleartextTraffic')) {
 }
 // Nhắc việc đúng giờ (Android 12+): quyền hẹn giờ chính xác
 manifest = fs.readFileSync(manifestPath, 'utf8');
-for (const perm of ['android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED']) {
+// + quyền mạng nội bộ cho đồng bộ với PC (ACCESS_LOCAL_NETWORK: Android mới chặn truy cập mạng nội bộ nếu thiếu)
+for (const perm of [
+  'android.permission.SCHEDULE_EXACT_ALARM',
+  'android.permission.USE_EXACT_ALARM',
+  'android.permission.RECEIVE_BOOT_COMPLETED',
+  'android.permission.ACCESS_NETWORK_STATE',
+  'android.permission.ACCESS_WIFI_STATE',
+  'android.permission.ACCESS_LOCAL_NETWORK'
+]) {
   if (!manifest.includes(perm)) manifest = manifest.replace('</manifest>', `    <uses-permission android:name="${perm}" />\n</manifest>`);
 }
 fs.writeFileSync(manifestPath, manifest);
+
+// 1b) Plugin gốc HcnNet: đọc địa chỉ mạng thật của điện thoại (để tìm PC qua Wi-Fi / USB / Bluetooth)
+function findFile(dir, name) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      const r = findFile(p, name);
+      if (r) return r;
+    } else if (e.name === name) return p;
+  }
+  return null;
+}
+const mainActivity = findFile(path.join(root, 'android/app/src/main/java'), 'MainActivity.java');
+if (!mainActivity) {
+  console.error('Không thấy MainActivity.java');
+  process.exit(1);
+}
+const pkgName = /^\s*package\s+([\w.]+)\s*;/m.exec(fs.readFileSync(mainActivity, 'utf8'))?.[1];
+if (!pkgName) {
+  console.error('Không đọc được package của MainActivity');
+  process.exit(1);
+}
+for (const f of ['HcnNetPlugin.java', 'MainActivity.java']) {
+  const src = fs.readFileSync(path.join(root, 'scripts/android', f), 'utf8').replace(/__PACKAGE__/g, pkgName);
+  fs.writeFileSync(path.join(path.dirname(mainActivity), f), src);
+}
+console.log(`Đã thêm plugin HcnNet vào ${pkgName}`);
 
 // 2) build.gradle: phiên bản + ký
 const gradlePath = path.join(root, 'android/app/build.gradle');

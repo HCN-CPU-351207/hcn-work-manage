@@ -425,21 +425,20 @@
     "hubHint": "Este PC é o ponto central: telemóveis na mesma rede Wi-Fi enviam e recebem alterações com a app do PC aberta. Os dados não saem da rede local.",
     "enable": "Permitir sincronização de telemóveis (Wi-Fi, USB, Bluetooth)",
     "addresses": "Endereço deste PC",
-    "addressesHint": "Introduza um destes endereços no telemóvel (ou toque em Procurar PC automaticamente). A etiqueta indica o caminho: Wi-Fi, cabo USB ou Bluetooth.",
+    "addressesHint": "O telemóvel só precisa do código de emparelhamento — a app encontra o endereço. Use estes endereços para introduzir manualmente se necessário; a etiqueta indica o tipo de ligação.",
     "noAddress": "Este PC não está ligado a Wi-Fi nem a rede com fios.",
     "code": "Código de emparelhamento",
     "codeHint": "Cada código só serve uma vez e muda depois de um telemóvel emparelhar.",
     "regen": "Novo código",
     "devices": "Telemóveis emparelhados",
-    "noDevices": "Ainda sem telemóveis. Abra o HCN no telemóvel, vá a Definições > Sincronização e introduza o endereço e o código acima.",
+    "noDevices": "Ainda não há telemóveis. No telemóvel: Definições > Sincronização, introduza o código acima e toque em Ligar.",
     "lastSeen": "Última sincronização: {{time}}",
     "never": "nunca",
     "remove": "Remover telemóvel",
     "removeTitle": "Remover telemóvel",
     "removeMsg": "{{name}} deixará de sincronizar até voltar a emparelhar. Os dados no telemóvel mantêm-se.",
     "lastSyncLine": "Última sincronização às {{time}}, {{n}} alterações.",
-    "firewall": "Na primeira vez (ou na primeira ligação USB / Bluetooth), o Windows pode pedir acesso na firewall: marque Privada e Pública e Permitir, pois redes USB/Bluetooth costumam ser Públicas.",
-    "clientHint": "No PC, abra HCN > Definições > Sincronização, ative-a e introduza o endereço e o código mostrados. O telemóvel e o PC têm de estar na mesma rede Wi-Fi ou ligados por cabo USB / Bluetooth.",
+    "clientHint": "No PC: abra HCN > Definições > Sincronização e ative a sincronização. No telemóvel basta introduzir o código de 6 dígitos mostrado no PC e tocar em Ligar — a app encontra o PC na mesma Wi-Fi ou por cabo USB / Bluetooth.",
     "addr": "Endereço do PC",
     "addrPlaceholder": "ex. 192.168.1.5:47821",
     "pairCode": "Código (6 dígitos)",
@@ -447,7 +446,7 @@
     "connect": "Ligar",
     "connecting": "A ligar…",
     "connected": "Ligado a {{name}}",
-    "auto": "Sincroniza ao abrir, após alterações e a cada 30 segundos, na mesma Wi-Fi que um PC com o HCN aberto. Fora dela funciona normalmente e sincroniza quando voltar.",
+    "auto": "Sincroniza ao abrir a app, após alterações e a cada 30 segundos enquanto o telemóvel alcança o PC com o HCN aberto. Se o endereço do PC mudar, ou se alternar entre Wi-Fi, cabo USB e Bluetooth, a app volta a encontrá-lo — não é preciso emparelhar de novo.",
     "hub": "PC",
     "lastSync": "Última sincronização",
     "now": "Sincronizar agora",
@@ -459,29 +458,115 @@
       "code": "Código errado ou já usado. Veja o novo código no PC.",
       "unpaired": "O PC removeu este telemóvel. Emparelhe de novo.",
       "tooMany": "Demasiadas tentativas erradas. Tente daqui a um minuto.",
-      "network": "Não foi possível ligar ao PC. Verifique: mesma Wi-Fi, HCN aberto no PC com sincronização ativa, endereço correto.",
-      "timeout": "O PC não respondeu a tempo. Tente com melhor sinal Wi-Fi.",
+      "network": "Não é possível alcançar o PC. Toque em Verificar ligação para ver porquê.",
+      "timeout": "O PC não responde (normalmente a Firewall do Windows). Toque em Verificar ligação para ver como resolver.",
       "schema": "Os aparelhos usam versões de dados diferentes. Atualize a app em ambos.",
       "server": "O PC reportou um erro. Tente mais tarde.",
       "addr": "Introduza o endereço do PC.",
-      "notFound": "PC não encontrado. Confirme que o HCN está aberto no PC com sincronização ativa e introduza o endereço mostrado."
+      "notFound": "Nenhum PC encontrado. Confirme que o HCN está aberto no PC com a sincronização ativa e que ambos estão na mesma rede; depois toque em Verificar ligação.",
+      "firewall": "Não foi possível abrir a firewall (talvez tenha escolhido Não no pedido de administrador). Tente de novo ou peça a alguém com direitos de administrador."
     },
     "kind": {
       "wifi": "Wi-Fi",
       "usb": "Cabo USB",
       "bluetooth": "Bluetooth",
-      "lan": "Cabo / USB"
+      "lan": "Cabo / USB",
+      "hotspot": "Hotspot",
+      "other": "Outra rede",
+      "cellular": "4G/5G",
+      "vpn": "VPN"
     },
     "tetherTitle": "Sem Wi-Fi? Use cabo USB ou Bluetooth",
     "tetherHint": "O telemóvel partilha rede com o PC por cabo ou Bluetooth e a sincronização funciona como por Wi-Fi. Não precisa de Internet.",
-    "tetherUsb": "USB: ligue o telemóvel ao PC. No telemóvel: Definições > Ligações/Hotspot e ancoragem > ative Ancoragem USB.",
-    "tetherBt": "Bluetooth: emparelhe primeiro o telemóvel com o PC. No telemóvel ative Ancoragem Bluetooth. No PC: ícone Bluetooth > Aderir a uma Rede de Área Pessoal > escolha o telemóvel > Ligar através de > Ponto de acesso.",
-    "tetherThen": "Depois aparece acima um novo endereço (Cabo USB, Bluetooth ou Cabo / USB). Telemóveis já emparelhados encontram o novo caminho sozinhos.",
+    "tetherUsb": "Cabo USB: ligue o telemóvel ao PC e, no telemóvel, ative a Partilha de ligação por USB (Definições > Ligações e partilha, ou Hotspot e partilha). Só carregar ou o modo \"Transferência de ficheiros\" não sincroniza.",
+    "tetherBt": "Bluetooth: emparelhe o telemóvel com o PC e ative a Partilha de ligação por Bluetooth no telemóvel. No PC: ícone Bluetooth na barra > Aderir a uma Rede de Área Pessoal > clique direito no telemóvel > Ligar através de > Ponto de acesso. Só emparelhar por Bluetooth não cria uma rede para sincronizar.",
+    "tetherThen": "Depois o novo endereço aparece acima (etiqueta Cabo USB / Bluetooth). Um telemóvel emparelhado encontra o novo caminho sozinho — não é preciso introduzir nada.",
     "discover": "Procurar PC automaticamente",
-    "searching": "A procurar… (até cerca de 30 segundos)",
+    "searching": "A procurar o PC…",
     "found": "Encontrado {{name}} ({{addr}}). Introduza o código e toque em Ligar.",
-    "clientTether": "Sem Wi-Fi: ative Ancoragem USB (cabo ao PC) ou Bluetooth nas definições e toque em Procurar PC automaticamente.",
-    "routes": "Caminhos até ao PC"
+    "clientTether": "Sem Wi-Fi em comum: ligue o cabo ao PC e ative a Partilha de ligação por USB, ou ative a Partilha de ligação por Bluetooth nas definições do telemóvel. Só carregar, ou só emparelhar por Bluetooth, não chega.",
+    "routes": "Caminhos até ao PC",
+    "addrOptional": "Endereço do PC (deixe vazio para procurar)",
+    "manualAddr": "Introduzir o endereço do PC manualmente",
+    "connectingAuto": "A procurar o PC e a ligar…",
+    "check": "Verificar ligação",
+    "checking": "A verificar…",
+    "route": "Ligado por",
+    "foundN": "Encontrado(s) {{n}} PC. Escolha um (ou deixe vazio para escolher automaticamente), introduza o código e toque em Ligar.",
+    "ready": "Estado de preparação",
+    "fixFw": "Abrir a firewall para o HCN",
+    "fixingFw": "A aguardar permissão…",
+    "fixFwHint": "O Windows vai pedir permissão de administrador — escolha Sim.",
+    "fwFixed": "Firewall aberta para o HCN",
+    "publicWarn": "As redes públicas (normalmente ligações USB / Bluetooth do telemóvel) são bloqueadas pela Firewall do Windows até abrir a firewall para o HCN.",
+    "iphone": "iPhone / iPad (cabo Lightning): ainda não existe app HCN para iPhone — a app é só para Android (.apk), por isso o iPhone não a instala nem sincroniza.",
+    "profile": {
+      "public": "Rede pública",
+      "private": "Rede privada",
+      "domain": "Rede de domínio"
+    },
+    "st": {
+      "running": "Servidor de sincronização ativo (porta {{port}})",
+      "fw_ok": "A Firewall do Windows permite ligações do telemóvel, incluindo por cabo USB, Bluetooth e Wi-Fi pública",
+      "fw_missing": "A Firewall do Windows pode bloquear o telemóvel por cabo USB, Bluetooth ou Wi-Fi pública",
+      "fw_blocked": "A Firewall do Windows está a bloquear o HCN (normalmente porque foi escolhido Cancelar no aviso da firewall)",
+      "fw_unknown": "Não foi possível verificar a firewall. Se tiver um antivírus com firewall própria, permita o HCN Work Manage nele.",
+      "fwChecking": "A verificar a firewall…",
+      "tray": "Fechar a janela mantém o HCN na área de notificação, e o telemóvel continua a sincronizar (para sair: clique direito no ícone HCN > Sair)",
+      "loginOn": "Abre com o Windows: o servidor está sempre pronto após ligar o PC",
+      "loginOff": "Não abre com o Windows: após reiniciar, é preciso abrir o HCN para o telemóvel sincronizar",
+      "loginBtn": "Abrir com o Windows"
+    },
+    "diag": {
+      "title": "Resultado da verificação",
+      "nets": "Redes do telemóvel",
+      "netsUnknown": "Não foi possível ler as redes do telemóvel.",
+      "netsNone": "O telemóvel só tem dados móveis (4G/5G): nenhuma Wi-Fi, USB ou Bluetooth ligada ao PC.",
+      "probes": "Endereços do PC testados",
+      "noProbes": "Ainda não emparelhado, por isso não há endereço do PC para testar.",
+      "found": "PC encontrado",
+      "cause": "Causa e solução",
+      "r": {
+        "ok": "respondeu em {{ms}} ms ({{name}})",
+        "timeout": "sem resposta",
+        "network": "recusado ou inalcançável",
+        "notHcn": "não é um PC com o HCN"
+      },
+      "h": {
+        "ok": {
+          "t": "A ligação está boa",
+          "d": "O PC responde normalmente. Se faltarem dados novos, toque em Sincronizar agora."
+        },
+        "addrChanged": {
+          "t": "O PC mudou de endereço — encontrado no novo",
+          "d": "A app passou para o novo endereço e sincronizou de novo. Não é preciso emparelhar outra vez."
+        },
+        "noLocalNet": {
+          "t": "O telemóvel não está ligado ao PC",
+          "d": "Ligue-se à mesma Wi-Fi do PC, ou ligue o cabo e ative a Partilha por USB, ou ative a Partilha por Bluetooth (no PC escolha Aderir a uma Rede de Área Pessoal)."
+        },
+        "diffNet": {
+          "t": "O telemóvel e o PC estão em redes diferentes",
+          "d": "O endereço do PC não está na rede atual do telemóvel. Ponha ambos na mesma Wi-Fi (não uma Wi-Fi de convidados), ou ligue por cabo USB / Bluetooth como descrito."
+        },
+        "firewall": {
+          "t": "Mesma rede, mas o PC não responde — normalmente a firewall",
+          "d": "No PC: Definições > Sincronização > \"Abrir a firewall para o HCN\" e escolha Sim. Wi-Fi de empresa ou de convidados pode impedir que os aparelhos comuniquem: experimente o cabo USB."
+        },
+        "hubOff": {
+          "t": "O PC não aceita ligações",
+          "d": "Abra o HCN no PC e ative \"Permitir sincronização de telemóveis\". Se o PC acabou de suspender ou reiniciar, abra o HCN de novo (ative Abrir com o Windows para não esquecer)."
+        },
+        "otherHub": {
+          "t": "O endereço antigo pertence agora a outro PC",
+          "d": "A app não sincroniza por engano com esse PC. Confirme que o seu PC tem o HCN aberto e está na mesma rede do telemóvel."
+        },
+        "notFound": {
+          "t": "Nenhum PC encontrado na rede",
+          "d": "Verifique: o HCN está aberto no PC com a sincronização ativa; ambos estão na mesma Wi-Fi ou a partilha por USB / Bluetooth está ativa; a firewall está aberta para o HCN no PC."
+        }
+      }
+    }
   },
   "rem": {
     "soon": "Prazo próximo ({{when}}): {{ma}}",
