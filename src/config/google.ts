@@ -1,4 +1,5 @@
-// Mã dự án Google Cloud cho đồng bộ Google Drive (tạo theo hướng dẫn trong README > "Đồng bộ online qua Google Drive").
+// Mã dự án Google Cloud cho đồng bộ Google Drive. KHÔNG điền vào đây (repo công khai):
+// máy build ghi mã từ GitHub Secrets HCN_GOOGLE_DESKTOP_ID / HCN_GOOGLE_DESKTOP_SECRET / HCN_GOOGLE_ANDROID_ID (scripts/inject-google.mjs).
 // Các mã này không phải mật khẩu: Google coi mã của app cài trên máy là công khai (bảo vệ bằng PKCE + email người dùng).
 // Để trống → mục Google Drive hiện "chưa cấu hình", các cách đồng bộ khác vẫn chạy bình thường.
 export const GOOGLE_CONFIG = {

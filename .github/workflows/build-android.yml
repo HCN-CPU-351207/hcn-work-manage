@@ -22,6 +22,12 @@ jobs:
           java-version: 21
       - run: npm install
       - run: npm test
+      - name: Gắn mã dự án Google (từ GitHub Secrets)
+        env:
+          HCN_GOOGLE_DESKTOP_ID: ${{ secrets.HCN_GOOGLE_DESKTOP_ID }}
+          HCN_GOOGLE_DESKTOP_SECRET: ${{ secrets.HCN_GOOGLE_DESKTOP_SECRET }}
+          HCN_GOOGLE_ANDROID_ID: ${{ secrets.HCN_GOOGLE_ANDROID_ID }}
+        run: node scripts/inject-google.mjs
       # Giao diện bản Android
       - run: npm run build:android
       # Tạo dự án Android, icon, rồi vá cấu hình (http trong Wi-Fi, phiên bản, ký APK)

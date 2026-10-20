@@ -18,6 +18,12 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm test
+      - name: Gắn mã dự án Google (từ GitHub Secrets)
+        env:
+          HCN_GOOGLE_DESKTOP_ID: ${{ secrets.HCN_GOOGLE_DESKTOP_ID }}
+          HCN_GOOGLE_DESKTOP_SECRET: ${{ secrets.HCN_GOOGLE_DESKTOP_SECRET }}
+          HCN_GOOGLE_ANDROID_ID: ${{ secrets.HCN_GOOGLE_ANDROID_ID }}
+        run: node scripts/inject-google.mjs
       - run: npm run typecheck
         continue-on-error: true
       # Tạo file cài đặt trong thư mục release/
