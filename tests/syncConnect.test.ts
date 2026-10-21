@@ -203,7 +203,8 @@ describe('PC: loại mạng và tường lửa Windows', () => {
   });
   it('lệnh PowerShell thoát đúng dấu nháy trong đường dẫn', () => {
     const exe = "C:\\Users\\O'Neil\\AppData\\Local\\Programs\\HCN Work Manage\\HCN Work Manage.exe";
-    expect(queryScript(exe)).toContain("O''Neil");
+    expect(queryScript(exe)).toContain("Get-NetFirewallRule -DisplayName 'HCN Work Manage*'");
+    expect(queryScript(exe)).not.toContain('Get-NetFirewallApplicationFilter'); // không duyệt toàn bộ quy tắc (chậm)
     const fix = fixScript(exe, [47821, 47830]);
     expect(fix).toContain("-LocalPort '47821-47830'");
     expect(fix).toContain('-Profile Any');

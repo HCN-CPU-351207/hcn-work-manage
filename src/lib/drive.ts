@@ -30,7 +30,7 @@ export function createDriveStore(d: DriveDeps): CloudStore {
   let serverTime: number | null = null;
   let serverAt = 0;
 
-  async function req(method: string, url: string, init: { body?: string; type?: string } = {}): Promise<Response> {
+  async function req(method: string, url: string, init: { body?: string; type?: string; override?: string } = {}): Promise<Response> {
     let force = false;
     let lastErr: CloudError = new CloudError('network');
     for (let attempt = 0; attempt <= retries; attempt++) {
@@ -41,6 +41,7 @@ export function createDriveStore(d: DriveDeps): CloudStore {
       try {
         const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
         if (init.type) headers['Content-Type'] = init.type;
+        if (init.override) headers['X-HTTP-Method-Override'] = init.override;
         const ctl = new AbortController();
         res = await withTimeout(d.fetchFn(url, { method, headers, body: init.body, signal: ctl.signal }), d.timeoutMs ?? 45_000, 'request-timeout').catch((e: unknown) => {
           ctl.abort();
@@ -103,7 +104,10 @@ export function createDriveStore(d: DriveDeps): CloudStore {
       return store.update(meta.id, text);
     },
     async update(id, text) {
-      const j = await (await req('PATCH', `${UPLOAD}/${encodeURIComponent(id)}?uploadType=media&fields=${FIELDS}`, { body: text, type: 'text/plain' })).json();
+      // PATCH gửi bằng POST + X-HTTP-Method-Override: lớp mạng gốc của Android (HttpURLConnection) không hỗ trợ PATCH
+      const j = await (
+        await req('POST', `${UPLOAD}/${encodeURIComponent(id)}?uploadType=media&fields=${FIELDS}`, { body: text, type: 'text/plain', override: 'PATCH' })
+      ).json();
       return toFile(j as { id: string; name: string; modifiedTime: string });
     },
     async remove(id) {

@@ -131,7 +131,7 @@ Khóa ký APK nằm ở `android-signing/hcn-release.jks` (mật khẩu `hcn-wor
 ```
 npm install
 npm run dev      # mở cửa sổ Electron, tự nạp lại khi sửa giao diện
-npm test         # 262 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
+npm test         # 266 test (Vitest): core, lưu trữ, gộp đồng bộ, đồng bộ HTTP đầu-cuối
 npm run typecheck
 ```
 

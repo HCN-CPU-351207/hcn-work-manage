@@ -30,15 +30,16 @@ function runPs(script: string, timeoutMs: number): Promise<string> {
 const appRules = (exe: string) =>
   `@(Get-NetFirewallApplicationFilter | Where-Object { $_.Program -and ([Environment]::ExpandEnvironmentVariables($_.Program) -ieq ${psq(exe)}) } | Get-NetFirewallRule | Where-Object { $_.Direction -eq 'Inbound' -and $_.Enabled -eq 'True' })`;
 
-export function queryScript(exe: string): string {
+export function queryScript(_exe: string): string {
+  // chỉ lọc quy tắc theo tên (nhanh); không duyệt toàn bộ quy tắc tường lửa (rất chậm, làm máy ì)
   return `[Console]::OutputEncoding=[Text.Encoding]::UTF8
 $ErrorActionPreference='SilentlyContinue'
 $ad = @(Get-NetAdapter | ForEach-Object { @{ n=$_.Name; d=$_.InterfaceDescription } })
 $pr = @(Get-NetConnectionProfile | ForEach-Object { @{ n=$_.InterfaceAlias; c=[string]$_.NetworkCategory } })
-$rule = @(Get-NetFirewallRule -DisplayName ${psq(RULE_NAME)} | Where-Object { $_.Enabled -eq 'True' -and $_.Action -eq 'Allow' -and $_.Direction -eq 'Inbound' }).Count
-$app = ${appRules(exe)}
-$block = @($app | Where-Object { $_.Action -eq 'Block' }).Count
-$allow = @($app | Where-Object { $_.Action -eq 'Allow' } | ForEach-Object { [string]$_.Profile })
+$all = @(Get-NetFirewallRule -DisplayName 'HCN Work Manage*' | Where-Object { $_.Direction -eq 'Inbound' -and $_.Enabled -eq 'True' })
+$rule = @($all | Where-Object { $_.DisplayName -eq ${psq(RULE_NAME)} -and $_.Action -eq 'Allow' }).Count
+$block = @($all | Where-Object { $_.Action -eq 'Block' }).Count
+$allow = @($all | Where-Object { $_.Action -eq 'Allow' -and $_.DisplayName -ne ${psq(RULE_NAME)} } | ForEach-Object { [string]$_.Profile })
 $on = @(Get-NetFirewallProfile | Where-Object { $_.Enabled -eq 'True' }).Count
 @{ ad=$ad; pr=$pr; rule=$rule; block=$block; allow=$allow; on=$on } | ConvertTo-Json -Depth 4 -Compress`;
 }
@@ -74,6 +75,7 @@ export function parseQuery(json: string): WinNetSnapshot {
 
 export function fixScript(exe: string, ports: [number, number]): string {
   return `$ErrorActionPreference='SilentlyContinue'
+Get-NetFirewallRule -DisplayName 'HCN Work Manage*' | Where-Object { $_.Direction -eq 'Inbound' -and $_.Action -eq 'Block' } | Remove-NetFirewallRule
 ${appRules(exe)} | Where-Object { $_.Action -eq 'Block' } | Remove-NetFirewallRule
 Remove-NetFirewallRule -DisplayName ${psq(RULE_NAME)}
 $ErrorActionPreference='Stop'
@@ -104,9 +106,9 @@ export function createWinNet(exe: string, log?: { warn(m: string): void }) {
     return running;
   };
   return {
-    /** trả bản đã đọc (có thể cũ tối đa 30 giây); tự đọc lại ở nền */
+    /** trả bản đã đọc (có thể cũ tối đa 5 phút); tự đọc lại ở nền */
     get(): WinNetSnapshot | null {
-      if (Date.now() - at > 30_000) void refresh();
+      if (Date.now() - at > 5 * 60_000) void refresh();
       return snap;
     },
     refresh,

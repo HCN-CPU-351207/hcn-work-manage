@@ -207,7 +207,7 @@ export async function discoverHubs(fetchFn: FetchFn, known: string[], opts: Disc
   knownList.forEach((k) => add(prefix24(k)));
   (opts.prefixes ?? TETHER_PREFIXES).forEach(add);
   const ports = [...new Set([opts.port ?? DEFAULT_PORT, ...knownList.map(portOf).filter((x): x is number => !!x)])];
-  const conc = opts.concurrency ?? 48;
+  const conc = opts.concurrency ?? 32;
   for (const pre of prefixes) {
     const queue: string[] = [];
     for (const port of ports) for (let i = 1; i <= 254; i++) queue.push(`${pre}.${i}:${port}`);

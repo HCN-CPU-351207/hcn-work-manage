@@ -177,7 +177,7 @@ describe('Drive REST', () => {
     const f = await m.store.create('f', '{"a":1}');
     expect(f.modifiedTime).toBe('t2');
     expect(JSON.parse(m.calls[0].body!)).toEqual({ name: 'f', parents: ['appDataFolder'], mimeType: 'text/plain' });
-    expect(m.calls[1].method).toBe('PATCH');
+    expect(m.calls[1].method).toBe('POST');
     expect(m.calls[1].url).toContain('/upload/drive/v3/files/n1?uploadType=media');
     expect(m.calls[1].body).toBe('{"a":1}');
   });
@@ -433,5 +433,84 @@ describe('không treo "đang đồng bộ"', () => {
     });
     expect(await store.list()).toEqual([]);
     expect(n).toBe(2);
+  });
+});
+
+describe('PC + điện thoại qua Drive: nhiều vòng đồng bộ', () => {
+  it('hai máy hội tụ cùng dữ liệu, không tải lên lặp vô hạn', async () => {
+    const files = new Map<string, { name: string; text: string; mt: number }>();
+    let n = 0;
+    let t = 0;
+    let writes = 0;
+    const meta = (id: string): CloudFile => ({ id, name: files.get(id)!.name, modifiedTime: new Date(Date.now() + files.get(id)!.mt).toISOString() });
+    const store: CloudStore = {
+      list: async () => [...files.keys()].map(meta),
+      read: async (id) => files.get(id)!.text,
+      create: async (name, text) => {
+        writes++;
+        const id = `f${++n}`;
+        files.set(id, { name, text, mt: ++t });
+        return meta(id);
+      },
+      update: async (id, text) => {
+        writes++;
+        files.set(id, { ...files.get(id)!, text, mt: ++t });
+        return meta(id);
+      },
+      remove: async (id) => void files.delete(id),
+      serverTime: () => null
+    };
+    const mk = (seed: ReturnType<typeof emptyData>) => {
+      const hub = createDataHub({ data: seed, meta: initMeta(seed, 1) });
+      let state: unknown = null;
+      let applied = 0;
+      const d = createCloudDriver({
+        configured: true,
+        auth: { init: async () => {}, email: () => 'an@gmail.com', signedIn: () => true, signIn: async () => 'an@gmail.com', signOut: async () => {}, accessToken: async () => 'T' } as never,
+        makeStore: () => store,
+        loadState: async () => state as never,
+        saveState: async (s) => {
+          state = s;
+        },
+        getLocal: async () => hub.state,
+        applyResult: async (dd, m, mode) => {
+          applied++;
+          if (mode === 'pull') hub.reset(dd, m);
+          else hub.adoptFromHub(dd, m, Date.now());
+        },
+        backupLocal: async () => {},
+        deviceName: 'x',
+        platform: 't',
+        newId: () => `id${Math.random().toString(16).slice(2)}`
+      });
+      return { hub, d, applied: () => applied };
+    };
+    const pc = mk({ ...emptyData(), thang: [mkThang({ id: 't1', ma: 'M001', ten: 'PC' })], counters: { M: 1, W: 0, D: 0 } });
+    const phone = mk(emptyData());
+    await pc.d.action({ type: 'syncNow' });
+    await phone.d.action({ type: 'syncNow' });
+    expect(phone.hub.state.data.thang.map((x) => x.ten)).toEqual(['PC']);
+    // điện thoại sửa, PC sửa việc khác
+    const pd = phone.hub.state.data;
+    phone.hub.save({ ...pd, thang: [...pd.thang, mkThang({ id: 't2', ma: 'M002', ten: 'ĐT' })], counters: { M: 2, W: 0, D: 0 } }, phone.hub.state.rev, Date.now());
+    const cd = pc.hub.state.data;
+    pc.hub.save({ ...cd, thang: cd.thang.map((x) => ({ ...x, ten: 'PC sửa' })) }, pc.hub.state.rev, Date.now() + 1);
+    for (let i = 0; i < 3; i++) {
+      await phone.d.action({ type: 'syncNow' });
+      await pc.d.action({ type: 'syncNow' });
+    }
+    const names = (h: typeof pc) => h.hub.state.data.thang.map((x) => x.ten).sort();
+    expect(names(pc)).toEqual(['PC sửa', 'ĐT']);
+    expect(names(phone)).toEqual(['PC sửa', 'ĐT']);
+    // đã hội tụ: thêm nhiều vòng không ghi gì lên Drive, không áp gì
+    const w = writes;
+    const ap = pc.applied() + phone.applied();
+    for (let i = 0; i < 5; i++) {
+      await phone.d.action({ type: 'syncNow' });
+      await pc.d.action({ type: 'syncNow' });
+    }
+    expect(writes).toBe(w);
+    expect(pc.applied() + phone.applied()).toBe(ap);
+    expect(pc.d.info().busy || phone.d.info().busy).toBe(false);
   });
 });

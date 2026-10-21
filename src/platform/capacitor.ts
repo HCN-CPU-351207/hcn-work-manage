@@ -196,6 +196,9 @@ export function createCapacitorApi(): HcnApi {
   let lastNets: LocalNet[] | null = null;
   /** lần tự quét tìm PC gần nhất (quét tự động tối đa 2 phút một lần cho đỡ tốn pin) */
   let lastAutoScan = 0;
+  /** dải mạng lúc quét gần nhất / lần đồng bộ đang chạy */
+  let lastScanSig = '';
+  let scanSig = '';
   /** đồng bộ đang chờ người dùng chọn cách (tự đồng bộ tạm dừng cho tới khi chọn) */
   let choice: SyncStats | null = null;
   /** choice đến từ nút "Chọn chiều đồng bộ" (chỉ xem) chứ không phải do bị chặn */
@@ -322,10 +325,13 @@ export function createCapacitorApi(): HcnApi {
       const lp = nets ? localPrefixes(nets) : [];
       // Quét lại khi mọi địa chỉ cũ đều hỏng: bấm tay thì quét cả các dải chia sẻ mạng;
       // tự động thì chỉ quét dải điện thoại đang dùng, và chỉ khi có Wi-Fi / USB / Bluetooth (không quét trên 4G)
-      const auto = (nets === null || lp.length > 0) && Date.now() - lastAutoScan > 120_000;
+      // tự quét (tốn pin, CPU): chỉ khi mạng của điện thoại vừa đổi, hoặc 15 phút một lần
+      const sig = lp.join(',');
+      const auto = (nets === null || lp.length > 0) && (sig !== lastScanSig || Date.now() - lastAutoScan > 15 * 60_000);
       // dải chia sẻ mạng đoán sẵn chỉ cần khi không đọc được mạng thật của điện thoại
       const scan = manual ? { localPrefixes: lp, tether: nets === null } : auto ? { localPrefixes: lp, tether: false } : null;
       scanned = !!scan;
+      scanSig = sig;
       const { data, meta } = hub.state;
       // bản cũ (đã đồng bộ trước đây) coi như đã qua lần đầu
       const first = client.firstDone === false || (client.firstDone === undefined && !client.lastSync);
@@ -367,7 +373,10 @@ export function createCapacitorApi(): HcnApi {
       return undefined;
     } catch (e) {
       const code = e instanceof SyncHttpError ? e.code : 'server';
-      if (scanned && !manual && (code === 'network' || code === 'timeout')) lastAutoScan = Date.now();
+      if (scanned && !manual && (code === 'network' || code === 'timeout')) {
+        lastAutoScan = Date.now();
+        lastScanSig = scanSig;
+      }
       client = { ...client, lastError: code, ...(code === 'unpaired' ? { token: null } : {}) };
       void persistSync();
       return code;
