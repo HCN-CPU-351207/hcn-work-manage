@@ -351,3 +351,87 @@ describe('đăng nhập trên PC qua 127.0.0.1', () => {
     expect((err as CloudError).code).toBe('cancel');
   });
 });
+
+describe('không treo "đang đồng bộ"', () => {
+  function mem(): CloudStore {
+    const files = new Map<string, { name: string; text: string; mt: string }>();
+    let n = 0;
+    let t = 0;
+    const meta = (id: string): CloudFile => ({ id, name: files.get(id)!.name, modifiedTime: new Date(1_800_000_000_000 + Number(files.get(id)!.mt)).toISOString() });
+    return {
+      list: async () => [...files.keys()].map(meta),
+      read: async (id) => files.get(id)!.text,
+      create: async (name, text) => {
+        const id = `f${++n}`;
+        files.set(id, { name, text, mt: String(++t) });
+        return meta(id);
+      },
+      update: async (id, text) => {
+        files.set(id, { ...files.get(id)!, text, mt: String(++t) });
+        return meta(id);
+      },
+      remove: async (id) => void files.delete(id),
+      serverTime: () => null
+    };
+  }
+  function drv(store: () => CloudStore, extra: object = {}) {
+    let state: unknown = null;
+    let syncs = 0;
+    const hub = createDataHub({ data: emptyData(), meta: initMeta(emptyData()) });
+    const d = createCloudDriver({
+      configured: true,
+      auth: { init: async () => {}, email: () => 'an@gmail.com', signedIn: () => true, signIn: async () => 'an@gmail.com', signOut: async () => {}, accessToken: async () => 'T' } as never,
+      makeStore: () => {
+        syncs++;
+        return store();
+      },
+      loadState: async () => state as never,
+      saveState: async (s) => {
+        state = s;
+      },
+      getLocal: async () => hub.state,
+      applyResult: async () => {},
+      backupLocal: async () => {},
+      deviceName: 'x',
+      platform: 't',
+      newId: () => `d${Math.random().toString(16).slice(2)}`,
+      ...extra
+    });
+    return { d, syncs: () => syncs };
+  }
+  it('đồng bộ xong thì hết trạng thái "đang đồng bộ" và lần tự động sau vẫn chạy', async () => {
+    const s = mem();
+    const { d, syncs } = drv(() => s);
+    await d.action({ type: 'syncNow' });
+    expect(d.info().busy).toBe(false);
+    await d.action({ type: 'syncNow' });
+    expect(d.info().busy).toBe(false);
+    const before = syncs();
+    d.localChanged(5);
+    await new Promise((r) => setTimeout(r, 60));
+    expect(syncs()).toBe(before + 1);
+    expect(d.info().busy).toBe(false);
+  });
+  it('Drive treo không trả lời → quá hạn thì nhả, báo lỗi mạng', async () => {
+    const hang: CloudStore = { ...mem(), list: () => new Promise(() => {}) };
+    const { d } = drv(() => hang, { runTimeoutMs: 50 });
+    const r = await d.action({ type: 'syncNow' });
+    expect(r.error).toBe('network');
+    expect(d.info().busy).toBe(false);
+  });
+  it('một yêu cầu Drive treo → hạn chờ từng yêu cầu rồi thử lại', async () => {
+    let n = 0;
+    const store = createDriveStore({
+      fetchFn: (async () => {
+        n++;
+        if (n === 1) return new Promise(() => {});
+        return new Response(JSON.stringify({ files: [] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      }) as unknown as typeof fetch,
+      accessToken: async () => 'T',
+      sleep: async () => {},
+      timeoutMs: 30
+    });
+    expect(await store.list()).toEqual([]);
+    expect(n).toBe(2);
+  });
+});

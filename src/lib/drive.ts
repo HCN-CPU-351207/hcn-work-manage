@@ -1,6 +1,6 @@
 // Google Drive REST (v3), chỉ trong thư mục ẩn của app (appDataFolder). Dùng chung PC và Android.
 // Lỗi: 401 → gia hạn mã rồi thử lại; 403/429 quá tải → chờ tăng dần rồi thử lại; Drive đầy → CloudError('full').
-import { CloudError } from '../core/cloudSync.ts';
+import { CloudError, withTimeout } from '../core/cloudSync.ts';
 import type { CloudFile, CloudStore } from '../core/cloudSync.ts';
 
 const API = 'https://www.googleapis.com/drive/v3/files';
@@ -13,6 +13,8 @@ export interface DriveDeps {
   /** chờ trước khi thử lại (test thay bằng hàm không chờ) */
   sleep?: (ms: number) => Promise<void>;
   retries?: number;
+  /** hạn chờ mỗi yêu cầu (mặc định 45 giây) */
+  timeoutMs?: number;
 }
 
 const toFile = (j: { id: string; name: string; modifiedTime: string; size?: string | number }): CloudFile => ({
@@ -39,7 +41,11 @@ export function createDriveStore(d: DriveDeps): CloudStore {
       try {
         const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
         if (init.type) headers['Content-Type'] = init.type;
-        res = await d.fetchFn(url, { method, headers, body: init.body });
+        const ctl = new AbortController();
+        res = await withTimeout(d.fetchFn(url, { method, headers, body: init.body, signal: ctl.signal }), d.timeoutMs ?? 45_000, 'request-timeout').catch((e: unknown) => {
+          ctl.abort();
+          throw e;
+        });
       } catch (e) {
         lastErr = new CloudError('network', (e as Error).message);
         continue;

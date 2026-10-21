@@ -1,7 +1,7 @@
 // Đăng nhập Google (OAuth 2.0 cho app cài trên máy, có PKCE). Dùng chung cho PC (Electron) và Android.
 // Chỉ xin: email (để kiểm tra cùng tài khoản) + thư mục ẩn của app trên Drive (drive.appdata).
 // Mã gia hạn (refresh token) dùng lâu dài khi dự án Google đã "Publish" (Production); app tự gia hạn mỗi lần đồng bộ.
-import { CloudError } from '../core/cloudSync.ts';
+import { CloudError, withTimeout } from '../core/cloudSync.ts';
 
 export const SCOPES = 'openid email https://www.googleapis.com/auth/drive.appdata';
 export const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -108,7 +108,7 @@ export function createGoogleAuth(d: GoogleAuthDeps) {
 
   async function post(fields: Record<string, string>) {
     try {
-      return await d.postForm(TOKEN_URL, withSecret(fields));
+      return await withTimeout(d.postForm(TOKEN_URL, withSecret(fields)), 30_000, 'token-timeout');
     } catch (e) {
       throw new CloudError('network', (e as Error).message);
     }

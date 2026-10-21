@@ -2,7 +2,7 @@
 // hỏi cách đồng bộ khi rủi ro, sao lưu trên Drive, sửa lệch giờ. Chạy song song với đồng bộ Wi-Fi/cáp.
 import type { Data } from '../core/model.ts';
 import type { SyncMeta, SyncMode, SyncStats } from '../core/sync.ts';
-import { clockOffset, CloudError, cloudSync, initCloudState, listCloudBackups, readCloudBackup } from '../core/cloudSync.ts';
+import { clockOffset, CloudError, cloudSync, initCloudState, listCloudBackups, readCloudBackup, withTimeout } from '../core/cloudSync.ts';
 import type { CloudBackup, CloudDeviceFile, CloudLocalState, CloudStore } from '../core/cloudSync.ts';
 import { clockNow, setClockOffset } from '../core/clock.ts';
 import type { GoogleAuth } from './googleAuth.ts';
@@ -77,6 +77,8 @@ export interface CloudDriverDeps {
   log?: { info(m: string): void; warn(m: string): void };
   /** chu kỳ tự đồng bộ (mặc định 2 phút) */
   intervalMs?: number;
+  /** hạn chờ tổng cho một lần đồng bộ (mặc định 5 phút) */
+  runTimeoutMs?: number;
 }
 
 export function createCloudDriver(d: CloudDriverDeps) {
@@ -179,10 +181,19 @@ export function createCloudDriver(d: CloudDriverDeps) {
   /** chạy tuần tự: không bao giờ hai lần đồng bộ Drive chen nhau */
   function exclusive(fn: () => Promise<string | undefined>): Promise<string | undefined> {
     const prev = busy ?? Promise.resolve(undefined);
-    const p = prev.catch(() => undefined).then(fn);
-    busy = p.finally(() => {
-      if (busy === p) busy = null;
-    }) as Promise<string | undefined>;
+    // cả lần đồng bộ có hạn chờ tổng: lỡ một thao tác treo thì vẫn nhả khóa, lần sau chạy lại được
+    const p = prev
+      .catch(() => undefined)
+      .then(() =>
+        withTimeout(fn(), d.runTimeoutMs ?? 5 * 60_000, 'run-timeout').catch((e: unknown) => {
+          lastError = codeOf(e);
+          return lastError;
+        })
+      );
+    const tracked: Promise<string | undefined> = p.finally(() => {
+      if (busy === tracked) busy = null;
+    });
+    busy = tracked;
     return p;
   }
 

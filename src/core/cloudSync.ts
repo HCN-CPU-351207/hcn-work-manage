@@ -39,6 +39,15 @@ export class CloudError extends Error {
   }
 }
 
+/** Hạn chờ cho một thao tác mạng: quá hạn → lỗi mạng (thao tác treo không được giữ khóa đồng bộ mãi) */
+export function withTimeout<T>(p: Promise<T>, ms: number, what = 'timeout'): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const t = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new CloudError('network', what)), ms);
+  });
+  return Promise.race([p, t]).finally(() => clearTimeout(timer));
+}
+
 export const VAULT_NAME = 'hcn-vault.json';
 export const devName = (id: string) => `hcn-dev-${id}.json`;
 const DEV_RE = /^hcn-dev-([\w-]+)\.json$/;
