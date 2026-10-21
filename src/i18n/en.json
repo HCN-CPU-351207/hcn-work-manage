@@ -941,5 +941,16 @@
     "placeWeek": "Locations (this week)",
     "peopleWeek": "By person (this week)",
     "accMonth": "Accuracy (this month)"
+  },
+  "pf": {
+    "only": {
+      "thang": "Table: this month only",
+      "tuan": "Table: this week only",
+      "ngay": "Table: this day only"
+    },
+    "all": "Table: all",
+    "hint": "On: the table below shows only tasks in the month / week / day selected here. Off: show everything. A date range set in the filter bar takes precedence.",
+    "empty": "No tasks in this period.",
+    "showAll": "Show all"
   }
 }

@@ -941,5 +941,16 @@
     "placeWeek": "Orte (Woche)",
     "peopleWeek": "Nach Person (Woche)",
     "accMonth": "Genauigkeit (Monat)"
+  },
+  "pf": {
+    "only": {
+      "thang": "Tabelle: nur dieser Monat",
+      "tuan": "Tabelle: nur diese Woche",
+      "ngay": "Tabelle: nur dieser Tag"
+    },
+    "all": "Tabelle: alle",
+    "hint": "An: Die Tabelle zeigt nur Aufgaben des hier gewählten Monats / der Woche / des Tages. Aus: alles anzeigen. Ein Datumsbereich in der Filterleiste hat Vorrang.",
+    "empty": "Keine Aufgaben in diesem Zeitraum.",
+    "showAll": "Alle anzeigen"
   }
 }

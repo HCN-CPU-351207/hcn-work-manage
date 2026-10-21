@@ -16,7 +16,7 @@ import { Nav } from '../Gantt/Charts.tsx';
 import { IChart, IChevR } from '../Common/Icons.tsx';
 import { PairBars, StackBar } from './Charts.tsx';
 import { ngayInsights } from '../../core/insights.ts';
-import { AccuracyBox, AllocDonut, AttentionList, MiniCard, PeopleBars, Stat } from './StripParts.tsx';
+import { AccuracyBox, AllocDonut, AttentionList, MiniCard, PeopleBars, PeriodToggle, Stat } from './StripParts.tsx';
 import type { AttnRow } from './StripParts.tsx';
 
 const KEY = 'hcn.dayStrip.open';
@@ -110,6 +110,7 @@ export function DayStrip({ rows, today, showNav }: { rows: NgayRow[]; today: str
         ) : (
           <strong className="ds-day">{fmtDate(day, lang)}</strong>
         )}
+        {showNav && <PeriodToggle unit="ngay" />}
         {!open && (
           <span className="ds-mini">
             {t('ds.doneOf', { a: ov.counts.done, b: live })} · {H(ov.actualMin)}/{H(ov.planMin)}

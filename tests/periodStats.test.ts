@@ -40,3 +40,18 @@ describe('tổng quan tuần / tháng', () => {
     expect(doneIn(items, '2026-10-01', '2026-10-31')).toEqual({ done: 2, total: 4 });
   });
 });
+
+import { inPeriod, periodRange } from '../src/core/periodStats.ts';
+describe('lọc bảng theo kỳ', () => {
+  it('khoảng kỳ và việc thuộc kỳ', () => {
+    expect(periodRange('thang', '2026-02', '2026-10-21', '2026-10-21')).toEqual({ from: '2026-02-01', to: '2026-02-28' });
+    expect(periodRange('tuan', '2026-10', '2026-10-21', '2026-10-21')).toEqual({ from: '2026-10-19', to: '2026-10-25' });
+    expect(periodRange('ngay', '2026-10', '2026-10-21', '2026-10-20')).toEqual({ from: '2026-10-20', to: '2026-10-20' });
+    expect(inPeriod({ ngay: '2026-10-20' }, '2026-10-20', '2026-10-20')).toBe(true);
+    expect(inPeriod({ ngay: '2026-10-21' }, '2026-10-20', '2026-10-20')).toBe(false);
+    expect(inPeriod({ bd: '2026-09-25', dl: '2026-10-02' }, '2026-10-01', '2026-10-31')).toBe(true);
+    expect(inPeriod({ bd: '2026-09-01', dl: '2026-09-30' }, '2026-10-01', '2026-10-31')).toBe(false);
+    expect(inPeriod({ bd: null, dl: '2026-10-15' }, '2026-10-01', '2026-10-31')).toBe(true);
+    expect(inPeriod({ bd: null, dl: null }, '2026-10-01', '2026-10-31')).toBe(true);
+  });
+});

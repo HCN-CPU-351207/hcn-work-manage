@@ -87,6 +87,8 @@ export interface AppState {
   month: string; // tháng đang xem trên Gantt (YYYY-MM)
   weekAnchor: string; // một ngày bất kỳ trong tuần đang xem
   dayDate: string; // ngày đang xem trên timeline tab Ngày
+  /** bảng CV Tháng / Tuần / Ngày chỉ hiện việc thuộc tháng / tuần / ngày đang chọn trên dải biểu đồ */
+  periodOnly: boolean;
   splitDay: string | null;
   selected: Record<Level, string[]>;
   drawer: DrawerState | null;
@@ -134,6 +136,7 @@ export interface AppState {
   setMonth(ym: string): void;
   setWeekAnchor(d: string): void;
   setDayDate(d: string): void;
+  setPeriodOnly(v: boolean): void;
   setSplitDay(d: string | null): void;
   toggleSelect(level: Level, id: string): void;
   setSelection(level: Level, ids: string[]): void;
@@ -224,6 +227,13 @@ export const useApp = create<AppState>()((set, get) => {
     month: ymOf(today),
     weekAnchor: today,
     dayDate: today,
+    periodOnly: (() => {
+      try {
+        return localStorage.getItem('hcn.periodOnly') !== '0';
+      } catch {
+        return true;
+      }
+    })(),
     splitDay: null,
     selected: EMPTY_SEL,
     drawer: null,
@@ -388,6 +398,14 @@ export const useApp = create<AppState>()((set, get) => {
     },
     setWeekAnchor(d) {
       set({ weekAnchor: d, splitDay: null });
+    },
+    setPeriodOnly(v) {
+      try {
+        localStorage.setItem('hcn.periodOnly', v ? '1' : '0');
+      } catch {
+        /* bỏ qua */
+      }
+      set({ periodOnly: v });
     },
     setDayDate(d) {
       set({ dayDate: d });

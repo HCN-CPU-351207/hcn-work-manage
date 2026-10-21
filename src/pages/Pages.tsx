@@ -2,6 +2,8 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Level } from '../core/model.ts';
+import { inPeriod, periodRange } from '../core/periodStats.ts';
+import { ymOf } from '../core/dates.ts';
 import type { FilterCtx } from '../core/search.ts';
 import { useApp } from '../store/app.ts';
 import { useDerived, useIsMobile, usePeopleMap } from '../lib/hooks.ts';
@@ -62,7 +64,17 @@ export function LevelPage({ level }: { level: Level }) {
   const all = useMemo(() => buildRows(level, data, derived, people, optName), [level, data, derived, people, optName]);
   const val = useColValue();
   /** pool = sau bộ lọc chung; rows = thêm lọc + sắp xếp theo cột */
-  const pool = useMemo(() => filterRows(all, filter, query, ctx), [all, filter, query, ctx]);
+  // bảng chỉ hiện việc của tháng / tuần / ngày đang chọn trên dải biểu đồ (trừ khi đã tự đặt khoảng ngày)
+  const periodOnly = useApp((s) => s.periodOnly);
+  const month = useApp((s) => s.month);
+  const weekAnchor = useApp((s) => s.weekAnchor);
+  const dayDate = useApp((s) => s.dayDate);
+  const byPeriod = mode === 'table' && periodOnly && !filter.from && !filter.to;
+  const range = useMemo(() => periodRange(level, month || ymOf(today), weekAnchor || today, dayDate || today), [level, month, weekAnchor, dayDate, today]);
+  const pool = useMemo(() => {
+    const base = filterRows(all, filter, query, ctx);
+    return byPeriod ? base.filter((r) => inPeriod(r.item, range.from, range.to)) : base;
+  }, [all, filter, query, ctx, byPeriod, range]);
   const rows = useMemo(() => sortRows(applyColFilters(pool, filter.cols, val), filter.sort, val), [pool, filter.cols, filter.sort, val]);
   // biểu đồ Tuần/Tháng cần CV Ngày để mở Timeline khi chia đôi
   const ngayRows = useMemo(
@@ -91,6 +103,13 @@ export function LevelPage({ level }: { level: Level }) {
         <button className="btn btn-sm btn-primary" onClick={() => setQuickOpen(true)}>
           <IPlus size={14} />
           {t('toolbar.quick')}
+        </button>
+      </span>
+    ) : byPeriod ? (
+      <span className="empty-cta">
+        {t('pf.empty')}
+        <button className="btn btn-sm" onClick={() => useApp.getState().setPeriodOnly(false)}>
+          {t('pf.showAll')}
         </button>
       </span>
     ) : (

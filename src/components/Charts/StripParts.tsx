@@ -190,3 +190,16 @@ export function Stat({ value, label, tone }: { value: ReactNode; label: string; 
     </div>
   );
 }
+
+/** công tắc: bảng chỉ hiện việc của kỳ đang chọn / hiện tất cả */
+export function PeriodToggle({ unit }: { unit: 'thang' | 'tuan' | 'ngay' }) {
+  const { t } = useTranslation();
+  const on = useApp((s) => s.periodOnly);
+  const set = useApp((s) => s.setPeriodOnly);
+  return (
+    <button className={cx('pf-toggle', on && 'on')} role="switch" aria-checked={on} onClick={() => set(!on)} title={t('pf.hint')}>
+      <i aria-hidden />
+      {on ? t(`pf.only.${unit}`) : t('pf.all')}
+    </button>
+  );
+}

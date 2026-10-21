@@ -941,5 +941,16 @@
     "placeWeek": "Locais (semana)",
     "peopleWeek": "Por pessoa (semana)",
     "accMonth": "Precisão (mês)"
+  },
+  "pf": {
+    "only": {
+      "thang": "Tabela: só este mês",
+      "tuan": "Tabela: só esta semana",
+      "ngay": "Tabela: só este dia"
+    },
+    "all": "Tabela: tudo",
+    "hint": "Ligado: a tabela mostra só as tarefas do mês / semana / dia escolhido aqui. Desligado: mostra tudo. Um intervalo de datas na barra de filtros tem prioridade.",
+    "empty": "Nenhuma tarefa neste período.",
+    "showAll": "Mostrar tudo"
   }
 }

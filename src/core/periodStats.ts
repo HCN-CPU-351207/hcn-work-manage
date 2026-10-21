@@ -101,3 +101,20 @@ export function doneIn(items: PItem[], from: string, to: string): { done: number
   }
   return r;
 }
+
+/** khoảng ngày của kỳ đang xem: CV Tháng → cả tháng, CV Tuần → tuần T2–CN, CV Ngày → một ngày */
+export function periodRange(level: 'thang' | 'tuan' | 'ngay', month: string, weekAnchor: string, day: string): { from: string; to: string } {
+  if (level === 'ngay') return { from: day, to: day };
+  if (level === 'tuan') {
+    const s = startOfWeek(weekAnchor);
+    return { from: s, to: addDays(s, 6) };
+  }
+  const days = monthDays(month);
+  return { from: days[0], to: days[days.length - 1] };
+}
+/** việc có thuộc kỳ không (CV Ngày: đúng ngày; CV Tháng / Tuần: kế hoạch giao kỳ, việc chưa có ngày vẫn hiện để không bị "mất") */
+export function inPeriod(x: { ngay?: string; bd?: string | null; dl?: string | null }, from: string, to: string): boolean {
+  if (x.ngay !== undefined) return x.ngay >= from && x.ngay <= to;
+  if (!x.bd && !x.dl) return true;
+  return overlaps({ bd: x.bd ?? null, dl: x.dl ?? null }, from, to);
+}

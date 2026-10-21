@@ -941,5 +941,16 @@
     "placeWeek": "Lieux (semaine)",
     "peopleWeek": "Par personne (semaine)",
     "accMonth": "Précision (mois)"
+  },
+  "pf": {
+    "only": {
+      "thang": "Tableau : ce mois",
+      "tuan": "Tableau : cette semaine",
+      "ngay": "Tableau : ce jour"
+    },
+    "all": "Tableau : tout",
+    "hint": "Activé : le tableau n’affiche que les tâches du mois / de la semaine / du jour choisi ici. Désactivé : tout afficher. Une plage de dates dans la barre de filtres est prioritaire.",
+    "empty": "Aucune tâche sur cette période.",
+    "showAll": "Tout afficher"
   }
 }

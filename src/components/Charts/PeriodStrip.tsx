@@ -19,7 +19,7 @@ import { PairBars, StackBar } from './Charts.tsx';
 import { ngayInsights } from '../../core/insights.ts';
 import { overlaps } from '../../core/periodStats.ts';
 import { diffDays } from '../../core/dates.ts';
-import { AccuracyBox, AllocDonut, AttentionList, CountBars, MiniCard, PeopleBars, Stat } from './StripParts.tsx';
+import { AccuracyBox, AllocDonut, AttentionList, CountBars, MiniCard, PeopleBars, PeriodToggle, Stat } from './StripParts.tsx';
 import type { AttnRow } from './StripParts.tsx';
 
 const H = (m: number) => durationLabel(m);
@@ -118,6 +118,7 @@ export function PeriodStrip({ level, rows, ngays, today, showNav }: { level: 'th
           <span>{t(level === 'tuan' ? 'ps.titleWeek' : 'ps.titleMonth')}</span>
         </button>
         {showNav ? nav : <strong className="ds-day">{periodLabel}</strong>}
+        {showNav && <PeriodToggle unit={level} />}
         {!open && (
           <span className="ds-mini">
             {t('ds.doneOf', { a: ov.counts.done, b: live })}

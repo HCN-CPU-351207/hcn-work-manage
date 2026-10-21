@@ -941,5 +941,16 @@
     "placeWeek": "Vị trí (tuần này)",
     "peopleWeek": "Theo người (tuần này)",
     "accMonth": "Độ chính xác (tháng này)"
+  },
+  "pf": {
+    "only": {
+      "thang": "Bảng: chỉ tháng này",
+      "tuan": "Bảng: chỉ tuần này",
+      "ngay": "Bảng: chỉ ngày này"
+    },
+    "all": "Bảng: tất cả",
+    "hint": "Bật: bảng bên dưới chỉ hiện việc thuộc tháng / tuần / ngày đang chọn ở đây. Tắt: hiện tất cả. Khi tự chọn khoảng ngày ở thanh lọc thì dùng khoảng ngày đó.",
+    "empty": "Kỳ này không có việc nào.",
+    "showAll": "Hiện tất cả"
   }
 }
