@@ -16,6 +16,11 @@ import type { ThangRow, TuanRow } from '../../lib/rows.ts';
 import { Nav } from '../Gantt/Charts.tsx';
 import { IChart, IChevR } from '../Common/Icons.tsx';
 import { PairBars, StackBar } from './Charts.tsx';
+import { ngayInsights } from '../../core/insights.ts';
+import { overlaps } from '../../core/periodStats.ts';
+import { diffDays } from '../../core/dates.ts';
+import { AccuracyBox, AllocDonut, AttentionList, CountBars, MiniCard, PeopleBars, Stat } from './StripParts.tsx';
+import type { AttnRow } from './StripParts.tsx';
 
 const H = (m: number) => durationLabel(m);
 const pctOf = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
@@ -57,6 +62,33 @@ export function PeriodStrip({ level, rows, ngays, today, showNav }: { level: 'th
     const y = month.slice(0, 4);
     return { label: t('ps.inYear', { y }), ...doneIn(items, `${y}-01-01`, `${y}-12-31`) };
   }, [level, refYm, month, items, t]);
+
+  // chi tiết thêm: các việc trong kỳ, CV Ngày trong kỳ, việc cần chú ý
+  const from = buckets[0].from;
+  const to = buckets[buckets.length - 1].to;
+  const nowHm = new Date(tick).toTimeString().slice(0, 5);
+  const inRows = useMemo(() => rows.filter((r) => overlaps(r.item, from, to)), [rows, from, to]);
+  const liveRows = inRows.filter((r) => r.display !== 'Đã hủy');
+  const avgPg = liveRows.length ? Math.round((liveRows.reduce((s, r) => s + (r.progress ?? 0), 0) / liveRows.length) * 100) : null;
+  const noPerson = liveRows.filter((r) => !r.item.personId).length;
+  const inNgays = useMemo(() => ngays.filter((n) => n.ngay >= from && n.ngay <= to), [ngays, from, to]);
+  const ins = useMemo(() => ngayInsights(inNgays, { today, nowHm, buckets }), [inNgays, today, nowHm, buckets]);
+  const attn: AttnRow[] = useMemo(() => {
+    const out: AttnRow[] = [];
+    const soon = addDays(today, 3);
+    for (const r of [...inRows].sort((a, b) => (a.item.dl ?? '').localeCompare(b.item.dl ?? ''))) {
+      const dl = r.item.dl;
+      if (r.display === 'Quá hạn' && dl) out.push({ level, id: r.id, ma: r.ma, ten: r.ten, tag: t('xs.lateDays', { n: Math.max(1, diffDays(dl, today)) }), tone: 'bad' });
+      else if ((r.display === 'Đang làm' || r.display === 'Chưa làm') && dl && dl >= today && dl <= soon)
+        out.push({ level, id: r.id, ma: r.ma, ten: r.ten, tag: t('xs.dueOn', { d: `${dl.slice(8, 10)}/${dl.slice(5, 7)}` }), tone: 'warn' });
+    }
+    for (const n of inNgays) {
+      if (n.huy || n.tt === 'Hoàn thành' || n.ngay !== today) continue;
+      if (!n.a1 && n.g1 && n.g1 < nowHm) out.push({ level: 'ngay', id: n.id, ma: n.ma, ten: n.ten, tag: t('xs.lateStart', { h: n.g1 }), tone: 'warn' });
+      else if (n.a1 && !n.a2 && n.g2 && n.g2 < nowHm) out.push({ level: 'ngay', id: n.id, ma: n.ma, ten: n.ten, tag: t('xs.overrun', { h: n.g2 }), tone: 'bad' });
+    }
+    return out;
+  }, [inRows, inNgays, level, today, nowHm, t]);
 
   const toggle = () =>
     setOpen((v) => {
@@ -142,6 +174,38 @@ export function PeriodStrip({ level, rows, ngays, today, showNav }: { level: 'th
               <p className="pp-empty">{t(level === 'tuan' ? 'ps.noTuan' : 'ps.noThang')}</p>
             )}
           </div>
+        </div>
+      )}
+      {open && (
+        <div className="ds-more">
+          <MiniCard title={t('xs.quick')}>
+            <div className="xs-stats">
+              <Stat value={avgPg === null ? '—' : `${avgPg}%`} label={t('xs.avgProgress')} tone={avgPg !== null && avgPg >= 70 ? 'ok' : undefined} />
+              <Stat value={`${ins.done}/${ins.total}`} label={t('xs.ngayDone')} />
+              <Stat value={ins.running} label={t('xs.running')} tone={ins.running ? 'info' : undefined} />
+              <Stat value={ov.counts.over} label={t('status.overdue')} tone={ov.counts.over ? 'bad' : undefined} />
+              <Stat value={ins.unscheduled} label={t('xs.unscheduled')} tone={ins.unscheduled ? 'warn' : undefined} />
+              <Stat value={noPerson} label={t('xs.noPerson')} tone={noPerson ? 'warn' : undefined} />
+            </div>
+          </MiniCard>
+          <MiniCard title={t(level === 'tuan' ? 'xs.ngayByDay' : 'xs.ngayByWeek')} sub={`${ins.done}/${ins.total}`}>
+            <CountBars buckets={ins.perBucket} />
+          </MiniCard>
+          <MiniCard title={t('xs.byCat')} sub={ins.workMin ? H(ins.workMin) : undefined}>
+            <AllocDonut kind="cats" slices={ins.byCat} total={ins.workMin} />
+          </MiniCard>
+          <MiniCard title={t('xs.byPlace')}>
+            <AllocDonut kind="places" slices={ins.byPlace} total={ins.workMin} />
+          </MiniCard>
+          <MiniCard title={t('xs.byPerson')} sub={t('xs.byPersonSub')}>
+            <PeopleBars people={ins.people} />
+          </MiniCard>
+          <MiniCard title={t('xs.accuracy')}>
+            <AccuracyBox acc={ins.accuracy} />
+          </MiniCard>
+          <MiniCard title={t('xs.attention')} sub={attn.length ? String(attn.length) : undefined} wide>
+            <AttentionList rows={attn} empty={t('xs.allGood')} />
+          </MiniCard>
         </div>
       )}
     </section>

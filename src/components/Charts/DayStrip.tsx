@@ -15,6 +15,9 @@ import type { NgayRow } from '../../lib/rows.ts';
 import { Nav } from '../Gantt/Charts.tsx';
 import { IChart, IChevR } from '../Common/Icons.tsx';
 import { PairBars, StackBar } from './Charts.tsx';
+import { ngayInsights } from '../../core/insights.ts';
+import { AccuracyBox, AllocDonut, AttentionList, MiniCard, PeopleBars, Stat } from './StripParts.tsx';
+import type { AttnRow } from './StripParts.tsx';
 
 const KEY = 'hcn.dayStrip.open';
 const read = () => {
@@ -63,6 +66,24 @@ export function DayStrip({ rows, today, showNav }: { rows: NgayRow[]; today: str
       return !v;
     });
   };
+  // chi tiết thêm cho ngày đang xem
+  const dayRows = useMemo(() => rows.filter((r) => r.item.ngay === day), [rows, day]);
+  const conflicts = useMemo(() => new Set(dayRows.filter((r) => r.conflict).map((r) => r.id)), [dayRows]);
+  const ins = useMemo(() => ngayInsights(dayRows.map((r) => r.item), { today, nowHm, conflicts }), [dayRows, today, nowHm, conflicts]);
+  const attn: AttnRow[] = useMemo(() => {
+    const out: AttnRow[] = [];
+    const passed = (hm: string | null) => !!hm && (day < today || (day === today && hm < nowHm));
+    for (const r of [...dayRows].sort((a, b) => (a.item.g1 ?? '99').localeCompare(b.item.g1 ?? '99'))) {
+      const n = r.item;
+      if (n.huy || n.tt === 'Hoàn thành') continue;
+      const base = { level: 'ngay' as const, id: n.id, ma: n.ma, ten: n.ten };
+      if (n.a1 && !n.a2 && passed(n.g2)) out.push({ ...base, tag: t('xs.overrun', { h: n.g2 }), tone: 'bad' });
+      else if (!n.a1 && passed(n.g1)) out.push({ ...base, tag: t('xs.lateStart', { h: n.g1 }), tone: 'warn' });
+      if (r.conflict) out.push({ ...base, tag: t('xs.conflict'), tone: 'warn' });
+      if (!n.g1 || !n.g2) out.push({ ...base, tag: t('xs.unscheduledTag'), tone: 'idle' });
+    }
+    return out;
+  }, [dayRows, day, today, nowHm, t]);
   const curH = day === today ? Number(nowHm.slice(0, 2)) : -1;
   const live = ov.total - ov.counts.cancel;
   const period = (
@@ -136,6 +157,35 @@ export function DayStrip({ rows, today, showNav }: { rows: NgayRow[]; today: str
               ]}
             />
           </div>
+        </div>
+      )}
+      {open && (
+        <div className="ds-more">
+          <MiniCard title={t('xs.quick')}>
+            <div className="xs-stats">
+              <Stat value={ins.running} label={t('xs.running')} tone={ins.running ? 'info' : undefined} />
+              <Stat value={ins.lateStart} label={t('xs.lateStartN')} tone={ins.lateStart ? 'warn' : undefined} />
+              <Stat value={ins.overrun} label={t('xs.overrunN')} tone={ins.overrun ? 'bad' : undefined} />
+              <Stat value={ins.conflicts} label={t('xs.conflictN')} tone={ins.conflicts ? 'warn' : undefined} />
+              <Stat value={ins.unscheduled} label={t('xs.unscheduled')} tone={ins.unscheduled ? 'warn' : undefined} />
+              <Stat value={ins.people.filter((p) => p.id).length} label={t('xs.peopleN')} />
+            </div>
+          </MiniCard>
+          <MiniCard title={t('xs.byCat')} sub={ins.workMin ? H(ins.workMin) : undefined}>
+            <AllocDonut kind="cats" slices={ins.byCat} total={ins.workMin} />
+          </MiniCard>
+          <MiniCard title={t('xs.byPlace')}>
+            <AllocDonut kind="places" slices={ins.byPlace} total={ins.workMin} />
+          </MiniCard>
+          <MiniCard title={t('xs.byPerson')} sub={t('xs.byPersonSub')}>
+            <PeopleBars people={ins.people} />
+          </MiniCard>
+          <MiniCard title={t('xs.accuracy')}>
+            <AccuracyBox acc={ins.accuracy} />
+          </MiniCard>
+          <MiniCard title={t('xs.attention')} sub={attn.length ? String(attn.length) : undefined} wide>
+            <AttentionList rows={attn} empty={t('xs.allGood')} />
+          </MiniCard>
         </div>
       )}
     </section>

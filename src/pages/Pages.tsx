@@ -15,6 +15,7 @@ import { SmartGrid } from '../components/Grid/SmartGrid.tsx';
 import { TaskCards } from '../components/Mobile/TaskCards.tsx';
 import { MetricGrid } from '../components/Overview/MetricGrid.tsx';
 import { HoursPanel } from '../components/Overview/HoursPanel.tsx';
+import { OverviewStrip } from '../components/Overview/OverviewStrip.tsx';
 import { IPlus } from '../components/Common/Icons.tsx';
 import { DayStrip } from '../components/Charts/DayStrip.tsx';
 import type { NgayRow, ThangRow, TuanRow } from '../lib/rows.ts';
@@ -38,6 +39,7 @@ export function OverviewPage() {
   return (
     <div className="page page-overview">
       <MetricGrid />
+      <OverviewStrip />
       <MonthChart rows={thang} ngayRows={ngay} today={today} />
       <HoursPanel />
     </div>
