@@ -792,7 +792,9 @@
       "server": "Google báo lỗi. App sẽ tự thử lại.",
       "config": "Cấu hình dự án Google chưa đúng (mã app hoặc Drive API chưa bật). Kiểm tra lại dự án trên Google Cloud.",
       "cancel": "Chưa đăng nhập (đã hủy hoặc hết thời gian chờ).",
-      "wrongAccount": "Đang đăng nhập {{email}}, khác tài khoản đã liên kết {{owner}}."
-    }
+      "wrongAccount": "Đang đăng nhập {{email}}, khác tài khoản đã liên kết {{owner}}.",
+      "scope": "Google chưa cho app quyền dùng thư mục của HCN trên Drive (lúc đăng nhập có thể ô quyền Google Drive chưa được tích). Bấm Đăng nhập lại và tích ô \"Xem, tạo và xóa dữ liệu cấu hình của riêng ứng dụng này trên Google Drive\"."
+    },
+    "detail": "Chi tiết: {{msg}}"
   }
 }

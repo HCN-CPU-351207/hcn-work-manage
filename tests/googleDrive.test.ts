@@ -514,3 +514,47 @@ describe('PC + điện thoại qua Drive: nhiều vòng đồng bộ', () => {
     expect(pc.d.info().busy || phone.d.info().busy).toBe(false);
   });
 });
+
+describe('thiếu quyền Drive lúc đăng nhập', () => {
+  it('Drive báo thiếu quyền → lỗi scope (hiện nút Đăng nhập lại)', async () => {
+    const store = createDriveStore({
+      fetchFn: (async () =>
+        new Response(JSON.stringify({ error: { code: 403, message: 'Request had insufficient authentication scopes.', status: 'PERMISSION_DENIED', errors: [{ reason: 'insufficientPermissions' }] } }), {
+          status: 403,
+          headers: { 'content-type': 'application/json' }
+        })) as unknown as typeof fetch,
+      accessToken: async () => 'T',
+      sleep: async () => {}
+    });
+    let err: unknown;
+    try {
+      await store.list();
+    } catch (e) {
+      err = e;
+    }
+    expect((err as CloudError).code).toBe('scope');
+  });
+  it('đăng nhập mà bỏ tích quyền Drive → báo scope, không lưu đăng nhập', async () => {
+    let saved: unknown = null;
+    const auth = createGoogleAuth({
+      clientId: 'c',
+      postForm: async () => ({ status: 200, json: { access_token: 'A', refresh_token: 'R', expires_in: 3600, scope: 'openid https://www.googleapis.com/auth/userinfo.email', id_token: jwt({ email: 'an@gmail.com' }) } }),
+      load: async () => null,
+      save: async (s) => {
+        saved = s;
+      },
+      interactive: async (b) => {
+        const st = new URL(b('http://127.0.0.1:1/')).searchParams.get('state');
+        return { callbackUrl: `http://127.0.0.1:1/?code=C&state=${st}`, redirectUri: 'http://127.0.0.1:1/' };
+      }
+    });
+    let err: unknown;
+    try {
+      await auth.signIn();
+    } catch (e) {
+      err = e;
+    }
+    expect((err as CloudError).code).toBe('scope');
+    expect(saved).toBe(null);
+  });
+});

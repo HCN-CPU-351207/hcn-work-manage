@@ -137,6 +137,9 @@ export function createGoogleAuth(d: GoogleAuthDeps) {
       const refresh = String(res.json.refresh_token ?? '');
       const email = emailFromIdToken(res.json.id_token as string | undefined);
       if (!refresh || !email) throw new CloudError('server', 'no-refresh-token');
+      // Google cho bỏ tích từng quyền: thiếu quyền thư mục ứng dụng trên Drive thì không đồng bộ được
+      const granted = String(res.json.scope ?? '');
+      if (granted && !granted.includes('drive.appdata')) throw new CloudError('scope', granted);
       stored = { refresh, email };
       access = { token: String(res.json.access_token), exp: now() + (Number(res.json.expires_in) || 3600) * 1000 - 60_000 };
       await d.save(stored);

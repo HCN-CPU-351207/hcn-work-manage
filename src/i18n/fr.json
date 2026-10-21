@@ -792,7 +792,9 @@
       "server": "Google a renvoyé une erreur. L'app réessaiera.",
       "config": "Le projet Google est mal configuré (clés de l'app ou Drive API non activée). Vérifiez le projet dans Google Cloud.",
       "cancel": "Non connecté (annulé ou délai dépassé).",
-      "wrongAccount": "Connecté en tant que {{email}}, différent du compte lié {{owner}}."
-    }
+      "wrongAccount": "Connecté en tant que {{email}}, différent du compte lié {{owner}}.",
+      "scope": "Google n'a pas donné à l'app l'accès au dossier HCN dans Drive (la case Google Drive n'a peut-être pas été cochée à la connexion). Touchez Se reconnecter et cochez « Afficher, créer et supprimer ses propres données de configuration dans Google Drive »."
+    },
+    "detail": "Détails : {{msg}}"
   }
 }

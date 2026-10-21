@@ -58,9 +58,11 @@ export function createDriveStore(d: DriveDeps): CloudStore {
       }
       if (res.ok) return res;
       let reason = '';
+      let message = '';
       try {
-        const j = (await res.clone().json()) as { error?: { errors?: { reason?: string }[]; status?: string } };
+        const j = (await res.clone().json()) as { error?: { errors?: { reason?: string }[]; status?: string; message?: string } };
         reason = j.error?.errors?.[0]?.reason ?? j.error?.status ?? '';
+        message = j.error?.message ?? '';
       } catch {
         /* không phải JSON */
       }
@@ -75,7 +77,9 @@ export function createDriveStore(d: DriveDeps): CloudStore {
         continue;
       }
       if (res.status === 403 && /accessNotConfigured|SERVICE_DISABLED/i.test(reason)) throw new CloudError('config', reason);
-      throw new CloudError('server', `${res.status} ${reason}`);
+      // lúc đăng nhập chưa tích ô quyền Google Drive → mã không có quyền drive.appdata
+      if (res.status === 403 && (/insufficientPermissions|ACCESS_TOKEN_SCOPE_INSUFFICIENT/i.test(reason) || /scope/i.test(message))) throw new CloudError('scope', `${reason} ${message}`.trim());
+      throw new CloudError('server', `${res.status} ${reason} ${message}`.trim());
     }
     throw lastErr;
   }

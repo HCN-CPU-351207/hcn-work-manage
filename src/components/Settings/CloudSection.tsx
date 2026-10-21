@@ -108,6 +108,7 @@ export function CloudSection() {
           )}
           {info.skewMin !== 0 && <p className="set-hint warn-text">{t('cloud.skew', { n: Math.abs(info.skewMin) })}</p>}
           {shownErr && !info.wrongOwner && <p className="set-status err">{errText(shownErr)}</p>}
+          {shownErr && info.errorDetail && <p className="set-hint err-detail">{t('cloud.detail', { msg: info.errorDetail })}</p>}
           <label className="toggle">
             <span>{t('cloud.auto')}</span>
             <button role="switch" aria-checked={info.auto} className={cx('switch', info.auto && 'on')} onClick={() => void run({ type: 'setAuto', on: !info.auto })}>
@@ -139,7 +140,7 @@ export function CloudSection() {
             >
               {backups ? t('cloud.hideBackups') : t('cloud.backups')}
             </button>
-            {info.wrongOwner && (
+            {(info.wrongOwner || shownErr === 'scope' || shownErr === 'config') && (
               <button className="btn" disabled={!!busy} onClick={() => void run({ type: 'signIn' })}>
                 {t('cloud.signInAgain')}
               </button>

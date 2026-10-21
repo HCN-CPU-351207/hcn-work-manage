@@ -3986,3 +3986,8 @@ th.col-actions {
   flex-direction: column;
   gap: 8px;
 }
+.err-detail {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  word-break: break-word;
+}

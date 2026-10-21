@@ -792,7 +792,9 @@
       "server": "A Google devolveu um erro. A app tenta de novo.",
       "config": "O projeto Google não está bem configurado (chaves da app ou Drive API desativada). Verifique o projeto no Google Cloud.",
       "cancel": "Sessão não iniciada (cancelado ou tempo esgotado).",
-      "wrongAccount": "Sessão iniciada como {{email}}, diferente da conta ligada {{owner}}."
-    }
+      "wrongAccount": "Sessão iniciada como {{email}}, diferente da conta ligada {{owner}}.",
+      "scope": "A Google não deu à app acesso à pasta do HCN no Drive (a caixa do Google Drive pode ter ficado por marcar ao iniciar sessão). Toque em Iniciar sessão de novo e marque \"Ver, criar e eliminar os seus próprios dados de configuração no Google Drive\"."
+    },
+    "detail": "Detalhes: {{msg}}"
   }
 }

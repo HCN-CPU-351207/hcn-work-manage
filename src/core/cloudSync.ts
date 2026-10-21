@@ -32,7 +32,7 @@ export interface CloudStore {
 }
 
 export class CloudError extends Error {
-  code: 'relogin' | 'network' | 'full' | 'rate' | 'server' | 'config' | 'cancel';
+  code: 'relogin' | 'network' | 'full' | 'rate' | 'server' | 'config' | 'cancel' | 'scope';
   constructor(code: CloudError['code'], message?: string) {
     super(message ?? code);
     this.code = code;

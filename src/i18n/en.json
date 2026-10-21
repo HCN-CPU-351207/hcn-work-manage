@@ -792,7 +792,9 @@
       "server": "Google reported an error. The app will retry.",
       "config": "The Google project is not set up correctly (app keys, or Drive API not enabled). Check the project in Google Cloud.",
       "cancel": "Not signed in (cancelled or timed out).",
-      "wrongAccount": "Signed in as {{email}}, which differs from the linked account {{owner}}."
-    }
+      "wrongAccount": "Signed in as {{email}}, which differs from the linked account {{owner}}.",
+      "scope": "Google has not given the app access to HCN's folder in Drive (the Google Drive checkbox may have been left unticked at sign-in). Tap Sign in again and tick \"See, create, and delete its own configuration data in your Google Drive\"."
+    },
+    "detail": "Details: {{msg}}"
   }
 }

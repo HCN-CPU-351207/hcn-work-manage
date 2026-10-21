@@ -792,7 +792,9 @@
       "server": "Google 返回错误，应用会自动重试。",
       "config": "Google 项目配置不正确（应用密钥或未启用 Drive API）。请检查 Google Cloud 中的项目。",
       "cancel": "未登录（已取消或超时）。",
-      "wrongAccount": "当前登录 {{email}}，与已关联的账号 {{owner}} 不同。"
-    }
+      "wrongAccount": "当前登录 {{email}}，与已关联的账号 {{owner}} 不同。",
+      "scope": "Google 尚未授予应用访问 HCN 云端硬盘文件夹的权限（登录时可能未勾选 Google 云端硬盘权限）。请点“重新登录”并勾选“查看、创建和删除此应用在 Google 云端硬盘中的配置数据”。"
+    },
+    "detail": "详情：{{msg}}"
   }
 }

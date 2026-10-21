@@ -792,7 +792,9 @@
       "server": "Google meldet einen Fehler. Die App versucht es erneut.",
       "config": "Das Google-Projekt ist nicht richtig eingerichtet (App-Schlüssel oder Drive API nicht aktiviert). Projekt in Google Cloud prüfen.",
       "cancel": "Nicht angemeldet (abgebrochen oder Zeit abgelaufen).",
-      "wrongAccount": "Angemeldet als {{email}}, abweichend vom verknüpften Konto {{owner}}."
-    }
+      "wrongAccount": "Angemeldet als {{email}}, abweichend vom verknüpften Konto {{owner}}.",
+      "scope": "Google hat der App keinen Zugriff auf den HCN-Ordner in Drive gegeben (das Google-Drive-Häkchen wurde bei der Anmeldung evtl. nicht gesetzt). Auf Erneut anmelden tippen und „Eigene Konfigurationsdaten in Google Drive ansehen, erstellen und löschen“ anhaken."
+    },
+    "detail": "Details: {{msg}}"
   }
 }

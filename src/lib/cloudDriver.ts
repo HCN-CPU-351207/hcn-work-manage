@@ -20,6 +20,8 @@ export interface CloudInfo {
   auto: boolean;
   lastSync: string | null;
   lastError: string | null;
+  /** chi tiết lỗi kỹ thuật (để báo lại khi cần hỗ trợ) */
+  errorDetail?: string | null;
   busy: boolean;
   signingIn: boolean;
   choice: SyncStats | null;
@@ -87,6 +89,7 @@ export function createCloudDriver(d: CloudDriverDeps) {
   let busy: Promise<string | undefined> | null = null;
   let signingIn = false;
   let lastError: string | null = null;
+  let errorDetail: string | null = null;
   let choice: SyncStats | null = null;
   let choiceIsPreview = false;
   let wrongOwner: string | null = null;
@@ -116,6 +119,7 @@ export function createCloudDriver(d: CloudDriverDeps) {
       auto: st.auto,
       lastSync: st.lastSync,
       lastError,
+      errorDetail: lastError ? errorDetail : null,
       busy: !!busy,
       signingIn,
       choice,
@@ -173,7 +177,8 @@ export function createCloudDriver(d: CloudDriverDeps) {
       return undefined;
     } catch (e) {
       lastError = codeOf(e);
-      d.log?.warn(`Đồng bộ Drive lỗi: ${(e as Error).message}`);
+      errorDetail = String((e as Error)?.message ?? e).slice(0, 300);
+      d.log?.warn(`Đồng bộ Drive lỗi: ${errorDetail}`);
       return lastError;
     }
   }
@@ -187,6 +192,7 @@ export function createCloudDriver(d: CloudDriverDeps) {
       .then(() =>
         withTimeout(fn(), d.runTimeoutMs ?? 5 * 60_000, 'run-timeout').catch((e: unknown) => {
           lastError = codeOf(e);
+          errorDetail = String((e as Error)?.message ?? e).slice(0, 300);
           return lastError;
         })
       );
