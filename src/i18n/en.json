@@ -875,5 +875,20 @@
     "noHours": "No planned or actual time this day.",
     "noTasks": "No day tasks on this date.",
     "late": "Late"
+  },
+  "ps": {
+    "titleWeek": "Week charts",
+    "titleMonth": "Month charts",
+    "inMonth": "Month {{m}}:",
+    "inYear": "Year {{y}}:",
+    "overN": "{{n}} overdue",
+    "doneTuan": "weekly tasks done this week",
+    "doneThang": "monthly tasks done this month",
+    "onTime": "done by deadline ({{a}}/{{b}})",
+    "dueSoon": "due in the next 3 days",
+    "noHoursWeek": "No planned or actual day-task time this week.",
+    "noHoursMonth": "No planned or actual day-task time this month.",
+    "noTuan": "No weekly tasks in this week.",
+    "noThang": "No monthly tasks in this month."
   }
 }

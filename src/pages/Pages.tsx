@@ -17,7 +17,8 @@ import { MetricGrid } from '../components/Overview/MetricGrid.tsx';
 import { HoursPanel } from '../components/Overview/HoursPanel.tsx';
 import { IPlus } from '../components/Common/Icons.tsx';
 import { DayStrip } from '../components/Charts/DayStrip.tsx';
-import type { NgayRow } from '../lib/rows.ts';
+import type { NgayRow, ThangRow, TuanRow } from '../lib/rows.ts';
+import { PeriodStrip } from '../components/Charts/PeriodStrip.tsx';
 
 function useCtx(level: Level): FilterCtx {
   const me = useApp((s) => s.settings.currentPersonId);
@@ -69,9 +70,17 @@ export function LevelPage({ level }: { level: Level }) {
 
   // dải biểu đồ CV Ngày: theo người / phân loại / vị trí / tìm kiếm đang lọc, không theo lọc ngày-trạng thái
   const stripRows = useMemo(
-    () => (level === 'ngay' ? filterRows(all, { personId: filter.personId, cats: filter.cats, places: filter.places }, query, ctx) : []),
+    () => filterRows(all, { personId: filter.personId, cats: filter.cats, places: filter.places }, query, ctx),
     [level, all, filter.personId, filter.cats, filter.places, query, ctx]
   );
+
+  // CV Ngày con của các việc đang hiện trên dải (giờ kế hoạch / thực tế)
+  const stripNgays = useMemo(() => {
+    if (level === 'ngay') return [];
+    const ids = new Set(stripRows.map((r) => (level === 'thang' ? r.ma : r.id)));
+    const tuanOk = level === 'thang' ? new Set(data.tuan.filter((w) => ids.has(w.parentMa)).map((w) => w.id)) : ids;
+    return data.ngay.filter((n) => tuanOk.has(n.parentId));
+  }, [level, stripRows, data.tuan, data.ngay]);
 
   const empty =
     all.length === 0 ? (
@@ -89,6 +98,7 @@ export function LevelPage({ level }: { level: Level }) {
   return (
     <div className="page page-level">
       <FilterBar level={level} count={rows.length} total={all.length} />
+      {level !== 'ngay' && <PeriodStrip level={level} rows={stripRows as (ThangRow | TuanRow)[]} ngays={stripNgays} today={today} showNav={mode !== 'chart'} />}
       {level === 'ngay' && <DayStrip rows={stripRows as NgayRow[]} today={today} showNav={mode !== 'chart'} />}
       {mode === 'chart' ? (
         <div className="page-chart">

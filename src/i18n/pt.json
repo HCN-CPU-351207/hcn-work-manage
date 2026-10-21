@@ -875,5 +875,20 @@
     "noHours": "Sem horário previsto ou real neste dia.",
     "noTasks": "Nenhuma tarefa do dia nesta data.",
     "late": "Atrasada"
+  },
+  "ps": {
+    "titleWeek": "Gráficos da semana",
+    "titleMonth": "Gráficos do mês",
+    "inMonth": "Mês {{m}}:",
+    "inYear": "Ano {{y}}:",
+    "overN": "{{n}} atrasadas",
+    "doneTuan": "tarefas semanais concluídas",
+    "doneThang": "tarefas mensais concluídas",
+    "onTime": "concluídas no prazo ({{a}}/{{b}})",
+    "dueSoon": "vencem nos próximos 3 dias",
+    "noHoursWeek": "Sem horário previsto ou real de tarefas do dia nesta semana.",
+    "noHoursMonth": "Sem horário previsto ou real de tarefas do dia neste mês.",
+    "noTuan": "Nenhuma tarefa semanal nesta semana.",
+    "noThang": "Nenhuma tarefa mensal neste mês."
   }
 }

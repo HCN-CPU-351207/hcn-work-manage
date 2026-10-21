@@ -875,5 +875,20 @@
     "noHours": "An diesem Tag keine Plan- oder Ist-Zeit.",
     "noTasks": "Keine Tagesaufgaben an diesem Datum.",
     "late": "Verspätet"
+  },
+  "ps": {
+    "titleWeek": "Wochendiagramme",
+    "titleMonth": "Monatsdiagramme",
+    "inMonth": "Monat {{m}}:",
+    "inYear": "Jahr {{y}}:",
+    "overN": "{{n}} überfällig",
+    "doneTuan": "Wochenaufgaben erledigt",
+    "doneThang": "Monatsaufgaben erledigt",
+    "onTime": "fristgerecht erledigt ({{a}}/{{b}})",
+    "dueSoon": "fällig in den nächsten 3 Tagen",
+    "noHoursWeek": "Diese Woche keine Plan- oder Ist-Zeit von Tagesaufgaben.",
+    "noHoursMonth": "Diesen Monat keine Plan- oder Ist-Zeit von Tagesaufgaben.",
+    "noTuan": "Keine Wochenaufgaben in dieser Woche.",
+    "noThang": "Keine Monatsaufgaben in diesem Monat."
   }
 }

@@ -78,6 +78,7 @@ Chạy song song với đồng bộ Wi-Fi / cáp. Mỗi máy đăng nhập **cù
 - **Mẫu checklist** cho việc lặp lại: nút *Mẫu ▾* → chọn mẫu để thêm sẵn các bước, hoặc *Lưu checklist này làm mẫu*. Quản lý (đổi tên, sửa bước — mỗi dòng một bước, xóa) ở **Cài đặt › Danh mục › Mẫu checklist**. Mẫu được đồng bộ giữa các máy như dữ liệu khác.
 - **Bấm 1 lần vào một CV Ngày** (điện thoại: chạm thẻ) để mở bảng chỉ số: vòng % checklist, thời gian đã làm so với dự kiến, nhận xét (bắt đầu muộn, còn/quá giờ, còn mấy bước), thanh kế hoạch / thực tế kèm vạch mỗi lần tích, dòng thời gian các bước (bước lâu nhất được đánh dấu), checklist sửa trực tiếp, việc tuần/tháng cha. Bấm đúp vẫn mở khung sửa.
 - Đầu trang **CV Ngày** có **dải biểu đồ** cho ngày đang xem (chọn ngày ‹ Hôm nay ›, thu gọn được): số việc xong, tỉ lệ đúng giờ, tổng giờ làm / dự kiến, cột giờ kế hoạch – thực tế theo từng giờ, thanh trạng thái; góc phải là **số việc xong trong tuần và tháng**. Dải này theo bộ lọc người / phân loại / vị trí đang chọn.
+- Trang **CV Tháng** và **CV Tuần** cũng có dải biểu đồ tổng quan (theo tháng / tuần đang xem, đổi bằng ‹ ›, đi cùng Gantt): số việc xong, tỉ lệ xong đúng hạn, số việc sắp đến hạn trong 3 ngày, giờ làm / dự kiến của CV Ngày con theo từng tuần (CV Tháng) hoặc từng ngày (CV Tuần), thanh trạng thái có Quá hạn; góc phải là số việc xong cả năm (CV Tháng) hoặc cả tháng (CV Tuần). Bấm vào một việc vẫn mở bảng Tổng quan dự án như cũ.
 - Bảng CV Ngày có thêm cột **Checklist** (3/5 kèm thanh nhỏ), lọc và sắp xếp được.
 
 ## Hủy công việc
@@ -192,7 +193,7 @@ build/         icon.ico, icon.png, installer.nsh
 
 ## Đã kiểm tra những gì
 
-- 282 test đơn vị (mục 13.1, đồng bộ, Google Drive, checklist): trạng thái/tiến độ/quá hạn, ngày thực tế, Bắt đầu/Kết thúc/Reset, trùng giờ và xếp làn, chênh lệch, migration file cũ, sinh mã không tái sử dụng, ghi nguyên tử khi lỗi giữa chừng, xoay vòng sao lưu và nhật ký.
+- 284 test đơn vị (mục 13.1, đồng bộ, Google Drive, checklist): trạng thái/tiến độ/quá hạn, ngày thực tế, Bắt đầu/Kết thúc/Reset, trùng giờ và xếp làn, chênh lệch, migration file cũ, sinh mã không tái sử dụng, ghi nguyên tử khi lỗi giữa chừng, xoay vòng sao lưu và nhật ký.
 - Gộp đồng bộ: sửa khác việc, sửa cùng việc, xóa không sống lại, sửa sau khi bên kia xóa, trùng mã, việc mồ côi, người đã xóa, idempotent; đồng bộ đầu-cuối qua HTTP thật (ghép đôi sai/đúng mã, mã dùng một lần, token chỉ lưu dạng băm, gỡ thiết bị).
 - Điện thoại ↔ PC trong Chromium ở chế độ Android (plugin Capacitor bản web) với trạm PC thật: ghép đôi, nhận dữ liệu, việc tạo trên điện thoại tự lên PC, thay đổi trên PC về điện thoại, dữ liệu còn sau khi mở lại app, xóa được đồng bộ.
 - Kiểm tra kiểu TypeScript strict cho giao diện, phần Android và main process (với kiểu của Electron 44, Capacitor 8, electron-updater 6.8, exceljs 4.4).

@@ -875,5 +875,20 @@
     "noHours": "Chưa có giờ dự kiến hay giờ thực tế trong ngày.",
     "noTasks": "Ngày này chưa có CV Ngày.",
     "late": "Trễ giờ"
+  },
+  "ps": {
+    "titleWeek": "Biểu đồ tuần",
+    "titleMonth": "Biểu đồ tháng",
+    "inMonth": "Tháng {{m}}:",
+    "inYear": "Năm {{y}}:",
+    "overN": "{{n}} quá hạn",
+    "doneTuan": "CV Tuần xong trong tuần",
+    "doneThang": "CV Tháng xong trong tháng",
+    "onTime": "xong đúng hạn ({{a}}/{{b}})",
+    "dueSoon": "sắp đến hạn (3 ngày tới)",
+    "noHoursWeek": "Tuần này chưa có giờ dự kiến hay thực tế của CV Ngày.",
+    "noHoursMonth": "Tháng này chưa có giờ dự kiến hay thực tế của CV Ngày.",
+    "noTuan": "Không có CV Tuần nào trong tuần này.",
+    "noThang": "Không có CV Tháng nào trong tháng này."
   }
 }

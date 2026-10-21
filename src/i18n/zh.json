@@ -875,5 +875,20 @@
     "noHours": "当天没有计划或实际时间。",
     "noTasks": "当天没有每日任务。",
     "late": "超时"
+  },
+  "ps": {
+    "titleWeek": "本周图表",
+    "titleMonth": "本月图表",
+    "inMonth": "{{m}} 月：",
+    "inYear": "{{y}} 年：",
+    "overN": "{{n}} 项逾期",
+    "doneTuan": "本周完成的每周任务",
+    "doneThang": "本月完成的每月任务",
+    "onTime": "按期完成（{{a}}/{{b}}）",
+    "dueSoon": "未来 3 天到期",
+    "noHoursWeek": "本周没有每日任务的计划或实际时间。",
+    "noHoursMonth": "本月没有每日任务的计划或实际时间。",
+    "noTuan": "本周没有每周任务。",
+    "noThang": "本月没有每月任务。"
   }
 }
