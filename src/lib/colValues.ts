@@ -62,6 +62,12 @@ export function useColValue(): ValueFn<Row> {
           const p = Math.round(row.progress * 100);
           return { key: String(p), label: `${p}%`, sort: p };
         }
+        case 'ck': {
+          if (row.level !== 'ngay' || !row.item.ck?.length) return EMPTY(blank);
+          const d = row.item.ck.filter((c) => c.done).length;
+          const n = row.item.ck.length;
+          return { key: `${d}/${n}`, label: `${d}/${n}`, sort: d / n + n / 1e4 };
+        }
         case 'gc':
           return text(row.item.gc);
         case 'gdk': {

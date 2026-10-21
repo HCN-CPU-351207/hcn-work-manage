@@ -98,6 +98,22 @@ export interface Tuan {
   huy?: Cancel | null;
 }
 
+/** Một bước trong checklist của CV Ngày */
+export interface CheckItem {
+  id: string;
+  text: string;
+  done: boolean;
+  /** lúc tích xong bước này ('YYYY-MM-DDTHH:mm:ss', sửa tay được); bỏ tích → null */
+  at: string | null;
+  note?: string;
+}
+/** Mẫu checklist dùng lại cho việc lặp lại */
+export interface CkTemplate {
+  id: string;
+  name: string;
+  items: string[];
+}
+
 export interface Ngay {
   id: string;
   ma: string; // D001...
@@ -116,6 +132,8 @@ export interface Ngay {
   tt: Status;
   gc: string;
   huy?: Cancel | null;
+  /** checklist: tích hết = Hoàn thành; thêm bước / bỏ tích khi đã xong = về Đang làm */
+  ck?: CheckItem[];
 }
 
 export type Item = Thang | Tuan | Ngay;
@@ -137,6 +155,8 @@ export interface Data {
   /** danh mục Phân loại / Vị trí (dùng chung giữa các máy); thiếu = mặc định */
   cats?: Opt[];
   places?: Opt[];
+  /** mẫu checklist */
+  tpls?: CkTemplate[];
   /** nhắc việc đã báo: khóa mốc → thời điểm báo (ms); gộp khi đồng bộ để máy kia không báo lặp */
   reminded?: Record<string, number>;
 }
@@ -206,7 +226,7 @@ export interface BackupFile {
   app: 'HCN';
   schemaVersion: number;
   exportedAt: string;
-  data: { people: Person[]; thang: Thang[]; tuan: Tuan[]; ngay: Ngay[]; counters?: Counters; cats?: Opt[]; places?: Opt[] };
+  data: { people: Person[]; thang: Thang[]; tuan: Tuan[]; ngay: Ngay[]; counters?: Counters; cats?: Opt[]; places?: Opt[]; tpls?: CkTemplate[] };
 }
 
 export function emptyData(): Data {
@@ -255,7 +275,10 @@ export function toBackup(data: Data, exportedAt: string): BackupFile {
       thang: data.thang,
       tuan: data.tuan,
       ngay: data.ngay,
-      counters: data.counters
+      counters: data.counters,
+      ...(data.cats ? { cats: data.cats } : {}),
+      ...(data.places ? { places: data.places } : {}),
+      ...(data.tpls ? { tpls: data.tpls } : {})
     }
   };
 }

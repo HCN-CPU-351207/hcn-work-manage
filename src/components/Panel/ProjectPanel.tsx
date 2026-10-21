@@ -16,6 +16,7 @@ import { Avatar, StatusChip } from '../Common/bits.tsx';
 import { CatChip } from '../Common/OptChip.tsx';
 import { IBan, IEdit, IGantt, IPlay, IStop, IUndo, IX } from '../Common/Icons.tsx';
 import { BurnChart, Donut, PairBars, Ring, StackBar } from '../Charts/Charts.tsx';
+import { NgayPanel } from './NgayPanel.tsx';
 
 const ddmm = (d: string | null) => (d ? `${d.slice(8, 10)}/${d.slice(5, 7)}` : '—');
 const PERSON_FALLBACK = '#94A3B8';
@@ -23,6 +24,7 @@ const PERSON_FALLBACK = '#94A3B8';
 export function ProjectPanel() {
   const panel = useApp((s) => s.panel);
   if (!panel) return null;
+  if (panel.level === 'ngay') return <NgayPanel key={`ngay:${panel.id}`} id={panel.id} />;
   return <PanelInner key={`${panel.level}:${panel.id}`} level={panel.level} id={panel.id} />;
 }
 
@@ -311,7 +313,7 @@ function sliceItems(list: Slice[], get: (id: string | null) => { id: string; nam
   });
 }
 
-function Card({ title, sub, children }: { title: string; sub?: string; children: ReactNode }) {
+export function Card({ title, sub, children }: { title: string; sub?: string; children: ReactNode }) {
   return (
     <section className="pp-card">
       <h4>

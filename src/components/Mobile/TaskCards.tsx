@@ -9,7 +9,7 @@ import { fmtDay, hhmm } from '../../lib/fmt.ts';
 import { cx } from '../../lib/labels.ts';
 import type { Row } from '../../lib/rows.ts';
 import { useRowHighlight } from '../Grid/SmartGrid.tsx';
-import { Avatar, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
+import { Avatar, CkChip, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
 import { ICheck, IEdit, ITrash } from '../Common/Icons.tsx';
 import { CatChip, PlaceChip } from '../Common/OptChip.tsx';
 import { optMap, useOpts } from '../../lib/opts.ts';
@@ -103,6 +103,7 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
   const cat = row.item.cat ? cats.get(row.item.cat) : undefined;
   const place = row.level === 'ngay' && row.item.place ? places.get(row.item.place) : undefined;
   const placeNote = row.level === 'ngay' ? row.item.placeNote : undefined;
+  const ckp = row.level === 'ngay' && row.item.ck?.length ? { done: row.item.ck.filter((c) => c.done).length, total: row.item.ck.length } : null;
   const running = row.level === 'ngay' && !!row.item.a1 && !row.item.a2 && row.item.ngay === today;
 
   return (
@@ -132,9 +133,8 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
         onPointerCancel={onUp}
         onClick={() => {
           if (open || dragging || Math.abs(dx) >= 4) return;
-          // CV Tháng / Tuần: mở Tổng quan dự án; CV Ngày: mở khung sửa
-          if (row.level === 'ngay') openDrawer({ level: row.level, id: row.id });
-          else useApp.getState().openPanel({ level: row.level, id: row.id });
+          // mở bảng chỉ số (CV Ngày: checklist, thời gian; có nút Sửa)
+          useApp.getState().openPanel({ level: row.level, id: row.id });
         }}
       >
         <div className="tc-top">
@@ -149,8 +149,9 @@ function SwipeCard({ row, today, hl }: { row: Row; today: string; hl: boolean })
           <span>{row.person?.name ?? t('person.unassigned')}</span>
           {row.progress !== null && <MiniProgress value={row.progress} />}
         </div>
-        {(cat || place || placeNote) && (
+        {(cat || place || placeNote || ckp) && (
           <div className="tc-tags">
+            {ckp && <CkChip done={ckp.done} total={ckp.total} />}
             {cat && <CatChip opt={cat} />}
             {(place || placeNote) && <PlaceChip opt={place} note={placeNote} />}
           </div>

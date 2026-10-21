@@ -18,7 +18,7 @@ import { fmtDay, hhmm } from '../../lib/fmt.ts';
 import { useIsTablet } from '../../lib/hooks.ts';
 import { LOAI_KEY, STATUS_KEY, cx } from '../../lib/labels.ts';
 import type { NgayRow, Row, ThangRow, TuanRow } from '../../lib/rows.ts';
-import { Avatar, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
+import { Avatar, CkChip, LiveClock, MiniProgress, StatusChip } from '../Common/bits.tsx';
 import { IBan, IEdit, IPlay, IReset, IStop, ITrash, IUndo, IWarn } from '../Common/Icons.tsx';
 
 export function useRowHighlight(level: Level) {
@@ -66,7 +66,7 @@ export function gridCols(level: Level, t: T): GridCol[] {
     ma, { key: 'parent', label: t('col.parentTuan') }, { key: 'task', label: t('col.content'), cls: 'col-task', fixed: true },
     cat, { key: 'place', label: t('col.place'), cls: 'col-place' },
     { key: 'person', label: t('col.person') }, { key: 'gdk', label: t('col.planTime') }, { key: 'gtt', label: t('col.actualTime') },
-    { key: 'st', label: t('col.status') }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
+    { key: 'st', label: t('col.status') }, { key: 'ck', label: t('col.ck'), cls: 'col-ck' }, { key: 'gc', label: t('col.note'), cls: 'col-note' }
   ];
 }
 
@@ -130,6 +130,8 @@ export function SmartGrid({ level, rows, pool, today, emptyText }: { level: Leve
   );
 }
 
+let rowClickTimer = 0;
+
 function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string; visible: string[]; hl: boolean; checked: boolean }) {
   const { t } = useTranslation();
   const lang = useApp((s) => s.settings.language);
@@ -187,6 +189,11 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
         return <StatusCell row={row} />;
       case 'pg':
         return row.progress !== null ? <MiniProgress value={row.progress} /> : null;
+      case 'ck': {
+        if (row.level !== 'ngay' || !row.item.ck?.length) return null;
+        const ck = row.item.ck;
+        return <CkChip done={ck.filter((c) => c.done).length} total={ck.length} />;
+      }
       case 'gc':
         return <span className="cell-note" title={row.level === 'ngay' ? row.item.gc : row.item.gc}>{row.item.gc}</span>;
       case 'gdk': {
@@ -209,7 +216,7 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
       case 'gtt': {
         if (row.level !== 'ngay') return null;
         const n = row.item;
-        if (!n.a1) return <span className="dim">—</span>;
+        if (!n.a1) return n.a2 ? <span className="cell-time"><span className="dim">—</span>–{hhmm(n.a2)}</span> : <span className="dim">—</span>;
         const diff = n.a2 ? diffMinutes(actualMinutes(n), plannedMinutes(n)) : null;
         return (
           <span className="cell-time">
@@ -227,14 +234,17 @@ function GridRow({ row, today, visible, hl, checked }: { row: Row; today: string
   return (
     <tr
       data-id={row.id}
-      className={cx('grid-row', hl && 'row-hl', checked && 'row-checked', active && 'row-active', row.level !== 'ngay' && 'row-click', row.item.huy && 'row-cancel')}
+      className={cx('grid-row', hl && 'row-hl', checked && 'row-checked', active && 'row-active', 'row-click', row.item.huy && 'row-cancel')}
       onClick={(e) => {
-        // CV Tháng / Tuần: bấm 1 lần mở Tổng quan dự án (bỏ qua ô tích, nút, ô sửa nhanh)
-        if (row.level === 'ngay' || (e.target as HTMLElement).closest('input, button, select, a, [data-inline], .qa')) return;
+        // bấm 1 lần mở bảng chỉ số bên phải (CV Tháng / Tuần: Tổng quan dự án; CV Ngày: checklist + thời gian)
+        if ((e.target as HTMLElement).closest('input, button, select, a, [data-inline], .qa')) return;
+        window.clearTimeout(rowClickTimer);
         if (e.detail > 1) return;
-        openPanel(active ? null : { level: row.level, id: row.id });
+        // chờ một nhịp: nếu là nhấp đúp thì chỉ mở khung sửa (mở bảng bên phải làm bảng co lại, dòng bị xê dịch)
+        rowClickTimer = window.setTimeout(() => openPanel(active ? null : { level: row.level, id: row.id }), 230);
       }}
       onDoubleClick={(e) => {
+        window.clearTimeout(rowClickTimer);
         if ((e.target as HTMLElement).closest('[data-inline]')) return;
         openDrawer({ level: row.level, id: row.id });
       }}

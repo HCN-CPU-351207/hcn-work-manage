@@ -91,7 +91,7 @@ export interface AppState {
   selected: Record<Level, string[]>;
   drawer: DrawerState | null;
   /** bảng Tổng quan dự án đang mở (CV Tháng / CV Tuần) */
-  panel: { level: 'thang' | 'tuan'; id: string } | null;
+  panel: { level: Level; id: string } | null;
   quickOpen: boolean;
   settingsOpen: SettingsSection | null;
   highlight: { level: Level; id: string; until: number } | null;
@@ -138,7 +138,7 @@ export interface AppState {
   toggleSelect(level: Level, id: string): void;
   setSelection(level: Level, ids: string[]): void;
   openDrawer(d: DrawerState | null): void;
-  openPanel(p: { level: 'thang' | 'tuan'; id: string } | null): void;
+  openPanel(p: { level: Level; id: string } | null): void;
   setQuickOpen(v: boolean): void;
   openSettings(s: SettingsSection | null): void;
   navigateTo(level: Level, id: string, openDrawer?: boolean): void;

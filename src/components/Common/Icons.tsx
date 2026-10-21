@@ -62,3 +62,7 @@ export const IColumns = mk(<><rect x="3" y="4" width="18" height="16" rx="2" /><
 // Hủy / khôi phục
 export const IBan = mk(<><circle cx="12" cy="12" r="9" /><path d="m5.7 5.7 12.6 12.6" /></>);
 export const IUndo = mk(<><path d="M9 14 4 9l5-5" /><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" /></>);
+export const IList = mk(<><path d="M9 6h11M9 12h11M9 18h11" /><path d="m3.5 6 1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2" /></>);
+export const IGrip = mk(<><circle cx="9" cy="6" r="1" /><circle cx="15" cy="6" r="1" /><circle cx="9" cy="12" r="1" /><circle cx="15" cy="12" r="1" /><circle cx="9" cy="18" r="1" /><circle cx="15" cy="18" r="1" /></>);
+export const INote = mk(<><path d="M4 4h16v12l-4 4H4Z" /><path d="M16 20v-4h4M8 9h8M8 13h5" /></>);
+export const IChart = mk(<><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></>);

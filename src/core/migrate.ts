@@ -3,7 +3,7 @@ import { syncCounters, formatCode } from './codes.ts';
 import { isDate } from './dates.ts';
 import { newId } from './ids.ts';
 import { LOAI_LIST, SCHEMA_VERSION, STATUSES } from './model.ts';
-import type { Cancel, Counters, Data, Loai, Ngay, Opt, Person, Status, Thang, Tuan } from './model.ts';
+import type { Cancel, CheckItem, CkTemplate, Counters, Data, Loai, Ngay, Opt, Person, Status, Thang, Tuan } from './model.ts';
 
 export type MigrationErrorCode = 'INVALID_FILE' | 'FUTURE_SCHEMA' | 'MIGRATION_FAILED';
 export class MigrationError extends Error {
@@ -114,9 +114,42 @@ const extra = (x: Obj, ngay: boolean): Record<string, unknown> => {
     if (p) o.place = p;
     const note = str(x.placeNote).trim();
     if (note) o.placeNote = note.slice(0, 120);
+    const ck = normCk(x.ck);
+    if (ck.length) o.ck = ck;
   }
   return o;
 };
+function normCk(x: unknown): CheckItem[] {
+  if (!Array.isArray(x)) return [];
+  const seen = new Set<string>();
+  const out: CheckItem[] = [];
+  for (const c of x) {
+    if (!isObj(c)) continue;
+    let id = str(c.id);
+    if (!id || seen.has(id)) id = newId('c');
+    seen.add(id);
+    const done = c.done === true;
+    const item: CheckItem = { id, text: str(c.text).slice(0, 300), done, at: done ? asIso(c.at) : null };
+    const note = str(c.note).trim();
+    if (note) item.note = note.slice(0, 300);
+    out.push(item);
+  }
+  return out.slice(0, 200);
+}
+function normTpls(x: unknown): CkTemplate[] | undefined {
+  if (!Array.isArray(x)) return undefined;
+  const seen = new Set<string>();
+  const out: CkTemplate[] = [];
+  for (const t of x) {
+    if (!isObj(t)) continue;
+    const id = str(t.id);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    const items = (Array.isArray(t.items) ? t.items : []).map((v) => str(v).trim().slice(0, 300)).filter(Boolean).slice(0, 200);
+    out.push({ id, name: str(t.name).trim().slice(0, 80) || 'Mẫu', items });
+  }
+  return out;
+}
 function normOpts(x: unknown): Opt[] | undefined {
   if (!Array.isArray(x)) return undefined;
   const seen = new Set<string>();
@@ -196,6 +229,7 @@ export function normalizeData(d: Obj): Data {
     counters: isObj(d.counters) ? (d.counters as unknown as Counters) : undefined,
     ...(normOpts(d.cats) ? { cats: normOpts(d.cats) } : {}),
     ...(normOpts(d.places) ? { places: normOpts(d.places) } : {}),
+    ...(normTpls(d.tpls) ? { tpls: normTpls(d.tpls) } : {}),
     ...(Object.keys(reminded).length ? { reminded } : {})
   };
   fillCodes(data);

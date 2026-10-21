@@ -16,6 +16,8 @@ import { TaskCards } from '../components/Mobile/TaskCards.tsx';
 import { MetricGrid } from '../components/Overview/MetricGrid.tsx';
 import { HoursPanel } from '../components/Overview/HoursPanel.tsx';
 import { IPlus } from '../components/Common/Icons.tsx';
+import { DayStrip } from '../components/Charts/DayStrip.tsx';
+import type { NgayRow } from '../lib/rows.ts';
 
 function useCtx(level: Level): FilterCtx {
   const me = useApp((s) => s.settings.currentPersonId);
@@ -65,6 +67,12 @@ export function LevelPage({ level }: { level: Level }) {
     [level, rows, data, derived, people, query, ctxN, optName]
   );
 
+  // dải biểu đồ CV Ngày: theo người / phân loại / vị trí / tìm kiếm đang lọc, không theo lọc ngày-trạng thái
+  const stripRows = useMemo(
+    () => (level === 'ngay' ? filterRows(all, { personId: filter.personId, cats: filter.cats, places: filter.places }, query, ctx) : []),
+    [level, all, filter.personId, filter.cats, filter.places, query, ctx]
+  );
+
   const empty =
     all.length === 0 ? (
       <span className="empty-cta">
@@ -81,6 +89,7 @@ export function LevelPage({ level }: { level: Level }) {
   return (
     <div className="page page-level">
       <FilterBar level={level} count={rows.length} total={all.length} />
+      {level === 'ngay' && <DayStrip rows={stripRows as NgayRow[]} today={today} showNav={mode !== 'chart'} />}
       {mode === 'chart' ? (
         <div className="page-chart">
           {level === 'thang' && <MonthChart rows={rows as never} ngayRows={ngayRows as never} today={today} />}

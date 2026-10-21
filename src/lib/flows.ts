@@ -251,3 +251,22 @@ export function runCommand(id: CommandId): void {
       break;
   }
 }
+
+/** Sửa checklist của một CV Ngày (đã lưu). Báo khi việc vừa tự hoàn thành (kèm Hoàn tác) hoặc quay về Đang làm. */
+export function ckDo(id: string, fn: (n: import('../core/model.ts').Ngay, now: string) => import('../core/model.ts').Ngay): void {
+  const st = S();
+  const before = st.data;
+  const cur = before.ngay.find((x) => x.id === id);
+  if (!cur) return;
+  if (cur.huy) {
+    st.toast(t('cancel.locked'), 'info');
+    return;
+  }
+  const next = fn(cur, nowIso());
+  if (next === cur) return;
+  st.mutate((d) => ({ ...d, ngay: d.ngay.map((x) => (x.id === id ? next : x)) }));
+  if (cur.tt !== 'Hoàn thành' && next.tt === 'Hoàn thành') {
+    useApp.setState({ undo: { data: before, until: Date.now() + 8000 } });
+    st.toast(t('ck.autoDone'), 'ok', { ttl: 8000, undo: true, action: { label: 'common.undo', run: () => S().undoNow() } });
+  } else if (cur.tt === 'Hoàn thành' && next.tt !== 'Hoàn thành') st.toast(t('ck.reopened'), 'info');
+}

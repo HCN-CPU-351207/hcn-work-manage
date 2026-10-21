@@ -10,7 +10,7 @@ import { DayTimeline } from './DayTimeline.tsx';
 import { GanttRange } from './GanttRange.tsx';
 import { SplitView } from './SplitView.tsx';
 
-function Nav({ label, onPrev, onNext, onToday, todayLabel }: { label: string; onPrev: () => void; onNext: () => void; onToday: () => void; todayLabel: string }) {
+export function Nav({ label, onPrev, onNext, onToday, todayLabel }: { label: string; onPrev: () => void; onNext: () => void; onToday: () => void; todayLabel: string }) {
   const { t } = useTranslation();
   return (
     <div className="chart-nav">

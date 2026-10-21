@@ -7,10 +7,10 @@ import type { Prefix } from './codes.ts';
 import type { Data, Ngay, Thang, Tuan } from './model.ts';
 import { mergeReminded } from './reminders.ts';
 
-export type Kind = 'people' | 'thang' | 'tuan' | 'ngay' | 'cats' | 'places';
-export const KINDS: Kind[] = ['people', 'thang', 'tuan', 'ngay', 'cats', 'places'];
+export type Kind = 'people' | 'thang' | 'tuan' | 'ngay' | 'cats' | 'places' | 'tpls';
+export const KINDS: Kind[] = ['people', 'thang', 'tuan', 'ngay', 'cats', 'places', 'tpls'];
 /** danh mục: máy chưa sửa lần nào không gửi gì (dùng mặc định) */
-const OPT_KINDS: Kind[] = ['cats', 'places'];
+const OPT_KINDS: Kind[] = ['cats', 'places', 'tpls'];
 
 export interface SyncMeta {
   v: 1;

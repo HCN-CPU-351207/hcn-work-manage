@@ -12,7 +12,11 @@ import { useToday } from '../../lib/hooks.ts';
 import { hhmm } from '../../lib/fmt.ts';
 import { LOAI_KEY, STATUS_KEY } from '../../lib/labels.ts';
 import { IBan, ILock, IUndo, IX } from '../Common/Icons.tsx';
-import { cancelFlow, restoreCancelled } from '../../lib/flows.ts';
+import { cancelFlow, ckDo, restoreCancelled } from '../../lib/flows.ts';
+import { ChecklistEditor } from '../Checklist/ChecklistEditor.tsx';
+import type { CkRun } from '../Checklist/ChecklistEditor.tsx';
+import { nowIso } from '../../core/dates.ts';
+import type { CheckItem } from '../../core/model.ts';
 import { optLabel, useOpts } from '../../lib/opts.ts';
 
 type Form = Record<string, string>;
@@ -76,6 +80,25 @@ function DrawerInner() {
   const firstRef = useRef<HTMLInputElement>(null);
   const kids = dr.id ? hasKids(data, level, dr.id) : false;
   const original = useRef(f);
+  // checklist: việc đã lưu → sửa trực tiếp (lưu ngay); việc mới → nháp, lưu cùng lúc tạo
+  const live = useApp((x) => (level === 'ngay' && dr.id ? x.data.ngay.find((v) => v.id === dr.id) : undefined));
+  const [draftCk, setDraftCk] = useState<CheckItem[]>([]);
+  const ckRun: CkRun = (fn) => {
+    if (dr.id) ckDo(dr.id, fn);
+    else setDraftCk((ck) => fn({ id: '', ma: '', ngay: f.ngay, parentId: '', ten: '', tt: 'Chưa làm', a1: null, a2: null, g1: null, g2: null, gc: '', personId: null, ck } as unknown as Ngay, nowIso()).ck ?? []);
+  };
+  // checklist đổi trạng thái / giờ kết thúc → cập nhật ô trên form (không đè các ô khác đang sửa)
+  const liveTt = live?.tt;
+  const liveA2 = live?.a2 ?? null;
+  useEffect(() => {
+    if (!live) return;
+    const a2 = hhmm(liveA2);
+    const a2date = liveA2 ? liveA2.slice(0, 10) : '';
+    if (original.current.tt === liveTt && original.current.a2 === a2 && original.current.a2date === a2date) return;
+    original.current = { ...original.current, tt: liveTt!, a2, a2date };
+    setF((x) => ({ ...x, tt: liveTt!, a2, a2date }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liveTt, liveA2]);
 
   useEffect(() => {
     firstRef.current?.focus();
@@ -110,7 +133,9 @@ function DrawerInner() {
     } else {
       if ((f.g1 && !f.g2) || (!f.g1 && f.g2)) return t('form.errBothTimes');
       if (f.g1 && f.g2 && hmToMin(f.g2) <= hmToMin(f.g1)) return t('form.errTimeOrder');
-      if (!f.a1 && f.a2) return t('form.errActualStartFirst');
+      // việc xong nhờ tích hết checklist mà chưa bấm Bắt đầu: có giờ kết thúc, không có giờ bắt đầu — hợp lệ
+      const ckDone = !!live?.ck?.length && live.ck.every((c) => c.done);
+      if (!f.a1 && f.a2 && !ckDone) return t('form.errActualStartFirst');
       if (f.a1 && f.a2 && hmToMin(f.a2) < hmToMin(f.a1) && (f.a2date || f.ngay) === (f.a1date || f.ngay)) return t('form.errTimeOrder');
     }
     return '';
@@ -141,13 +166,13 @@ function DrawerInner() {
       };
       const actualChanged = f.a1 !== original.current.a1 || f.a2 !== original.current.a2;
       if (dr.id) {
-        const prev = item as Ngay;
+        const prev = (S.data.ngay.find((x) => x.id === dr.id) ?? item) as Ngay; // bản mới nhất (giữ checklist vừa sửa)
         let next: Ngay = { ...prev, ...base };
         if (actualChanged) next = applyActualEdit(next); // a2 → Hoàn thành; chỉ a1 → Đang làm; rỗng → Chưa làm
         S.updateItem('ngay', dr.id, next);
       } else {
         const tmp = normalizeNewNgay({ id: '', ma: '', ...base } as Ngay);
-        S.toast(t('toast.created', { ma: S.createNgay({ ...base, tt: tmp.tt }).ma }), 'ok');
+        S.toast(t('toast.created', { ma: S.createNgay({ ...base, tt: tmp.tt, ...(draftCk.length ? { ck: draftCk } : {}) }).ma }), 'ok');
       }
     }
     if (dr.id) S.toast(t('toast.saved'), 'ok');
@@ -337,6 +362,7 @@ function DrawerInner() {
               </Row2>
               <p className="field-hint">{t('drawer.ngayHint')}</p>
               {statusField}
+              <ChecklistEditor ck={dr.id ? live?.ck ?? [] : draftCk} run={ckRun} disabled={!!huy} draft={!dr.id} />
             </>
           )}
           <Field label={t('col.note')}>

@@ -71,3 +71,20 @@ export function Segmented<T extends string>({
     </div>
   );
 }
+
+/** "☑ 3/5" + thanh nhỏ: tiến độ checklist của CV Ngày */
+export function CkChip({ done, total }: { done: number; total: number }) {
+  const full = total > 0 && done === total;
+  return (
+    <span className={full ? 'ck-chip full' : 'ck-chip'} title={`Checklist ${done}/${total}`}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <rect x="3" y="3" width="18" height="18" rx="4" />
+        <path d="m8 12 3 3 5-6" />
+      </svg>
+      {done}/{total}
+      <i>
+        <b style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+      </i>
+    </span>
+  );
+}
